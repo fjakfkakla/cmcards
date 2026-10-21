@@ -208,6 +208,14 @@ export const TRADERS: Trader[] = [
   { id: "alxcooks", name: "Alxcooks", handle: "", category: "trencher", art: "/art/alxcooks.webp", artPos: "58% 40%", tint: "gold",
     mythic: { banner: "/art/alxcooks.webp", avatar: "/art/alxcooks.webp",
       panels: { top: { src: "/art/alxcooks.webp", pos: "50% 32%" }, left: { src: "/art/alxcooks.webp", pos: "10% 55%" }, right: { src: "/art/alxcooks.webp", pos: "90% 50%" } } } },
+  // Zero : sa pdp (Kurapika, le regard en coin) en principale ; sa bannière (ZEROPNL,
+  // Hunter x Hunter en bleu et or, les chaînes) sur son OG et dans la planche de sa
+  // Mythic : le nom et Kurapika enchaîné en haut, Kurapika aux chaînes à gauche, Gon
+  // à droite, la pdp en sticker. Pas de thème. Un Trencher.
+  { id: "zero", name: "Zero", handle: "", category: "trencher", art: "/art/zero-face.webp", artPos: "50% 40%",
+    shots: { og: { src: "/art/zero.webp", pos: "37% 50%" } },
+    mythic: { banner: "/art/zero.webp", avatar: "/art/zero-face.webp",
+      panels: { top: { src: "/art/zero.webp", pos: "66% 40%" }, left: { src: "/art/zero.webp", pos: "20% 55%" }, right: { src: "/art/zero.webp", pos: "84% 100%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
