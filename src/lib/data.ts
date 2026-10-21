@@ -130,6 +130,14 @@ export const TRADERS: Trader[] = [
   { id: "jack", name: "Jack Duval", handle: "", category: "bundler", art: "/art/duve-face.webp", artPos: "50% 32%", theme: "call", tint: "blue",
     mythic: { banner: "/art/duve-call.webp", avatar: "/art/duve-face.webp",
       panels: { top: { src: "/art/duve-call.webp", pos: "50% 38%" }, left: { src: "/art/duve-call.webp", pos: "18% 90%" }, right: { src: "/art/duve-call.webp", pos: "82% 90%" } } } },
+  // SCHARO : sa pdp (le bandana noir et blanc, le Bearbrick en tailleur Chanel dans
+  // la chambre) en principale ; une photo : sa Shiny est en or. Sa bannière (la partie
+  // de poker dans la pénombre) ne sert qu'à la planche de sa Mythic : le donneur et
+  // les jetons en haut, les joueurs à gauche, le fauteuil jaune à droite, la pdp en
+  // sticker. Pas de thème. Un Bundler.
+  { id: "scharo", name: "SCHARO", handle: "", category: "bundler", art: "/art/scharo.webp", artPos: "50% 50%", tint: "gold",
+    mythic: { banner: "/art/scharo-banner.webp", avatar: "/art/scharo.webp",
+      panels: { top: { src: "/art/scharo-banner.webp", pos: "50% 60%" }, left: { src: "/art/scharo-banner.webp", pos: "15% 70%" }, right: { src: "/art/scharo-banner.webp", pos: "78% 55%" } } } },
   // Yenni : le chat rose, un Trencher. Sa pdp en principale ; un chat qui compte en
   // billets : sa Shiny est en or. Sa bannière (YENNI, la lune, les billets) dans la
   // planche de sa Mythic : le nom et la lune en haut, le pistolet à billets à gauche,
