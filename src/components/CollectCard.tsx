@@ -131,6 +131,12 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             PILLS.map(([x, s, dur, d], i) => (
               <span key={i} className="cc-pill" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s * 2.1}cqw`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
             ))}
+          {theme === "call" && (
+            <>
+              <span className="cc-ring a" /><span className="cc-ring b" /><span className="cc-ring c" />
+              <span className="cc-calling">is calling…</span>
+            </>
+          )}
           {theme === "mist" && (
             <>
               <div className="cc-fog a" />
