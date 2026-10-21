@@ -204,6 +204,12 @@ export const TRADERS: Trader[] = [
   { id: "megga", name: "MEGGA", handle: "", category: "famous", art: "/art/megga.webp", artPos: "42% 45%", tint: "gold",
     mythic: { banner: "/art/megga.webp", avatar: "/art/megga.webp",
       panels: { top: { src: "/art/megga.webp", pos: "42% 35%" }, left: { src: "/art/megga.webp", pos: "20% 55%" }, right: { src: "/art/megga.webp", pos: "60% 60%" } } } },
+  // Alxcooks : une seule image, la sienne partout : de nuit dans la rue aux néons,
+  // les tresses, il se retourne par-dessus l'épaule. Une photo : sa Shiny est en or.
+  // Pas de thème pour sa Mythic. Un Trencher.
+  { id: "alxcooks", name: "Alxcooks", handle: "", category: "trencher", art: "/art/alxcooks.webp", artPos: "58% 40%", tint: "gold",
+    mythic: { banner: "/art/alxcooks.webp", avatar: "/art/alxcooks.webp",
+      panels: { top: { src: "/art/alxcooks.webp", pos: "50% 32%" }, left: { src: "/art/alxcooks.webp", pos: "10% 55%" }, right: { src: "/art/alxcooks.webp", pos: "90% 50%" } } } },
   // Pain : une seule image, la sienne partout : le ninja au bandeau frontal, les
   // yeux du Rinnegan, la foudre sur fond rouge. Sa Shiny est en or (pas de peau verte).
   // Pas de thème pour sa Mythic. Le premier Holder.
