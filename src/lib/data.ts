@@ -477,17 +477,19 @@ export const packTraders = (p: Pack) => TRADERS.filter((t) => t.category === p.p
 export const pack = (id: string) => PACKS.find((p) => p.id === id);
 export const rank = (id: RarityId) => RARITIES.findIndex((r) => r.id === id);
 
-/* La rareté d'une carte, d'un nombre au hasard entre 0 et 1 (tiré par le serveur). */
+/* La rareté d'une carte, d'un nombre au hasard entre 0 et 1 (tiré par le serveur).
+   La garantie remonte une carte trop basse jusqu'à elle, sans toucher aux chances
+   des raretés au-dessus : une Shiny garantie ne rend pas l'OG ou la Mythic plus
+   fréquentes. */
 export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"): RarityId {
-  const min = rank(floor);
-  const pool = RARITIES.filter((_, i) => i >= min);
-  const w = pool.map((r) => (r.id === "mythic" || r.id === "og" ? r.odds * boost : r.odds));
+  const w = RARITIES.map((r) => (r.id === "mythic" || r.id === "og" ? r.odds * boost : r.odds));
   let x = rand * w.reduce((a, b) => a + b, 0);
-  for (let i = pool.length - 1; i >= 0; i--) {
-    if (x < w[i]) return pool[i].id;
+  let got = RARITIES[0].id;
+  for (let i = RARITIES.length - 1; i >= 0; i--) {
+    if (x < w[i]) { got = RARITIES[i].id; break; }
     x -= w[i];
   }
-  return pool[0].id;
+  return rank(got) < rank(floor) ? floor : got;
 }
 
 export const fmtSol = (sol: number) =>
