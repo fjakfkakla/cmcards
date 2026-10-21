@@ -49,3 +49,8 @@ node tools/brand/png.cjs          # PNG, src/app/favicon.ico, tools/brand/board.
 
 Le symbole : une carte, et une pièce dedans. Le nom : « cm » Bricolage Grotesque 800
 à l'encre, « cards » Bricolage 500 en bleu.
+
+Pour X, les mêmes scripts écrivent `public/brand/cmcards-x-pdp.png` (la photo de
+profil, 1000 × 1000, X la rogne en rond) et `public/brand/cmcards-x-banner.png` (la
+bannière, 1500 × 500 : le logo, l'accroche en anglais, cinq cartes de la saison en
+éventail, rien d'important en bas à gauche où X pose la photo de profil).

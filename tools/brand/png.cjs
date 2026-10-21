@@ -12,6 +12,8 @@ const JOBS = [
   ['cmcards-icon.svg', 'cmcards-icon-512.png', 512],
   ['cmcards-avatar.svg', 'cmcards-avatar-1000.png', 1000],
   ['cmcards-og.svg', 'cmcards-og.png', 1200, 630],
+  ['cmcards-x-pdp.svg', 'cmcards-x-pdp.png', 1000],
+  ['cmcards-x-banner.svg', 'cmcards-x-banner.png', 1500, 500],
 ];
 const ICO = { src: 'cmcards-favicon.svg', out: path.join(__dirname, '../../src/app/favicon.ico'), sizes: [16, 32, 48] };
 function ico(pngs) {
@@ -48,7 +50,7 @@ const fill = s => s.replace('<svg ', '<svg style="display:block;width:100vw;heig
   fs.writeFileSync(ICO.out, ico(pngs));
   console.log('src/app/favicon.ico');
   // La planche de contrôle : papier, encre, planche, et les petites tailles.
-  const p = await b.newPage({ viewport: { width: 1200, height: 900 } });
+  const p = await b.newPage({ viewport: { width: 1200, height: 1300 } });
   const img = f => 'data:image/svg+xml;base64,' + Buffer.from(svgOf(f)).toString('base64');
   await p.setContent(`<html><body style="margin:0;font-family:sans-serif">
     <div style="background:#fff4dc;padding:60px;display:flex;gap:60px;align-items:center">
@@ -58,7 +60,9 @@ const fill = s => s.replace('<svg ', '<svg style="display:block;width:100vw;heig
       <img src="${img('cmcards-favicon.svg')}" style="height:16px">
       <img src="${img('cmcards-favicon.svg')}" style="height:32px"></div>
     <div style="background:#1e1a16;padding:60px"><img src="${img('cmcards-logo-white.svg')}" style="height:110px"></div>
-    <div><img src="${img('cmcards-og.svg')}" style="width:600px;display:block"></div></body></html>`);
+    <div style="display:flex"><img src="${img('cmcards-og.svg')}" style="width:600px;display:block">
+      <img src="${img('cmcards-x-pdp.svg')}" style="width:300px;height:300px;border-radius:50%;margin:8px"></div>
+    <div><img src="${img('cmcards-x-banner.svg')}" style="width:1200px;display:block"></div></body></html>`);
   await p.screenshot({ path: path.join(__dirname, 'board.png'), fullPage: true });
   console.log('tools/brand/board.png');
   await b.close();
