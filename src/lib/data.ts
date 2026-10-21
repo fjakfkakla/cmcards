@@ -202,6 +202,12 @@ export const TRADERS: Trader[] = [
   { id: "megga", name: "MEGGA", handle: "", category: "famous", art: "/art/megga.webp", artPos: "42% 45%", tint: "gold",
     mythic: { banner: "/art/megga.webp", avatar: "/art/megga.webp",
       panels: { top: { src: "/art/megga.webp", pos: "42% 35%" }, left: { src: "/art/megga.webp", pos: "20% 55%" }, right: { src: "/art/megga.webp", pos: "60% 60%" } } } },
+  // Limfork : une seule image, la sienne partout : le dessin en niqab noir, les grands
+  // yeux verts aux reflets en cœur. Presque en noir et blanc : sa Shiny est en bleu
+  // électrique. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "limfork", name: "Limfork", handle: "", category: "trencher", art: "/art/limfork.webp", artPos: "50% 42%", tint: "blue",
+    mythic: { banner: "/art/limfork.webp", avatar: "/art/limfork.webp",
+      panels: { top: { src: "/art/limfork.webp", pos: "50% 42%" }, left: { src: "/art/limfork.webp", pos: "15% 65%" }, right: { src: "/art/limfork.webp", pos: "85% 65%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
