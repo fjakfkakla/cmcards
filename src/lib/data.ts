@@ -338,6 +338,15 @@ export const TRADERS: Trader[] = [
   { id: "waiter", name: "waiter", handle: "", category: "holder", art: "/art/waiter.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/waiter.webp", avatar: "/art/waiter.webp",
       panels: { top: { src: "/art/waiter.webp", pos: "50% 15%" }, left: { src: "/art/waiter.webp", pos: "22% 35%" }, right: { src: "/art/waiter.webp", pos: "60% 80%" } } } },
+  // DOC : sa photo (Chuck Norris, la barbe rousse, le sourire, le jean au premier plan)
+  // en principale ; une photo : sa Shiny est en or. Sa seconde image (le singe en
+  // smoking, le bob orange « I ♥ ₿ », le cigare, le couteau) sur son OG et dans la
+  // planche de sa Mythic : le bob en haut, le couteau à gauche, le cigare à droite, la
+  // photo en sticker. Pas de thème. Un Holder.
+  { id: "doc", name: "DOC", handle: "", category: "holder", art: "/art/doc-face.webp", artPos: "42% 35%", tint: "gold",
+    shots: { og: { src: "/art/doc.webp", pos: "50% 40%" } },
+    mythic: { banner: "/art/doc.webp", avatar: "/art/doc-face.webp",
+      panels: { top: { src: "/art/doc.webp", pos: "50% 20%" }, left: { src: "/art/doc.webp", pos: "8% 80%" }, right: { src: "/art/doc.webp", pos: "75% 45%" } } } },
   // bandit : une seule image, la sienne partout : le chat tigré attablé devant son verre
   // de vin rouge, et son grand portrait qui veille dans la pénombre. Une photo dans les
   // bruns : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
