@@ -318,6 +318,27 @@ export const TRADERS: Trader[] = [
   { id: "dani", name: "Dani", handle: "", category: "holder", art: "/art/dani-face.webp", artPos: "60% 40%", tint: "blue",
     mythic: { banner: "/art/dani.webp", avatar: "/art/dani-face.webp",
       panels: { top: { src: "/art/dani.webp", pos: "55% 50%" }, left: { src: "/art/dani.webp", pos: "8% 85%" }, right: { src: "/art/dani.webp", pos: "98% 40%" } } } },
+  // waiter : une seule image, la sienne partout : Juuzou (Tokyo Ghoul), les cheveux
+  // noirs, les barrettes en croix, les yeux rouges, les points sous la lèvre. Presque en
+  // noir et blanc : sa Shiny est en bleu électrique. Pas de thème pour sa Mythic. Un Holder.
+  { id: "waiter", name: "waiter", handle: "", category: "holder", art: "/art/waiter.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/waiter.webp", avatar: "/art/waiter.webp",
+      panels: { top: { src: "/art/waiter.webp", pos: "50% 15%" }, left: { src: "/art/waiter.webp", pos: "22% 35%" }, right: { src: "/art/waiter.webp", pos: "60% 80%" } } } },
+  // bandit : une seule image, la sienne partout : le chat tigré attablé devant son verre
+  // de vin rouge, et son grand portrait qui veille dans la pénombre. Une photo dans les
+  // bruns : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "bandit", name: "bandit", handle: "", category: "trencher", art: "/art/bandit.webp", artPos: "50% 50%", tint: "gold",
+    mythic: { banner: "/art/bandit.webp", avatar: "/art/bandit.webp",
+      panels: { top: { src: "/art/bandit.webp", pos: "62% 22%" }, left: { src: "/art/bandit.webp", pos: "10% 75%" }, right: { src: "/art/bandit.webp", pos: "58% 90%" } } } },
+  // west : sa pdp (en voiture, les lunettes rondes, l'éventail de billets) en
+  // principale ; une photo aux tons chauds : l'or la verdit, sa Shiny est en bleu
+  // électrique. Sa bannière (le casque blanc dans sa chambre, « it's impossible to
+  // quit now… until your death » en sous-titre) ne sert qu'à la planche de sa
+  // Mythic : lui et le sous-titre en haut, son visage à gauche, l'étagère à droite,
+  // la pdp en sticker. Pas de thème. Un Dev.
+  { id: "west", name: "west", handle: "", category: "dev", art: "/art/west.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/west-banner.webp", avatar: "/art/west.webp",
+      panels: { top: { src: "/art/west-banner.webp", pos: "50% 75%" }, left: { src: "/art/west-banner.webp", pos: "47% 0%" }, right: { src: "/art/west-banner.webp", pos: "92% 0%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
