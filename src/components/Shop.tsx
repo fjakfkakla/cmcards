@@ -3,24 +3,33 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import BoosterPack from "./BoosterPack";
-import { PACKS, RARITIES, fmtUsd, packRange, rarity } from "@/lib/data";
+import { PACKS, RARITIES, category, fmtUsd, packRange, packTraders, rarity } from "@/lib/data";
 
 /* La boutique : les boosters en carrousel (on glisse, ou on touche un voisin), et
    sous celui du milieu ce qu'il peut contenir. */
 export default function Shop() {
   const [at, setAt] = useState(0);
   const rail = useRef<HTMLDivElement>(null);
+  /* pendant le défilement vers un booster touché, le défilement ne choisit pas */
+  const jumping = useRef<ReturnType<typeof setTimeout> | null>(null);
   const p = PACKS[at];
   const [min, max] = packRange(p);
+  const open = packTraders(p).length > 0;
 
   useEffect(() => {
     const el = rail.current?.children[at] as HTMLElement | undefined;
     el?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
   }, [at]);
 
+  function go(k: number) {
+    if (jumping.current) clearTimeout(jumping.current);
+    jumping.current = setTimeout(() => { jumping.current = null; }, 800);
+    setAt(k);
+  }
+
   function onScroll() {
     const r = rail.current;
-    if (!r) return;
+    if (!r || jumping.current) return;
     const mid = r.scrollLeft + r.clientWidth / 2;
     let best = 0, d = Infinity;
     Array.from(r.children).forEach((c, k) => {
@@ -41,7 +50,7 @@ export default function Shop() {
         {PACKS.map((q, k) => (
           <button
             key={q.id}
-            onClick={() => setAt(k)}
+            onClick={() => go(k)}
             className="w-[260px] shrink-0 snap-center transition-[transform,opacity,filter] duration-300 sm:w-[300px]"
             style={{ transform: k === at ? "scale(1)" : "scale(.78)", opacity: k === at ? 1 : 0.55, filter: k === at ? "none" : "saturate(.6)" }}
             aria-label={q.name}
@@ -53,12 +62,13 @@ export default function Shop() {
 
       <div className="mt-2 flex gap-2">
         {PACKS.map((q, k) => (
-          <button key={q.id} onClick={() => setAt(k)} aria-label={q.name}
+          <button key={q.id} onClick={() => go(k)} aria-label={q.name}
             className={`h-3 rounded-full border-2 border-ink transition-all ${k === at ? "w-8 bg-ink" : "w-3 bg-paper"}`} />
         ))}
       </div>
 
       <h1 className="mt-6 font-display text-5xl">{p.name}</h1>
+      <p className="mt-1 text-lg font-extrabold text-ink-2">{category(p.pool).tagline}</p>
 
       <div className="mt-5 grid w-full max-w-md grid-cols-3 overflow-hidden rounded-2xl sticker bg-paper text-center">
         <Stat label="Min" value={fmtUsd(min)} />
@@ -67,14 +77,20 @@ export default function Shop() {
       </div>
 
       <div className="mt-4 flex flex-wrap justify-center gap-2">
-        {p.pool && <Chip>Seulement {p.pool === "top10" ? "Top 10" : p.pool}</Chip>}
+        <Chip>Seulement des {p.name}</Chip>
         {p.guarantee && <Chip>{rarity(p.guarantee).name} ou mieux garantie</Chip>}
         {p.boost && <Chip>OG et Mythic ×{p.boost}</Chip>}
       </div>
 
-      <Link href={`/booster/${p.id}`} className="btn mt-7 w-full max-w-md bg-tomato py-4 text-2xl text-cream">
-        Ouvrir · {p.price.toLocaleString("fr-FR")} SOL
-      </Link>
+      {open ? (
+        <Link href={`/booster/${p.id}`} className="btn mt-7 w-full max-w-md bg-tomato py-4 text-2xl text-cream">
+          Ouvrir · {p.price.toLocaleString("fr-FR")} SOL
+        </Link>
+      ) : (
+        <span className="btn mt-7 w-full max-w-md cursor-not-allowed bg-paper py-4 text-2xl opacity-60">
+          Bientôt · aucun {p.name} pour l&apos;instant
+        </span>
+      )}
 
       <Odds boost={p.boost} />
     </div>

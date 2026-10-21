@@ -2,36 +2,50 @@
    (devnet) : ils seront lus sur la chaîne et chez Jupiter au branchement. */
 
 /* Le système de cm cards : une carte = un personnage, une catégorie, une rareté.
-   La catégorie donne le fond, la rareté donne la bordure et l'effet. */
+   La catégorie donne le fond (et le booster), la rareté donne la bordure et l'effet. */
 
-export type RarityId = "common" | "shiny" | "millionaire" | "legendary" | "og" | "mythic";
+export type RarityId = "common" | "rare" | "shiny" | "og" | "mythic";
 
 export type Rarity = {
   id: RarityId;
   name: string;
-  odds: number;          // probabilité dans le booster Classique, en %
+  odds: number;          // probabilité dans un booster, en %
   usd: [number, number]; // fourchette de la valeur en coins à l'intérieur
   supply: number;        // exemplaires numérotés par personnage
 };
 
 export const RARITIES: Rarity[] = [
-  { id: "common", name: "Common", odds: 70, usd: [0.5, 3], supply: 5000 },
-  { id: "shiny", name: "Shiny", odds: 20, usd: [3, 15], supply: 1000 },
-  { id: "millionaire", name: "Millionaire", odds: 7, usd: [15, 80], supply: 250 },
-  { id: "legendary", name: "Legendary", odds: 2.5, usd: [80, 400], supply: 50 },
-  { id: "og", name: "OG", odds: 0.45, usd: [400, 1500], supply: 10 },
-  { id: "mythic", name: "Mythic", odds: 0.05, usd: [1500, 5000], supply: 1 },
+  { id: "common", name: "Commun", odds: 65, usd: [0.5, 3], supply: 5000 },
+  { id: "rare", name: "Rare", odds: 24, usd: [3, 12], supply: 2000 },
+  { id: "shiny", name: "Shiny", odds: 9, usd: [12, 60], supply: 500 },
+  { id: "og", name: "OG", odds: 1.8, usd: [60, 600], supply: 50 },
+  { id: "mythic", name: "Mythic", odds: 0.2, usd: [600, 5000], supply: 1 },
 ];
 export const rarity = (id: RarityId) => RARITIES.find((r) => r.id === id)!;
 
-export type CategoryId = "top10" | "trader" | "dev" | "sniper" | "bundler";
-export type Category = { id: CategoryId; name: string; bg: string };
+/* Les catégories, de la plus courante à la plus recherchée : les Legend en dernier. */
+export type CategoryId = "trader" | "trencher" | "dev" | "sniper" | "bundler" | "famous" | "legend";
+export type Category = {
+  id: CategoryId; name: string; tagline: string;
+  bg: string;    // le fond des cartes, le papier du booster
+  ink: string;   // le motif du booster
+  glyph: string; // dessiné sur une grille de 24
+};
 export const CATEGORIES: Category[] = [
-  { id: "top10", name: "Top 10", bg: "#ff9a1f" },
-  { id: "trader", name: "Trader", bg: "#4da8ff" },
-  { id: "dev", name: "Dev", bg: "#3dcb6c" },
-  { id: "sniper", name: "Sniper", bg: "#ff4b3e" },
-  { id: "bundler", name: "Bundler", bg: "#a77bff" },
+  { id: "trader", name: "Trader", tagline: "La base", bg: "#4da8ff", ink: "#7cc0ff",
+    glyph: "M5 3h2v4h2v8H7v6H5v-6H3V7h2zm10 4h2v3h2v7h-2v4h-2v-4h-2v-7h2z" },
+  { id: "trencher", name: "Trencher", tagline: "Le trader, en plus stylé", bg: "#ff9a1f", ink: "#ffbb63",
+    glyph: "M15.5 2 22 8.5l-1.4 1.4-1.6-1.6-4.3 4.3 1.1 1.1-3 3a3 3 0 0 1-4.2 0l-.3-.3-4.9 4.9L2 19.9 6.9 15l-.3-.3a3 3 0 0 1 0-4.2l3-3 1.1 1.1 4.3-4.3-1.6-1.6z" },
+  { id: "dev", name: "Dev", tagline: "Les bons", bg: "#3dcb6c", ink: "#6fdd92",
+    glyph: "M8.6 6.4 3 12l5.6 5.6 1.4-1.4L5.8 12 10 7.8zm6.8 0L14 7.8l4.2 4.2-4.2 4.2 1.4 1.4L21 12z" },
+  { id: "sniper", name: "Sniper", tagline: "Ceux qui rentrent au début", bg: "#ff4b3e", ink: "#ff7b70",
+    glyph: "M11 2h2v3.1A7 7 0 0 1 18.9 11H22v2h-3.1A7 7 0 0 1 13 18.9V22h-2v-3.1A7 7 0 0 1 5.1 13H2v-2h3.1A7 7 0 0 1 11 5.1zm1 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" },
+  { id: "bundler", name: "Bundler", tagline: "Toxique", bg: "#a77bff", ink: "#c3a4ff",
+    glyph: "M12 2a8 8 0 0 0-8 8c0 2.8 1.4 4.6 3 5.6V19a1 1 0 0 0 1 1h1v2h2v-2h2v2h2v-2h1a1 1 0 0 0 1-1v-3.4c1.6-1 3-2.8 3-5.6a8 8 0 0 0-8-8zM8.5 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 13.5l1.3 2.5h-2.6z" },
+  { id: "famous", name: "Famous", tagline: "Tout le monde les connaît", bg: "#ff5fb4", ink: "#ff8fcb",
+    glyph: "M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 16.8 6.1 20l1.3-6.5L2.5 8.9l6.6-.8z" },
+  { id: "legend", name: "Legend", tagline: "Les plus recherchés", bg: "#ffc21a", ink: "#ffdc6b",
+    glyph: "M2 7l5 4 5-7 5 7 5-4-2 12H4zm2.4 13h15.2v2H4.4z" },
 ];
 export const category = (id: CategoryId) => CATEGORIES.find((c) => c.id === id)!;
 
@@ -53,9 +67,9 @@ export type Trader = {
 };
 export const TRADERS: Trader[] = [
   { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
-  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
+  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
     mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
-  { id: "cented", name: "Cented", handle: "@Cented7" },
+  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous" },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 
@@ -70,28 +84,36 @@ export type Card = {
 
 export const usdOf = (c: Card) => c.amount * COINS[c.coin].price;
 
-/* Les boosters : chacun change QUI on peut tirer (la catégorie), COMBIEN de
-   cartes, et CE QUI EST GARANTI. */
+/* Les boosters : un par catégorie. Il ne contient que ses personnages ; plus la
+   catégorie est recherchée, plus il coûte, plus il a de cartes et de garanties. */
 export type Pack = {
-  id: string;
+  id: CategoryId;
   name: string;
   price: number;         // en SOL
   cards: number;
-  pool?: CategoryId;     // seulement cette catégorie
+  pool: CategoryId;      // seulement cette catégorie
   guarantee?: RarityId;  // la dernière carte est au moins de cette rareté
   boost?: number;        // multiplie les chances d'OG et de Mythic
   color: string;         // la couleur du papier du booster
   ink: string;           // la couleur de son motif
-  motif: "dots" | "stripes" | "bills" | "rays";
-  face: string;          // le personnage en vitrine
+  motif: "dots" | "stripes" | "rays";
 };
 
-export const PACKS: Pack[] = [
-  { id: "classique", name: "Classique", price: 0.1, cards: 3, color: "#ff4b3e", ink: "#ff7b70", motif: "dots", face: "mitch" },
-  { id: "top10", name: "Top 10", price: 0.25, cards: 3, pool: "top10", guarantee: "shiny", color: "#ff9a1f", ink: "#ffbb63", motif: "stripes", face: "cupsey" },
-  { id: "millionaire", name: "Millionaire", price: 0.5, cards: 5, guarantee: "millionaire", color: "#2f8f5b", ink: "#4fb07b", motif: "bills", face: "mitch" },
-  { id: "og", name: "OG", price: 1, cards: 5, guarantee: "legendary", boost: 5, color: "#1e1a16", ink: "#3a332c", motif: "rays", face: "cupsey" },
-];
+const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif">> = {
+  trader: { price: 0.1, cards: 3, motif: "dots" },
+  trencher: { price: 0.15, cards: 3, motif: "stripes" },
+  dev: { price: 0.15, cards: 3, motif: "dots" },
+  sniper: { price: 0.2, cards: 3, motif: "rays" },
+  bundler: { price: 0.2, cards: 3, motif: "stripes" },
+  famous: { price: 0.35, cards: 4, guarantee: "rare", motif: "rays" },
+  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, motif: "rays" },
+};
+
+export const PACKS: Pack[] = CATEGORIES.map((c) => ({
+  id: c.id, name: c.name, pool: c.id, color: c.bg, ink: c.ink, ...PACK_RULES[c.id],
+}));
+/* Les personnages d'un booster ; vide tant que sa catégorie n'en a aucun. */
+export const packTraders = (p: Pack) => TRADERS.filter((t) => t.category === p.pool);
 export const pack = (id: string) => PACKS.find((p) => p.id === id);
 export const rank = (id: RarityId) => RARITIES.findIndex((r) => r.id === id);
 
@@ -111,7 +133,8 @@ export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"):
 export function drawCard(seed: number, p?: Pack, floor: RarityId = "common"): Card {
   const rnd = mulberry(seed);
   const r = drawRarity(rnd(), p?.boost ?? 1, floor);
-  const who = p?.pool ? TRADERS.filter((t) => t.category === p.pool) : TRADERS;
+  const pool = p ? packTraders(p) : [];
+  const who = pool.length ? pool : TRADERS;
   const t = who[Math.floor(rnd() * who.length)];
   const coins = Object.keys(COINS);
   const coin = coins[Math.floor(rnd() * coins.length)];

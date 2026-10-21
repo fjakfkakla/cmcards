@@ -10,9 +10,8 @@ import { COINS, type Card, type Pack, type RarityId, fmtAmount, fmtUsd, openPack
 /* La couleur de la lumière d'une rareté : celle qui sort du booster, celle du nom. */
 const GLOW: Record<RarityId, string> = {
   common: "#efe5d0",
+  rare: "#dfe6ee",
   shiny: "#bfe6ff",
-  millionaire: "#7fdc9b",
-  legendary: "#ffcf3a",
   og: "#ffffff",
   mythic: "#ff5fb4",
 };
@@ -180,7 +179,7 @@ function RevealFx({ rarity: r }: { rarity: RarityId }) {
           className={`op-bit ${cls}`}
           style={{
             "--dx": `${Math.cos(a) * d}px`,
-            "--dy": `${Math.sin(a) * d + (cls === "bill" ? 120 : 0)}px`,
+            "--dy": `${Math.sin(a) * d}px`,
             "--r": `${(k * 67) % 360}deg`,
             background: colors ? colors[k % colors.length] : undefined,
             animationDelay: `${(k % 4) * 40}ms`,
@@ -190,12 +189,10 @@ function RevealFx({ rarity: r }: { rarity: RarityId }) {
     });
 
   switch (r) {
+    case "rare":
+      return <div className="op-fx">{bits(8, "star", 220)}</div>;
     case "shiny":
-      return <div className="op-fx">{bits(14, "star", 260)}</div>;
-    case "millionaire":
-      return <div className="op-fx"><div className="op-flash" />{bits(18, "bill", 340)}</div>;
-    case "legendary":
-      return <div className="op-fx"><div className="op-rays" /><div className="op-flash" />{bits(22, "gold", 320)}</div>;
+      return <div className="op-fx"><div className="op-flash" />{bits(18, "star", 280)}</div>;
     case "og":
       return <div className="op-fx"><div className="op-flash" style={{ background: "#000" }} /></div>;
     case "mythic":
