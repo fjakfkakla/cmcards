@@ -222,6 +222,12 @@ export const TRADERS: Trader[] = [
   { id: "pain", name: "Pain", handle: "", category: "holder", art: "/art/pain.webp", artPos: "50% 38%", tint: "gold",
     mythic: { banner: "/art/pain.webp", avatar: "/art/pain.webp",
       panels: { top: { src: "/art/pain.webp", pos: "50% 20%" }, left: { src: "/art/pain.webp", pos: "12% 70%" }, right: { src: "/art/pain.webp", pos: "88% 25%" } } } },
+  // Théo : une seule image, la sienne partout : la silhouette par défaut, noire sur
+  // fond gris. En noir et blanc : sa Shiny est en bleu électrique. Pas de thème pour
+  // sa Mythic. Un Trencher.
+  { id: "theo", name: "théo", handle: "", category: "trencher", art: "/art/theo.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/theo.webp", avatar: "/art/theo.webp",
+      panels: { top: { src: "/art/theo.webp", pos: "50% 30%" }, left: { src: "/art/theo.webp", pos: "20% 60%" }, right: { src: "/art/theo.webp", pos: "80% 60%" } } } },
   // blu6k : une seule image, la sienne partout : la grenouille peinte en mafieux,
   // le borsalino et le costume bleus, le cigare au bec, la pochette rouge. Une peau
   // verte : sa Shiny est en bleu électrique. Pas de thème pour sa Mythic. Un Trencher.
