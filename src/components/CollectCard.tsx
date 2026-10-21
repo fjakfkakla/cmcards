@@ -54,9 +54,21 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   }
 
   const fallback = portraitUri(t.name, cat?.bg);
+  /* L'image de la carte : la principale, ou celle que la rareté a en propre. */
+  const shot = r.id !== "mythic" ? t.shots?.[r.id] : undefined;
   const art = (
-    <Pic className="cc-art" srcs={portraitSources(t)} fallback={fallback} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
+    <Pic className="cc-art" srcs={portraitSources(t, shot?.src)} fallback={fallback} alt={t.name} style={{ objectPosition: shot?.pos ?? t.artPos }} draggable={false} />
   );
+  /* Une case de la planche Mythic : la bannière cadrée, ou l'image que la case a en propre. */
+  const panel = (side: "top" | "left" | "right", pos: string) => {
+    const p = mythic?.panels?.[side];
+    const at = p?.pos ?? pos;
+    return (
+      <div className={`cc-panel ${side}`}>
+        <Pic srcs={portraitSources(t, p?.src ?? mythic!.banner)} fallback={fallback} alt="" style={{ objectPosition: at, transformOrigin: at }} draggable={false} />
+      </div>
+    );
+  };
 
   /* Chaque rareté a sa mise en scène : le décor, la place du personnage, l'effet.
      Un personnage qui a son set signature a les siennes, une par rareté. */
@@ -87,9 +99,9 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
       scene = mythic ? (
         <>
           <div className="cc-rays" />
-          <div className="cc-panel top"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "50% 48%" }} draggable={false} /></div>
-          <div className="cc-panel left"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "8% 40%" }} draggable={false} /></div>
-          <div className="cc-panel right"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "92% 38%" }} draggable={false} /></div>
+          {panel("top", "54% 50%")}
+          {panel("left", "8% 40%")}
+          {panel("right", "92% 38%")}
           <div className="cc-sticker"><Pic srcs={portraitSources(t, mythic.avatar)} fallback={fallback} alt={t.name} draggable={false} /></div>
           {SPARKS.map(([x, y, d], i) => (
             <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
@@ -98,6 +110,13 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             BUBBLES.map(([x, s, d], i) => (
               <span key={i} className="cc-bubble" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${d}s`, animationDelay: `${i * 1.2}s` }} />
             ))}
+          {theme === "mist" && (
+            <>
+              <div className="cc-fog a" />
+              <div className="cc-fog b" />
+              <div className="cc-eyes" />
+            </>
+          )}
           {theme === "volt" && (
             <>
               <div className="cc-static" />
@@ -138,7 +157,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   return (
     <div
       ref={ref}
-      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${t.mono ? "mono" : ""} ${live ? "is-live" : ""} ${className}`}
+      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${t.tint ? `tint-${t.tint}` : ""} ${live ? "is-live" : ""} ${className}`}
       style={{ "--cat": cat?.bg ?? "#8a8079" } as React.CSSProperties}
       onPointerMove={move}
       onPointerLeave={leave}

@@ -68,13 +68,24 @@ export type AuraArt = {
   bg: string; cut: string; glow: string; // Mythic : le décor, lui, sa silhouette floutée
 };
 
+/* Une image et son cadrage (object-position). */
+export type Shot = { src: string; pos?: string };
+/* La planche d'une Mythic : la bannière dans les trois cases, l'avatar en sticker au
+   centre. Avec plusieurs images, chaque case peut avoir la sienne. */
+export type Mythic = {
+  banner: string; avatar: string;
+  panels?: { top?: Shot; left?: Shot; right?: Shot };
+};
+
 export type Trader = {
   id: string; name: string; handle: string;
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
-  theme?: "sponge" | "volt"; // le thème de sa Mythic (1 sur 1) : les bulles, la foudre
-  mono?: boolean;        // ses images sont en noir et blanc : sa Shiny les colore au lieu de les décaler
-  mythic?: { banner: string; avatar: string }; // les images de sa Mythic
+  theme?: "sponge" | "volt" | "mist"; // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume
+  tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
+                          // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
+  shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
+  mythic?: Mythic;       // les images de sa Mythic
   aura?: AuraArt;        // son set signature : une carte différente par rareté
 };
 /* Les illustrations : la bannière X publique du trader, servie par X (rien dans
@@ -93,8 +104,14 @@ export const TRADERS: Trader[] = [
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.
-  { id: "decu", name: "DECU", handle: "", category: "famous", art: "/art/decu-face.webp", artPos: "50% 42%", theme: "volt", mono: true,
+  { id: "decu", name: "DECU", handle: "", category: "famous", art: "/art/decu-face.webp", artPos: "50% 42%", theme: "volt", tint: "blue",
     mythic: { banner: "/art/decu.webp", avatar: "/art/decu-face.webp" } },
+  // Ansem : sa pdp en principale ; le taureau dans la brume sur son OG et dans sa
+  // planche Mythic, avec la bannière (les singes de Banksy) et sa pdp au centre.
+  { id: "ansem", name: "Ansem", handle: "", category: "legend", art: "/art/ansem-face.webp", artPos: "58% 30%", theme: "mist", tint: "gold",
+    shots: { og: { src: "/art/ansem-bull.webp", pos: "50% 40%" } },
+    mythic: { banner: "/art/ansem.webp", avatar: "/art/ansem-face.webp",
+      panels: { top: { src: "/art/ansem-bull.webp", pos: "50% 18%" }, left: { src: "/art/ansem.webp", pos: "22% 50%" }, right: { src: "/art/ansem-bull.webp", pos: "50% 92%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
