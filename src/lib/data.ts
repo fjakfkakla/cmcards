@@ -299,6 +299,17 @@ export const TRADERS: Trader[] = [
   { id: "iceman77x", name: "iceman77x", handle: "", category: "trencher", art: "/art/iceman77x.webp", artPos: "50% 35%", tint: "gold",
     mythic: { banner: "/art/iceman77x.webp", avatar: "/art/iceman77x.webp",
       panels: { top: { src: "/art/iceman77x.webp", pos: "50% 20%" }, left: { src: "/art/iceman77x.webp", pos: "10% 40%" }, right: { src: "/art/iceman77x.webp", pos: "90% 60%" } } } },
+  // gasp : sa pdp (le garçon aux yeux blancs, l'anneau de lumière bleue sur le front,
+  // les doigts croisés devant le visage) en principale ; un dessin en bleu et violet :
+  // sa Shiny est en bleu électrique. Sa bannière (gasp en lettres mauves, les
+  // personnages de manga dans les nuages) sur son OG (celui qui pointe le doigt) et
+  // dans la planche de sa Mythic : le nom en haut, la bête aux yeux rouges et le bras
+  // levé à gauche, celui qui pointe le doigt à droite, la pdp en sticker. Pas de
+  // thème. Un Trencher.
+  { id: "gasp", name: "gasp", handle: "", category: "trencher", art: "/art/gasp-face.webp", artPos: "50% 45%", tint: "blue",
+    shots: { og: { src: "/art/gasp.webp", pos: "83% 40%" } },
+    mythic: { banner: "/art/gasp.webp", avatar: "/art/gasp-face.webp",
+      panels: { top: { src: "/art/gasp.webp", pos: "50% 45%" }, left: { src: "/art/gasp.webp", pos: "20% 35%" }, right: { src: "/art/gasp.webp", pos: "82% 40%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
