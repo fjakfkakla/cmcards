@@ -234,6 +234,15 @@ export const TRADERS: Trader[] = [
   { id: "blu6k", name: "blu6k", handle: "", category: "trencher", art: "/art/blu6k.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/blu6k.webp", avatar: "/art/blu6k.webp",
       panels: { top: { src: "/art/blu6k.webp", pos: "50% 25%" }, left: { src: "/art/blu6k.webp", pos: "15% 55%" }, right: { src: "/art/blu6k.webp", pos: "80% 85%" } } } },
+  // Ethan pr6spr : sa pdp (Zenitsu, les cheveux blonds dans la lumière) en principale ;
+  // un éclair jaune : sa Shiny est en or. Sa seconde image, détourée de sa miniature
+  // YouTube (lui seul, les boucles brunes et le maillot solana spaces), sur son OG et
+  // dans la planche de sa Mythic : son visage en haut, le maillot à gauche, la chaîne
+  // à droite. Pas de thème. Un Trencher.
+  { id: "ethan", name: "Ethan pr6spr", handle: "", category: "trencher", art: "/art/ethan-face.webp", artPos: "50% 40%", tint: "gold",
+    shots: { og: { src: "/art/ethan.webp", pos: "50% 35%" } },
+    mythic: { banner: "/art/ethan.webp", avatar: "/art/ethan-face.webp",
+      panels: { top: { src: "/art/ethan.webp", pos: "50% 30%" }, left: { src: "/art/ethan.webp", pos: "0% 85%" }, right: { src: "/art/ethan.webp", pos: "80% 75%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
