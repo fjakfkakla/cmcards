@@ -115,6 +115,11 @@ export const TRADERS: Trader[] = [
   { id: "rice", name: "Rice", handle: "", category: "famous", art: "/art/rice.webp", artPos: "50% 55%",
     mythic: { banner: "/art/rice.webp", avatar: "/art/rice.webp",
       panels: { top: { src: "/art/rice.webp", pos: "50% 18%" }, left: { src: "/art/rice.webp", pos: "8% 60%" }, right: { src: "/art/rice.webp", pos: "92% 60%" } } } },
+  // Sling : une seule image, la sienne partout : le dessin aux lunettes de ski et
+  // aux rayons sur fond jaune. Pas de thème pour sa Mythic : la planche de base.
+  { id: "sling", name: "Sling", handle: "", category: "famous", art: "/art/sling.webp", artPos: "50% 40%",
+    mythic: { banner: "/art/sling.webp", avatar: "/art/sling.webp",
+      panels: { top: { src: "/art/sling.webp", pos: "50% 20%" }, left: { src: "/art/sling.webp", pos: "10% 60%" }, right: { src: "/art/sling.webp", pos: "90% 60%" } } } },
   // Frank : son dessin en principale ; sa Mythic montre sa photo, le dessin en sticker. Thème bling.
   { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
     mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
