@@ -84,12 +84,12 @@ const BANNER = {
 };
 export const TRADERS: Trader[] = [
   // ses images sont versionnées (public/art/) : elles s'affichent aussi sur Vercel
-  { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/art/mitch.webp", artPos: "50% 42%",
+  { id: "mitch", name: "Mitch", handle: "", category: "trader", art: "/art/mitch.webp", artPos: "50% 42%",
     mythic: { banner: "/art/mitch.webp", avatar: "/art/mitch-face.webp" } },
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
     mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
   { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: BANNER.cented, artPos: "65% 45%" },
-  // le handle X reste vide tant qu'on n'a pas le bon : le secours est le portrait dessiné
+  // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
       print: "/traders/kimchi-desert.webp",

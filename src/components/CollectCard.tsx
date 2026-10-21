@@ -4,8 +4,17 @@ import { useRef } from "react";
 import "./card.css";
 import { auraScene } from "./AuraScene";
 import Pic from "./Pic";
-import { type Card, category, rarity, trader } from "@/lib/data";
+import { type Card, type RarityId, category, rarity, trader } from "@/lib/data";
 import { portraitSources, portraitUri } from "@/lib/portrait";
+
+/* Le symbole de chaque rareté, à côté de son nom (grille de 24). */
+const MARK: Record<RarityId, string> = {
+  common: "M12 5a7 7 0 1 1 0 14 7 7 0 0 1 0-14z",
+  rare: "M12 3l8 9-8 9-8-9z",
+  shiny: "M12 2l2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6z",
+  og: "M12 2l8.7 5v10L12 22l-8.7-5V7z",
+  mythic: "M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 16.8 6.1 20l1.3-6.5L2.5 8.9l6.6-.8z",
+};
 
 const SPARKS = [[18, 22, 0], [74, 16, 0.9], [62, 48, 1.7], [26, 58, 0.4], [82, 64, 2.1]];
 const BUBBLES = [[10, 3.4, 7], [30, 2.4, 9], [58, 4.2, 6.5], [76, 2.8, 8.5], [90, 3.6, 10], [44, 3, 11]];
@@ -55,9 +64,8 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     case "rare":
       scene = (
         <>
-          {art}
-          <div className="cc-foil" />
-          <div className="cc-holo" />
+          <div className="cc-halftone" />
+          <div className="cc-window">{art}<div className="cc-foil" /><div className="cc-holo" /></div>
         </>
       );
       break;
@@ -68,6 +76,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
           <div className="cc-scan" />
           <div className="cc-grain" />
           <div className="cc-vignette" />
+          <span className="cc-stamp">OG</span>
         </>
       );
       break;
@@ -88,13 +97,20 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             ))}
         </>
       ) : (
-        <>{art}<div className="cc-holo" /></>
+        <>
+          <div className="cc-rays" />
+          <div className="cc-medal">{art}<div className="cc-holo" /></div>
+          {SPARKS.map(([x, y, d], i) => (
+            <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
+          ))}
+        </>
       );
       break;
     case "shiny":
       scene = (
         <>
           {art}
+          <div className="cc-rainbow" />
           <div className="cc-sheen" />
           {SPARKS.map(([x, y, d], i) => (
             <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
@@ -125,7 +141,10 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
           )}
           <div className="cc-plate">
             <span className="cc-name">{t.name}</span>
-            <span className="cc-serial"><b>{r.name}</b>{serial}</span>
+            <span className="cc-serial">
+              <b><svg className="cc-mark" viewBox="0 0 24 24" aria-hidden="true"><path d={MARK[r.id]} /></svg>{r.name}</b>
+              {serial}
+            </span>
           </div>
         </div>
         {over}
