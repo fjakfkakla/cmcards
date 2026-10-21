@@ -83,6 +83,11 @@ export type Card = {
 };
 
 export const usdOf = (c: Card) => c.amount * COINS[c.coin].price;
+/* Le numéro imprimé : 0042/2000, ou 1/1 pour une Mythic. */
+export function serialOf(c: Card) {
+  const { supply } = rarity(c.rarity);
+  return supply === 1 ? "1/1" : `${String(c.serial).padStart(String(supply).length, "0")}/${supply}`;
+}
 
 /* Les boosters : un par catégorie. Il ne contient que ses personnages ; plus la
    catégorie est recherchée, plus il coûte, plus il a de cartes et de garanties. */

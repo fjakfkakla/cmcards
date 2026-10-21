@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import "./card.css";
 import Pic from "./Pic";
-import { type Card, category, rarity, trader } from "@/lib/data";
+import { type Card, category, rarity, serialOf, trader } from "@/lib/data";
 import { portraitSources, portraitUri } from "@/lib/portrait";
 
 const SPARKS = [[18, 22, 0], [74, 16, 0.9], [62, 48, 1.7], [26, 58, 0.4], [82, 64, 2.1]];
@@ -16,7 +16,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   const r = rarity(card.rarity);
   const theme = r.id === "mythic" ? t.theme ?? "" : "";
   const mythic = r.id === "mythic" ? t.mythic : undefined;
-  const serial = r.supply === 1 ? "1/1" : `${String(card.serial).padStart(String(r.supply).length, "0")}/${r.supply}`;
+  const serial = serialOf(card);
 
   function move(e: React.PointerEvent) {
     const el = ref.current;

@@ -11,7 +11,7 @@ export function generateStaticParams() {
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
-      <Nav />
+      <Nav at="boosters" />
       <main className="flex flex-1 flex-col">
         <Suspense>
           <Booster params={params} />

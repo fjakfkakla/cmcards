@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import "./opening.css";
 import BoosterPack from "./BoosterPack";
 import CollectCard from "./CollectCard";
+import { keep } from "@/lib/collection";
 import { COINS, type Card, type Pack, type RarityId, fmtAmount, fmtUsd, openPack, rarity, usdOf } from "@/lib/data";
 
 /* La couleur de la lumière d'une rareté : celle qui sort du booster, celle du nom. */
@@ -36,7 +37,9 @@ export default function Opening({ pack }: { pack: Pack }) {
 
   function tear() {
     if (phase !== "sealed") return;
-    setSeed(Math.floor(Math.random() * 1e9));
+    const s = Math.floor(Math.random() * 1e9);
+    setSeed(s);
+    keep(openPack(pack, s), pack.id); // dans la collection dès l'ouverture
     setSlit(1);
     setShaking(true);
     setTimeout(() => { setShaking(false); setPhase("torn"); }, 1050);
@@ -150,6 +153,7 @@ export default function Opening({ pack }: { pack: Pack }) {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <button className="btn bg-tomato text-cream" onClick={again}>Rouvrir un {pack.name}</button>
+            <Link className="btn bg-sponge" href="/collection">Voir ma collection</Link>
             <Link className="btn bg-paper" href="/">Autres boosters</Link>
           </div>
         </div>
