@@ -122,3 +122,177 @@
 @media (prefers-reduced-motion: reduce) {
   .bp.floating, .bp.is-shaking { animation: none; }
 }
+
+/* ================= Le sachet des Legend : le multivers =================
+   Pas le papier de la catégorie, pas de marque, pas de personnage : le ciel
+   profond, les nébuleuses, deux profondeurs d'étoiles qui dérivent, le portail
+   (les anneaux multicolores des Mythic, qui tournent) autour de la couronne, le
+   film holographique. Tout est centré et droit : rien ne penche. */
+.bp.multiverse { --c: #0d0a1f; --m: #ffd12e; --gold: #ffd12e; }
+.bp-bag.mv-bag { background: #0d0a1f; }
+/* les bandes serties, en or qui brille (le même or que la pastille Legend des cartes) */
+.bp-bag.mv-bag::before, .bp-bag.mv-bag::after {
+  filter: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.26) 0 .6cqw, rgba(255,255,255,.16) .6cqw 1.6cqw),
+    linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
+  animation: mv-gold 3s linear infinite;
+  box-shadow: 0 0 0 .5cqw #1e1a16 inset;
+}
+@keyframes mv-gold { to { background-position: 0 0, -250% 0; } }
+
+/* le ciel : du violet profond au bord du vide, avec une lueur au centre */
+.mv-space {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 38%, rgba(167,123,255,.45), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgba(255,75,62,.35), transparent 65%),
+    linear-gradient(180deg, #120d33 0%, #0d0a1f 55%, #170a2a 100%);
+}
+/* les nébuleuses : deux taches floues de couleurs qui se croisent lentement */
+.mv-nebula { position: absolute; inset: 0; overflow: hidden; mix-blend-mode: screen; }
+.mv-nebula::before, .mv-nebula::after {
+  content: ""; position: absolute; width: 90%; aspect-ratio: 1; border-radius: 50%;
+  filter: blur(8cqw); opacity: .55;
+}
+.mv-nebula::before {
+  left: -30%; top: 5%;
+  background: radial-gradient(circle, #ff5fb4 0%, rgba(255,95,180,0) 65%);
+  animation: mv-drift-a 14s ease-in-out infinite alternate;
+}
+.mv-nebula::after {
+  right: -30%; top: 40%;
+  background: radial-gradient(circle, #4da8ff 0%, rgba(77,168,255,0) 65%);
+  animation: mv-drift-b 18s ease-in-out infinite alternate;
+}
+@keyframes mv-drift-a { to { transform: translate(30%, 35%) scale(1.15); } }
+@keyframes mv-drift-b { to { transform: translate(-28%, -30%) scale(1.2); } }
+
+/* les étoiles : deux profondeurs, celles de loin petites et lentes, celles de près
+   plus grosses et plus vives ; chacune dérive à sa vitesse (le parallaxe) */
+.mv-stars { position: absolute; inset: 0; background-repeat: repeat; }
+.mv-stars.far {
+  opacity: .8; background-size: 60cqw 60cqw;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' fill='%23fff'><circle cx='64.8' cy='30.2' r='0.89' opacity='0.54'/><circle cx='107.2' cy='73.1' r='0.53' opacity='0.75'/><circle cx='7.5' cy='86.7' r='0.54' opacity='0.55'/><circle cx='84.9' cy='165.4' r='0.57' opacity='0.61'/><circle cx='125.5' cy='189.5' r='0.85' opacity='0.7'/><circle cx='195.3' cy='9.3' r='1.02' opacity='0.64'/><circle cx='28.9' cy='23.6' r='0.69' opacity='0.91'/><circle cx='36.1' cy='116.3' r='0.88' opacity='0.69'/><circle cx='109.5' cy='12.6' r='0.54' opacity='0.6'/><circle cx='136.1' cy='85.5' r='0.69' opacity='0.79'/><circle cx='90.6' cy='60.0' r='0.98' opacity='0.85'/><circle cx='48.8' cy='114.9' r='0.82' opacity='0.94'/><circle cx='145.9' cy='57.6' r='1.09' opacity='0.56'/><circle cx='83.6' cy='151.4' r='0.59' opacity='0.74'/><circle cx='7.8' cy='133.6' r='0.96' opacity='0.79'/><circle cx='175.1' cy='62.7' r='0.92' opacity='0.8'/><circle cx='116.0' cy='91.2' r='1.0' opacity='0.97'/><circle cx='94.8' cy='132.8' r='0.54' opacity='0.85'/><circle cx='129.4' cy='198.6' r='0.99' opacity='0.64'/><circle cx='77.2' cy='133.7' r='0.51' opacity='0.73'/><circle cx='33.6' cy='23.4' r='0.54' opacity='0.88'/><circle cx='25.9' cy='49.5' r='0.73' opacity='0.94'/><circle cx='16.1' cy='89.8' r='0.83' opacity='0.94'/><circle cx='163.9' cy='172.8' r='0.67' opacity='0.71'/><circle cx='71.8' cy='176.8' r='1.07' opacity='0.58'/><circle cx='35.2' cy='46.4' r='0.64' opacity='0.74'/><circle cx='117.8' cy='52.5' r='0.5' opacity='0.71'/><circle cx='73.9' cy='113.3' r='1.07' opacity='0.85'/><circle cx='103.1' cy='123.5' r='0.91' opacity='0.53'/><circle cx='179.9' cy='156.0' r='1.02' opacity='0.9'/><circle cx='78.5' cy='79.8' r='0.56' opacity='0.82'/><circle cx='12.4' cy='13.5' r='0.63' opacity='0.58'/><circle cx='68.0' cy='10.5' r='0.5' opacity='0.58'/><circle cx='20.3' cy='72.7' r='0.52' opacity='0.94'/></svg>");
+  animation: mv-stars 90s linear infinite;
+}
+.mv-stars.near {
+  background-size: 84cqw 84cqw;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' fill='%23fff'><circle cx='122.8' cy='29.7' r='1.45' opacity='0.67'/><circle cx='72.8' cy='24.6' r='2.05' opacity='1.0'/><circle cx='93.2' cy='96.8' r='1.29' opacity='0.55'/><circle cx='68.5' cy='53.0' r='2.03' opacity='0.58'/><circle cx='4.6' cy='190.2' r='1.73' opacity='0.57'/><circle cx='108.6' cy='5.4' r='1.73' opacity='0.99'/><circle cx='172.7' cy='139.2' r='1.46' opacity='0.68'/><circle cx='33.4' cy='154.4' r='1.73' opacity='0.89'/><circle cx='65.9' cy='44.6' r='2.01' opacity='0.99'/><circle cx='170.5' cy='161.2' r='2.02' opacity='0.87'/><circle cx='45.3' cy='103.5' r='1.56' opacity='0.51'/><circle cx='5.6' cy='55.9' r='1.46' opacity='0.85'/><circle cx='191.3' cy='89.4' r='2.14' opacity='0.99'/><circle cx='191.0' cy='72.9' r='1.42' opacity='0.61'/><circle cx='39.3' cy='40.9' r='1.82' opacity='0.95'/><circle cx='168.1' cy='95.9' r='1.85' opacity='0.9'/></svg>");
+  animation: mv-stars 40s linear infinite;
+  filter: drop-shadow(0 0 .6cqw rgba(255,255,255,.9));
+}
+@keyframes mv-stars { to { background-position: 0 -100cqw; } }
+
+/* le portail : centré, et ses anneaux tournent */
+.mv-portal {
+  position: absolute; z-index: 2; left: 18%; right: 18%; top: 15.5%; aspect-ratio: 1;
+  filter: drop-shadow(2cqw 2cqw 0 #1e1a16);
+}
+.mv-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(#ff4b3e, #ff9a1f, #ffd12e, #3dcb6c, #4da8ff, #a77bff, #ff5fb4, #ff4b3e);
+  -webkit-mask: radial-gradient(circle, transparent 0 calc(50% - 4.6cqw), #000 calc(50% - 4.2cqw));
+  mask: radial-gradient(circle, transparent 0 calc(50% - 4.6cqw), #000 calc(50% - 4.2cqw));
+  animation: mv-rot 9s linear infinite;
+}
+.mv-ring.dashed {
+  inset: 5.6cqw;
+  background: repeating-conic-gradient(var(--gold) 0 8deg, transparent 8deg 20deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 calc(50% - 2cqw), #000 calc(50% - 1.6cqw));
+  mask: radial-gradient(circle, transparent 0 calc(50% - 2cqw), #000 calc(50% - 1.6cqw));
+  animation: mv-rot 14s linear infinite reverse;
+}
+@keyframes mv-rot { to { transform: rotate(360deg); } }
+/* le cœur : les rayons des Mythic, un tourbillon qui s'assombrit vers le bord,
+   la couronne Legend en or au milieu */
+.mv-core {
+  position: absolute; inset: 9.4cqw; border-radius: 50%; overflow: hidden;
+  background: #1e1a16;
+  border: 1.4cqw solid #fff4dc; outline: .8cqw solid #1e1a16;
+  box-shadow: 0 0 7cqw 1.6cqw rgba(255,209,46,.45);
+  animation: mv-breathe 3.2s ease-in-out infinite;
+}
+@keyframes mv-breathe {
+  0%, 100% { box-shadow: 0 0 5cqw 1cqw rgba(255,209,46,.35); }
+  50% { box-shadow: 0 0 9cqw 2.6cqw rgba(255,209,46,.7); }
+}
+.mv-rays {
+  position: absolute; inset: -40%;
+  background: repeating-conic-gradient(from 0deg, #ffd12e 0 9deg, #ff9a1f 9deg 18deg, #ff5fb4 18deg 27deg, #4da8ff 27deg 36deg);
+  animation: mv-rot 18s linear infinite;
+}
+.mv-vortex {
+  position: absolute; inset: 0;
+  background: radial-gradient(circle, rgba(255,255,255,.9) 0 10%, rgba(255,255,255,0) 34%, rgba(13,10,31,.75) 78%);
+}
+.mv-crown {
+  position: absolute; left: 50%; top: 50%; width: 50%; height: 50%;
+  transform: translate(-50%, -50%);
+  fill: var(--gold); stroke: #1e1a16; stroke-width: 1.4; paint-order: stroke;
+  filter: drop-shadow(.8cqw .8cqw 0 #1e1a16) drop-shadow(0 0 2cqw rgba(255,255,255,.8));
+  animation: mv-crown 3.2s ease-in-out infinite;
+}
+@keyframes mv-crown {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.07); }
+}
+
+/* les éclats : des étoiles à huit branches qui clignotent chacune à son tour */
+.mv-spark {
+  position: absolute; z-index: 3; aspect-ratio: 1; pointer-events: none;
+  background: #fff;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  filter: drop-shadow(0 0 .8cqw rgba(255,209,46,.9));
+  animation: mv-twinkle 3s ease-in-out infinite;
+}
+@keyframes mv-twinkle { 0%, 100% { transform: scale(0) rotate(0); opacity: 0; } 45%, 55% { transform: scale(1) rotate(45deg); opacity: 1; } }
+
+/* le film holographique : l'arc-en-ciel des cartes, qui coule, et plus fort au survol */
+.mv-holo {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: color-dodge; opacity: .22;
+  background: linear-gradient(110deg, #ff7ac8 0%, #ffe066 20%, #7dffb0 40%, #69c8ff 60%, #c38bff 80%, #ff7ac8 100%) 0 0 / 300% 300%;
+  -webkit-mask: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+  mask: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 75%);
+  animation: mv-holo 9s linear infinite;
+  transition: opacity .5s;
+}
+.bp:hover .mv-holo { opacity: .45; }
+@keyframes mv-holo { to { background-position: 300% 300%; } }
+
+/* le nom : en or, centré, droit, l'encre autour */
+.mv-name {
+  position: absolute; z-index: 5; left: 4%; right: 4%; top: 61%; text-align: center;
+  font: 400 19cqw/.9 var(--font-chewy); color: var(--gold);
+  -webkit-text-stroke: 2.2cqw #1e1a16; paint-order: stroke fill;
+  letter-spacing: .01em;
+  filter: drop-shadow(1cqw 1cqw 0 #1e1a16) drop-shadow(0 0 2cqw rgba(255,226,122,.3));
+}
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .mv-name {
+    background: linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: mv-gold 3s linear infinite;
+  }
+}
+/* la pastille : l'autocollant or, comme la pastille Legend des cartes */
+.mv-count {
+  position: absolute; z-index: 5; bottom: 10.5%; left: 50%; transform: translateX(-50%);
+  white-space: nowrap;
+  background: var(--gold); color: #3a2400; border: .7cqw solid #1e1a16; border-radius: 99px;
+  padding: 1.6cqw 4cqw; box-shadow: .8cqw .8cqw 0 #1e1a16;
+  font: 900 4.2cqw/1 var(--font-nunito); letter-spacing: .06em; text-transform: uppercase;
+}
+/* la ligne de découpe, en or sur le ciel */
+.bp.multiverse .bp-cut { border-top-color: rgba(255,209,46,.95); }
+.bp.multiverse .bp-cut::before { background: var(--gold); }
+.bp.multiverse .bp-foil {
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 44%, transparent 56%) var(--sx, 140%) 0 / 300% 100% no-repeat,
+    linear-gradient(90deg, rgba(255,255,255,.12), transparent 20%, transparent 80%, rgba(0,0,0,.3));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-bag.mv-bag::before, .bp-bag.mv-bag::after, .mv-nebula::before, .mv-nebula::after, .mv-stars,
+  .mv-ring, .mv-core, .mv-rays, .mv-crown, .mv-spark, .mv-holo, .mv-name { animation: none; }
+}

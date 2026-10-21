@@ -171,16 +171,17 @@ export type Pack = {
   color: string;         // la couleur du papier du booster
   ink: string;           // la couleur de son motif
   motif: "dots" | "stripes" | "rays";
+  skin?: "multiverse"; // le sachet des Legend : le multivers, pas le papier de la catégorie
 };
 
-const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif">> = {
+const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif" | "skin">> = {
   trader: { price: 0.1, cards: 3, motif: "dots" },
   trencher: { price: 0.15, cards: 3, motif: "stripes" },
   dev: { price: 0.15, cards: 3, motif: "dots" },
   sniper: { price: 0.2, cards: 3, motif: "rays" },
   bundler: { price: 0.2, cards: 3, motif: "stripes" },
   famous: { price: 0.35, cards: 4, guarantee: "rare", motif: "rays" },
-  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, motif: "rays" },
+  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, motif: "rays", skin: "multiverse" },
 };
 
 export const PACKS: Pack[] = CATEGORIES.map((c) => ({
