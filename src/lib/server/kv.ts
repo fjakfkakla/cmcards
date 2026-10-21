@@ -39,7 +39,7 @@ export async function multi(cmds: Cmd[]): Promise<unknown[]> {
   if (REDIS_URL) {
     // ioredis range les commandes d'un multi par nom de méthode : en minuscules
     const res = await tcp().multi(cmds.map(([op, ...a]) => [String(op).toLowerCase(), ...a.map(String)])).exec();
-    if (!res) throw new Error("kv: multi annulé");
+    if (!res) throw new Error("kv: multi aborted");
     return res.map(([e, r]) => { if (e) throw e; return r; });
   }
   if (URL_ && TOKEN) {

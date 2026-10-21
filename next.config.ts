@@ -7,6 +7,15 @@ import type { NextConfig } from "next";
 const RAILWAY = "";
 
 const nextConfig: NextConfig = {
+  /* Les anciennes adresses en français, gardées pour les liens déjà partagés. */
+  async redirects() {
+    return [
+      { source: "/marche", destination: "/market", permanent: true },
+      { source: "/profil", destination: "/profile", permanent: true },
+      { source: "/cartes", destination: "/cards", permanent: true },
+      { source: "/cartes/:id", destination: "/cards/:id", permanent: true },
+    ];
+  },
   async rewrites() {
     if (!process.env.VERCEL || !RAILWAY) return [];
     return { beforeFiles: [{ source: "/api/:path*", destination: `${RAILWAY}/api/:path*` }], afterFiles: [], fallback: [] };

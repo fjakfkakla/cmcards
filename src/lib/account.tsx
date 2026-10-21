@@ -32,7 +32,7 @@ type Account = {
 const Ctx = createContext<Account | null>(null);
 export const useAccount = () => {
   const a = useContext(Ctx);
-  if (!a) throw new Error("useAccount hors de <AccountProvider>");
+  if (!a) throw new Error("useAccount outside <AccountProvider>");
   return a;
 };
 
@@ -40,8 +40,8 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
   const r = await fetch(path, body === undefined
     ? { cache: "no-store" }
     : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  const j = await r.json().catch(() => ({ error: "Réponse illisible du serveur." }));
-  if (!r.ok) throw new Error(j.error ?? "Erreur du serveur.");
+  const j = await r.json().catch(() => ({ error: "Unreadable response from the server." }));
+  if (!r.ok) throw new Error(j.error ?? "Server error.");
   return j as T;
 }
 
@@ -91,7 +91,7 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
 
   const sign = useCallback(async () => {
     if (!w.publicKey || !w.signMessage) {
-      setError("Ce wallet ne sait pas signer de message. Essaie Phantom ou Solflare.");
+      setError("This wallet can't sign messages. Try Phantom or Solflare.");
       return;
     }
     const wallet = w.publicKey.toBase58();
@@ -102,7 +102,7 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
       await api("/api/auth/verify", { wallet, message, signature: Buffer.from(sig).toString("base64") });
       await refresh();
     } catch (e) {
-      setError(e instanceof Error && !/reject/i.test(e.message) ? e.message : "Connexion annulée.");
+      setError(e instanceof Error && !/reject/i.test(e.message) ? e.message : "Sign-in cancelled.");
     } finally { setBusy(false); }
   }, [w, refresh]);
 
@@ -132,13 +132,13 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
   }, [w, refresh]);
 
   const pay = useCallback(async (transfers: { to: string; lamports: number }[], memo: string) => {
-    if (!me?.wallet) throw new Error("Connecte ton wallet.");
+    if (!me?.wallet) throw new Error("Connect your wallet.");
     if (!w.publicKey || !w.connected) {
       signIn();
-      throw new Error("Branche ton wallet, puis recommence.");
+      throw new Error("Connect your wallet, then try again.");
     }
     if (w.publicKey.toBase58() !== me.wallet)
-      throw new Error(`Ton wallet branché n'est pas celui de ta session (${me.wallet.slice(0, 4)}…). Reconnecte-toi.`);
+      throw new Error(`The connected wallet isn't the one of your session (${me.wallet.slice(0, 4)}…). Sign in again.`);
     const from = w.publicKey;
     const tx = new Transaction();
     for (const t of transfers)
@@ -155,10 +155,10 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
     try {
       signature = await w.sendTransaction(tx, connection);
     } catch (e) {
-      throw new Error(e instanceof Error && /reject|cancel/i.test(e.message) ? "Paiement annulé." : "Le wallet a refusé la transaction. Vérifie ton solde.");
+      throw new Error(e instanceof Error && /reject|cancel/i.test(e.message) ? "Payment cancelled." : "The wallet rejected the transaction. Check your balance.");
     }
     const r = await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
-    if (r.value.err) throw new Error("La transaction a échoué sur la chaîne.");
+    if (r.value.err) throw new Error("The transaction failed on-chain.");
     return signature;
   }, [me, w, connection, signIn]);
 

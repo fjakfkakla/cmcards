@@ -15,7 +15,7 @@ export function oddsOf(p: Pack) {
   const tot = w.reduce((a, b) => a + b, 0);
   return RARITIES.map((r, k) => ({ r, pct: (w[k] / tot) * 100 }));
 }
-const pct = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: n < 1 ? 2 : 1 })} %`;
+const pct = (n: number) => `${n.toLocaleString("en-US", { maximumFractionDigits: n < 1 ? 2 : 1 })}%`;
 
 /* Choisir son booster : les six pièces des familles ; le booster choisi au centre,
    sur une planche à SA couleur ; à droite ce qu'il contient, ses chances, son prix,
@@ -41,7 +41,7 @@ export default function PackPicker() {
 
   return (
     <div className="pk" style={{ "--c": cat.bg, "--m": cat.ink } as React.CSSProperties}>
-      <div className="pk-coins" role="tablist" aria-label="Les familles">
+      <div className="pk-coins" role="tablist" aria-label="Families">
         {PACKS.map((q) => (
           <button key={q.id} role="tab" aria-selected={q.id === id} onClick={() => setId(q.id)} className="pk-coin">
             <FamilyCoin id={q.id} size={52} />
@@ -59,14 +59,14 @@ export default function PackPicker() {
         <div className="pk-card surface">
           <h3 className="font-display text-[34px] leading-none font-extrabold tracking-[-.035em]">Booster {p.name}</h3>
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="plate"><b className="num">{p.cards}</b> cartes</span>
-            {p.guarantee && <span className="plate"><RarityTag id={p.guarantee} size="sm" /> garantie</span>}
-            {p.boost && <span className="plate">OG et Mythic <b>×{p.boost}</b></span>}
+            <span className="plate"><b className="num">{p.cards}</b> cards</span>
+            {p.guarantee && <span className="plate"><RarityTag id={p.guarantee} size="sm" /> guaranteed</span>}
+            {p.boost && <span className="plate">OG and Mythic <b>×{p.boost}</b></span>}
           </div>
 
           <div className="mt-5 flex -space-x-2.5">
             {people.slice(0, 6).map((t) => (
-              <Link key={t.id} href={`/cartes/${t.id}`} title={t.name} className="pk-face">
+              <Link key={t.id} href={`/cards/${t.id}`} title={t.name} className="pk-face">
                 <Pic srcs={portraitSources(t)} fallback={portraitUri(t.name, cat.bg)} alt={t.name} style={{ objectPosition: t.artPos }} />
               </Link>
             ))}
@@ -86,7 +86,7 @@ export default function PackPicker() {
           </ul>
 
           <Link href={`/booster/${p.id}`} className="btn-gold btn-lg mt-6 w-full">
-            Ouvrir pour {fmtSol(p.price)}
+            Open for {fmtSol(p.price)}
           </Link>
         </div>
       </div>

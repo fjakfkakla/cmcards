@@ -19,7 +19,7 @@ export default function Profile() {
   if (!me) return <div className="h-40 animate-pulse rounded-[22px] bg-raised" />;
   if (!wallet) return (
     <>
-      <h1 className="font-display text-[44px] leading-none font-extrabold tracking-[-.04em] sm:text-[56px]">Profil</h1>
+      <h1 className="font-display text-[44px] leading-none font-extrabold tracking-[-.04em] sm:text-[56px]">Profile</h1>
       <ConnectCard />
     </>
   );
@@ -43,33 +43,33 @@ export default function Profile() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h1 className="num font-display text-[30px] leading-none font-extrabold tracking-[-.03em]">{short(wallet)}</h1>
-              <button className="grid h-9 w-9 place-items-center rounded-full border-2 border-fg bg-white hover:bg-cream" aria-label="Copier l'adresse"
+              <button className="grid h-9 w-9 place-items-center rounded-full border-2 border-fg bg-white hover:bg-cream" aria-label="Copy address"
                 onClick={() => { navigator.clipboard?.writeText(wallet); setCopied(true); setTimeout(() => setCopied(false), 1500); }}>
                 <Icon name={copied ? "check" : "copy"} size={15} />
               </button>
             </div>
             <p className="mt-2 flex flex-wrap items-center gap-2">
-              <span className="plate h-8 px-3 text-[14px]"><b className="num text-[15px]">{balance !== null ? `${toSol(balance).toLocaleString("fr-FR", { maximumFractionDigits: 4 })} SOL` : "Wallet non branché"}</b></span>
+              <span className="plate h-8 px-3 text-[14px]"><b className="num text-[15px]">{balance !== null ? `${toSol(balance).toLocaleString("en-US", { maximumFractionDigits: 4 })} SOL` : "Wallet not connected"}</b></span>
               {cfg.cluster === "devnet" && <span className="plate h-8 px-3 text-[13.5px]">Devnet</span>}
             </p>
           </div>
-          <button className="btn-ghost btn-sm ml-auto" onClick={signOut}><Icon name="logout" size={15} /> Déconnexion</button>
+          <button className="btn-ghost btn-sm ml-auto" onClick={signOut}><Icon name="logout" size={15} /> Sign out</button>
         </div>
       </section>
 
       <div className="mt-5">
         <Stats items={[
-          ["Cartes", String(me.cards.length)],
-          ["En vente", String(me.listings.length)],
-          ["Vendues", String(sold.length)],
-          ["Gagné", fmtSol(toSol(earned))],
+          ["Cards", String(me.cards.length)],
+          ["For sale", String(me.listings.length)],
+          ["Sold", String(sold.length)],
+          ["Earned", fmtSol(toSol(earned))],
         ]} />
       </div>
 
       <section className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">Succès</h2>
-          <Link href="/collection" className="btn-ghost btn-sm">Tous les succès</Link>
+          <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">Achievements</h2>
+          <Link href="/collection" className="btn-ghost btn-sm">All achievements</Link>
         </div>
         {won.length ? (
           <ul className="surface mt-4 flex flex-wrap gap-x-6 gap-y-4 p-5">
@@ -80,13 +80,13 @@ export default function Profile() {
               </li>
             ))}
           </ul>
-        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">Aucun succès</p>}
+        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">No achievements yet</p>}
       </section>
 
       <section className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">Mes annonces</h2>
-          <Link href="/collection" className="btn-ghost btn-sm">Vendre une carte</Link>
+          <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">My listings</h2>
+          <Link href="/collection" className="btn-ghost btn-sm">Sell a card</Link>
         </div>
         {me.listings.length ? (
           <div className="surface mt-4 divide-y-2 divide-fg/10">
@@ -97,18 +97,18 @@ export default function Profile() {
                 <div key={l.id} className="flex items-center gap-3 px-4 py-3 text-[14.5px]">
                   <span className="min-w-0 truncate font-display text-[16px] font-extrabold">{trader(c.trader).name}</span>
                   <RarityTag id={c.rarity} size="sm" />
-                  <span className="num hidden font-semibold text-muted sm:inline">n° {serialOf(c)}</span>
+                  <span className="num hidden font-semibold text-muted sm:inline">#{serialOf(c)}</span>
                   <span className="num ml-auto font-display text-[16px] font-extrabold">{fmtSol(toSol(l.lamports))}</span>
-                  <button className="btn-ghost btn-sm h-9 px-3.5 text-[14px]" onClick={() => unlist(l.uid)} disabled={busy === l.uid}>Retirer</button>
+                  <button className="btn-ghost btn-sm h-9 px-3.5 text-[14px]" onClick={() => unlist(l.uid)} disabled={busy === l.uid}>Delist</button>
                 </div>
               );
             })}
           </div>
-        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">Aucune annonce</p>}
+        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">No listings</p>}
       </section>
 
       <section className="mt-10">
-        <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">Historique</h2>
+        <h2 className="font-display text-[30px] font-extrabold tracking-[-.035em]">History</h2>
         {me.sales.length ? (
           <div className="surface mt-4 divide-y-2 divide-fg/10">
             {me.sales.map((s) => {
@@ -119,7 +119,7 @@ export default function Profile() {
                     <Icon name={out ? "arrow" : "back"} size={15} />
                   </span>
                   <span className="min-w-0 truncate">
-                    <span className="font-display font-extrabold">{out ? "Vendue" : "Achetée"}</span>{" "}
+                    <span className="font-display font-extrabold">{out ? "Sold" : "Bought"}</span>{" "}
                     <span className="font-semibold text-muted">{trader(s.trader).name} {rarity(s.rarity).name}</span>
                   </span>
                   <span className={`num ml-auto font-display font-extrabold ${out ? "text-up" : ""}`}>{out ? "+" : "-"}{fmtSol(toSol(s.lamports))}</span>
@@ -128,7 +128,7 @@ export default function Profile() {
               );
             })}
           </div>
-        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">Aucune vente</p>}
+        ) : <p className="mt-4 font-display text-[19px] font-extrabold text-muted">No sales yet</p>}
       </section>
     </>
   );

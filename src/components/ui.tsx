@@ -110,9 +110,9 @@ export function ConnectCard() {
   return (
     <div className="surface mt-8 flex flex-col items-center px-6 py-14 text-center">
       <Medal glyph="cards" rar="og" size={64} />
-      <h2 className="mt-4 font-display text-[28px] font-extrabold tracking-[-.03em]">Connecte ton wallet</h2>
+      <h2 className="mt-4 font-display text-[28px] font-extrabold tracking-[-.03em]">Connect your wallet</h2>
       <button className="btn-gold mt-6" onClick={signIn} disabled={busy}>
-        <Icon name="wallet" size={18} /> {busy ? "Signature…" : "Connecter"}
+        <Icon name="wallet" size={18} /> {busy ? "Signing…" : "Connect"}
       </button>
       {error && <p className="mt-3 text-[14px] font-semibold text-down">{error}</p>}
     </div>
@@ -143,7 +143,7 @@ export function Modal({ onClose, label, children }: {
   return (
     <div className="col-sheet" role="dialog" aria-modal="true" aria-label={label} onClick={onClose}>
       <div className="col-sheet-box" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="col-x" onClick={onClose} aria-label="Fermer"><Icon name="close" size={18} /></button>
+        <button type="button" className="col-x" onClick={onClose} aria-label="Close"><Icon name="close" size={18} /></button>
         {children}
       </div>
     </div>
@@ -155,6 +155,6 @@ export function Ago({ at }: { at: number }) {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 30_000); return () => clearInterval(t); }, []);
   const s = Math.max(0, (now - at) / 1000);
-  const txt = s < 60 ? "à l'instant" : s < 3600 ? `il y a ${Math.floor(s / 60)} min` : s < 86400 ? `il y a ${Math.floor(s / 3600)} h` : `il y a ${Math.floor(s / 86400)} j`;
+  const txt = s < 60 ? "just now" : s < 3600 ? `${Math.floor(s / 60)} min ago` : s < 86400 ? `${Math.floor(s / 3600)} h ago` : `${Math.floor(s / 86400)} d ago`;
   return <time dateTime={new Date(at).toISOString()}>{txt}</time>;
 }

@@ -40,9 +40,9 @@ export async function readPayment(sig: string): Promise<Payment> {
     const j = r?.ok ? await r.json().catch(() => null) : null;
     tx = j?.result ?? null;
   }
-  if (!tx) throw new Oops(404, "Transaction introuvable sur la chaîne. Réessaie dans un instant.");
-  if (!tx.meta || tx.meta.err) throw new Oops(400, "La transaction a échoué sur la chaîne.");
-  if (!tx.blockTime || Date.now() / 1000 - tx.blockTime > MAX_AGE) throw new Oops(400, "Ce paiement est trop ancien.");
+  if (!tx) throw new Oops(404, "Transaction not found on-chain. Try again in a moment.");
+  if (!tx.meta || tx.meta.err) throw new Oops(400, "The transaction failed on-chain.");
+  if (!tx.blockTime || Date.now() / 1000 - tx.blockTime > MAX_AGE) throw new Oops(400, "This payment is too old.");
 
   const { accountKeys, instructions } = tx.transaction.message;
   const transfers: Payment["transfers"] = [];

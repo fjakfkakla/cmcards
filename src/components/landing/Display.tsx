@@ -5,7 +5,7 @@ import { PACKS, type RarityId } from "@/lib/data";
 
 /* Le présentoir : la boîte de boosters ouverte, comme en magasin. Derrière, un
    éventail de vraies cartes de la saison ; dans la boîte, les six boosters debout ;
-   devant, le rabat imprimé au logo. Chaque booster mène à son choix plus bas. */
+   devant, le rabat imprimé au logo. Chaque booster mène à son choix dans l'app. */
 const FAN: [string, RarityId][] = [["blu6k", "common"], ["pain", "rare"], ["ansem", "og"], ["kimchi", "mythic"], ["cented", "shiny"], ["zero", "rare"], ["yenni", "common"]];
 
 export default function Display() {
@@ -24,12 +24,12 @@ export default function Display() {
 
       <div className="dx-back">
         <div className="dx-back-rays" />
-        <span className="dx-back-word">Saison 1</span>
+        <span className="dx-back-word">Season 1</span>
       </div>
 
       <div className="dx-packs">
         {PACKS.map((p, k) => (
-          <Link key={p.id} href={`#b-${p.id}`} className="dx-pack" style={{ "--k": k } as React.CSSProperties}
+          <Link key={p.id} href={`/boosters#b-${p.id}`} className="dx-pack" style={{ "--k": k } as React.CSSProperties}
             aria-label={`Booster ${p.name}`}>
             <BoosterPack pack={p} />
           </Link>
@@ -50,7 +50,7 @@ export default function Display() {
             <text x="150" y="54" fill="url(#dx-word)">cm cards</text>
           </g>
         </svg>
-        <span className="dx-ribbon">Cartes à collectionner</span>
+        <span className="dx-ribbon">Collectible cards</span>
       </div>
     </div>
   );

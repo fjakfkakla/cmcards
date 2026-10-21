@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Collection from "@/components/Collection";
 import Nav from "@/components/Nav";
 
-export const metadata: Metadata = { title: "Ma collection · cm cards" };
+export const metadata: Metadata = { title: "My collection · cm cards" };
 
 export default function Page() {
   return (

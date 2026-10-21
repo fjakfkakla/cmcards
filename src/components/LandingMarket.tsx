@@ -49,7 +49,7 @@ export default function LandingMarket() {
   return (
     <div className="surface p-4 sm:p-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <Seg value={sort} onChange={setSort} options={[["recent", "Récentes"], ["cheap", "Moins chères"], ["rare", "Plus rares"]]} />
+        <Seg value={sort} onChange={setSort} options={[["recent", "Newest"], ["cheap", "Cheapest"], ["rare", "Rarest"]]} />
         <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pt-1 pb-2 [scrollbar-width:none] lg:mx-0 lg:pb-1">
           {FAMILIES.map((c) => (
             <button key={c.id} onClick={() => setCat(cat === c.id ? null : c.id)} aria-pressed={cat === c.id} title={c.name}
@@ -60,7 +60,7 @@ export default function LandingMarket() {
         </div>
         <label className="relative w-full lg:ml-auto lg:w-72">
           <Icon name="search" size={18} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted" />
-          <input className="field h-12 pl-11" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Chercher un trader" />
+          <input className="field h-12 pl-11" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a trader" />
         </label>
       </div>
 
@@ -70,13 +70,13 @@ export default function LandingMarket() {
             {Array.from({ length: 4 }, (_, k) => <li key={k} className="h-[66px] animate-pulse rounded-2xl bg-cream" />)}
           </ul>
         ) : failed && !offers ? (
-          <p className="py-12 text-center font-display text-[20px] font-extrabold">Le marché ne répond pas</p>
+          <p className="py-12 text-center font-display text-[20px] font-extrabold">The market isn&apos;t responding</p>
         ) : list.length === 0 ? (
           <div className="flex flex-col items-center py-12 text-center">
-            <p className="font-display text-[24px] font-extrabold tracking-[-.02em]">{offers?.length ? "Rien avec ces filtres" : "Aucune carte en vente"}</p>
+            <p className="font-display text-[24px] font-extrabold tracking-[-.02em]">{offers?.length ? "Nothing matches these filters" : "No cards for sale"}</p>
             {offers?.length
-              ? <button className="btn-ghost btn-sm mt-5" onClick={() => { setCat(null); setQ(""); }}>Tout afficher</button>
-              : <Link href="#boosters" className="btn-gold mt-5">Ouvrir un booster</Link>}
+              ? <button className="btn-ghost btn-sm mt-5" onClick={() => { setCat(null); setQ(""); }}>Show all</button>
+              : <Link href="#boosters" className="btn-gold mt-5">Open a booster</Link>}
           </div>
         ) : (
           <ul className="grid gap-2">
@@ -84,19 +84,19 @@ export default function LandingMarket() {
               const t = trader(o.card.trader);
               return (
                 <li key={o.id}>
-                  <Link href="/marche" className="grid grid-cols-[28px_1fr_auto] items-center gap-3 rounded-2xl border-2 border-fg bg-white px-3 py-2.5 shadow-[0_3px_0_#1e1a16] transition-transform hover:-translate-y-0.5 sm:grid-cols-[32px_1fr_110px_120px_auto] sm:px-4">
+                  <Link href="/market" className="grid grid-cols-[28px_1fr_auto] items-center gap-3 rounded-2xl border-2 border-fg bg-white px-3 py-2.5 shadow-[0_3px_0_#1e1a16] transition-transform hover:-translate-y-0.5 sm:grid-cols-[32px_1fr_110px_120px_auto] sm:px-4">
                     <span className="num font-display text-[17px] font-extrabold text-muted">{k + 1}</span>
                     <span className="flex min-w-0 items-center gap-3">
                       <Pic srcs={portraitSources(t)} fallback={portraitUri(t.name, t.category ? category(t.category).bg : undefined)} alt=""
                         className="h-11 w-11 shrink-0 rounded-full border-2 border-fg object-cover" style={{ objectPosition: t.artPos }} />
                       <span className="min-w-0">
                         <span className="block truncate font-display text-[17px] font-extrabold">{t.name}</span>
-                        <span className="num block text-[13px] font-semibold text-muted">n° {serialOf(o.card)}</span>
+                        <span className="num block text-[13px] font-semibold text-muted">#{serialOf(o.card)}</span>
                       </span>
                     </span>
                     <span className="hidden sm:block"><RarityTag id={o.card.rarity} size="sm" /></span>
                     <span className="num text-right font-display text-[17px] font-extrabold">{fmtSol(toSol(o.lamports))}</span>
-                    <span className="hidden sm:block"><span className="btn-gold btn-sm h-9 px-4 text-[14px]">Acheter</span></span>
+                    <span className="hidden sm:block"><span className="btn-gold btn-sm h-9 px-4 text-[14px]">Buy</span></span>
                   </Link>
                 </li>
               );
@@ -105,7 +105,7 @@ export default function LandingMarket() {
         )}
       </div>
       {list.length > ROWS && (
-        <Link href="/marche" className="btn-ghost btn-sm mx-auto mt-5 flex w-fit">Les {list.length} annonces</Link>
+        <Link href="/market" className="btn-ghost btn-sm mx-auto mt-5 flex w-fit">All {list.length} listings</Link>
       )}
     </div>
   );

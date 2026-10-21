@@ -6,6 +6,6 @@ import { needWallet } from "@/lib/server/session";
 /* Un booster payé : le serveur lit le paiement sur la chaîne, puis tire les cartes. */
 export const POST = route(async ({ pack, signature }) => {
   const wallet = await needWallet();
-  if (typeof pack !== "string" || !isSignature(signature)) throw new Oops(400, "Demande invalide.");
+  if (typeof pack !== "string" || !isSignature(signature)) throw new Oops(400, "Invalid request.");
   return { cards: await openPack(wallet, pack, signature) };
 });

@@ -31,7 +31,7 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
   async function act(path: string, body: unknown) {
     setBusy(true); setError(null);
     try { await api(path, body); await refresh(); setPrice(""); }
-    catch (e) { setError(e instanceof Error ? e.message : "Erreur."); }
+    catch (e) { setError(e instanceof Error ? e.message : "Error."); }
     finally { setBusy(false); }
   }
 
@@ -43,11 +43,11 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
       <div className="surface mt-6 p-5">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <div className="font-display text-[17px] font-extrabold text-muted">En vente</div>
+            <div className="font-display text-[17px] font-extrabold text-muted">For sale</div>
             <div className="num mt-1 font-display text-[32px] leading-none font-extrabold tracking-[-.02em]">{fmtSol(toSol(listing.lamports))}</div>
           </div>
           <button className="btn-ghost btn-sm" onClick={() => act("/api/market/unlist", { uid: card.uid })} disabled={busy}>
-            {busy ? "…" : "Retirer"}
+            {busy ? "…" : "Delist"}
           </button>
         </div>
         {error && <p className="mt-3 text-[14.5px] font-bold text-down">{error}</p>}
@@ -57,11 +57,11 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
   return (
     <form className="surface mt-6 p-5" onSubmit={(e) => { e.preventDefault(); if (valid) act("/api/market/list", { uid: card.uid, price: sol }); }}>
       <div className="flex items-center justify-between gap-3">
-        <label htmlFor="price" className="font-display text-[19px] font-extrabold">Ton prix</label>
-        <span className="plate h-8 px-3 text-[13.5px]">Mise en vente gratuite</span>
+        <label htmlFor="price" className="font-display text-[19px] font-extrabold">Your price</label>
+        <span className="plate h-8 px-3 text-[13.5px]">Listing is free</span>
       </div>
       <div className="relative mt-2">
-        <input id="price" className="field num pr-14" inputMode="decimal" autoComplete="off" placeholder="0,5"
+        <input id="price" className="field num pr-14" inputMode="decimal" autoComplete="off" placeholder="0.5"
           value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.,]/g, ""))} />
         <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 font-display text-[15px] font-extrabold text-muted">SOL</span>
       </div>
@@ -69,18 +69,18 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
         <div className="mt-3 flex flex-wrap gap-2">
           {floor.min !== null && (
             <button type="button" className="chip h-9 text-muted hover:text-fg" onClick={() => setPrice(String(toSol(floor.min!)))}>
-              Plancher <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.min))}</span>
+              Floor <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.min))}</span>
             </button>
           )}
           {floor.last !== null && (
             <button type="button" className="chip h-9 text-muted hover:text-fg" onClick={() => setPrice(String(toSol(floor.last!)))}>
-              Dernière vente <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.last))}</span>
+              Last sale <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.last))}</span>
             </button>
           )}
         </div>
       )}
       <button className="btn-gold mt-4 w-full" disabled={!valid || busy}>
-        <Icon name="tag" size={16} /> {busy ? "Mise en vente…" : valid ? `Vendre ${fmtSol(sol)}` : "Mettre en vente"}
+        <Icon name="tag" size={16} /> {busy ? "Listing…" : valid ? `Sell for ${fmtSol(sol)}` : "List for sale"}
       </button>
       {error && <p className="mt-3 text-[14.5px] font-bold text-down">{error}</p>}
     </form>

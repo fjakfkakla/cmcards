@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
-      <Nav at="cartes" />
+      <Nav at="cards" />
       <main className="mx-auto w-full max-w-6xl px-4 pt-10 pb-28 md:pb-16">
         <Suspense>
           <Sheet params={params} />

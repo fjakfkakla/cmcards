@@ -174,3 +174,133 @@
 @media (max-width: 640px) {
   .dx { width: 132%; margin-left: -16%; }
 }
+
+/* ---------- la landing : la rivière de cartes ---------- */
+/* deux rangées de cartes qui défilent sans fin, chacune dans son sens ; la souris
+   dessus arrête tout, et la carte touchée se soulève */
+.rv {
+  display: flex; flex-direction: column; gap: 26px; padding: 24px 0 34px; overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+          mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.rv-row {
+  display: flex; width: max-content; will-change: transform;
+  animation: rv-slide calc(var(--n) * 5.2s) linear infinite;
+}
+.rv-row.rtl { animation-direction: reverse; }
+.rv:hover .rv-row, .rv:focus-within .rv-row { animation-play-state: paused; }
+@keyframes rv-slide { to { transform: translateX(-50%); } }
+.rv-card {
+  display: block; flex: none; width: clamp(150px, 17vw, 210px); margin-right: 18px;
+  border-radius: 14px; transition: transform .35s var(--spring); outline-offset: 6px;
+}
+.rv-card:hover, .rv-card:focus-visible { transform: translateY(-12px) scale(1.05) rotate(-1.5deg); z-index: 2; position: relative; }
+.rv-card .cc { border: 3px solid #1e1a16; }
+@media (prefers-reduced-motion: reduce) { .rv-row { animation: none; } .rv { -webkit-mask: none; mask: none; } }
+
+/* ---------- la landing : les piles des familles ---------- */
+.pls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 18px; }
+@media (min-width: 760px) { .pls { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 24px; } }
+.pl { position: relative; display: flex; flex-direction: column; gap: 14px; }
+.pl.is-open, .pl:hover, .pl:focus-within { z-index: 5; }
+/* la pile : le tapis à la couleur de la famille, les cartes dessus ; la souris l'étale */
+.pl-stack {
+  position: relative; aspect-ratio: 1 / .96; cursor: pointer; border-radius: 26px; outline-offset: 4px;
+  container-type: inline-size;
+}
+.pl-mat {
+  position: absolute; inset: 0; border-radius: 26px;
+  border: 2.5px solid #1e1a16; background: var(--c); box-shadow: 0 5px 0 #1e1a16; overflow: hidden;
+}
+.pl-mat::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(50% 45% at 50% 60%, rgba(255, 255, 255, .55), transparent 70%),
+    repeating-conic-gradient(from 0deg at 50% 60%, rgba(255, 255, 255, .18) 0 7deg, transparent 7deg 14deg);
+}
+.pl-card {
+  position: absolute; left: 50%; top: 50%; width: 46cqw; translate: -50% -50%;
+  --o: calc(var(--k) - (var(--n) - 1) / 2);
+  transform-origin: 50% 170%;
+  transform: rotate(calc(var(--o) * 2.2deg)) translateY(calc(var(--o) * -.6cqw));
+  transition: transform .55s var(--spring);
+  z-index: calc(var(--k) + 1);
+}
+.pl-card .cc { border: .9cqw solid #1e1a16; pointer-events: none; }
+.pl.is-open .pl-card, .pl-stack:hover .pl-card, .pl-stack:focus-visible .pl-card {
+  transform: rotate(calc(var(--o) * 13deg)) translateY(-3cqw);
+}
+@media (hover: none) { .pl-stack:hover .pl-card { transform: rotate(calc(var(--o) * 2.2deg)) translateY(calc(var(--o) * -.6cqw)); } .pl.is-open .pl-card { transform: rotate(calc(var(--o) * 13deg)) translateY(-3cqw); } }
+.pl-foot { display: flex; align-items: center; gap: 12px; }
+@media (max-width: 520px) { .pl-foot .btn-ghost { display: none; } }
+
+/* ---------- la landing : l'ouverture en démonstration ---------- */
+.od { display: flex; flex-direction: column; gap: 18px; }
+/* la planche à la couleur du booster, en pleine largeur : le booster au centre,
+   puis les cinq cartes en rangée, comme dans l'app */
+.od-plank {
+  position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  min-height: 540px; padding: 36px 16px 28px; container-type: inline-size;
+  border: 2.5px solid #1e1a16; border-radius: 30px; box-shadow: 0 5px 0 #1e1a16; background: var(--c);
+}
+.od-rays {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(50% 45% at 50% 50%, rgba(255, 255, 255, .65), transparent 70%),
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(255, 255, 255, .22) 0 7deg, transparent 7deg 14deg);
+  animation: od-turn 60s linear infinite;
+}
+@keyframes od-turn { to { rotate: 360deg; } }
+.od-pack { position: relative; width: min(56vw, 280px); cursor: pointer; border-radius: 12px; outline-offset: 10px; animation: od-in .5s var(--spring) both; }
+@keyframes od-in { from { opacity: 0; transform: translateY(30px) scale(.85); } }
+.od-hint { position: relative; min-height: 38px; padding: 8px 18px; border: 2.5px solid #1e1a16; border-radius: 999px; background: #fff; box-shadow: 0 4px 0 #1e1a16; text-align: center; font: 800 16px/1.3 var(--font-display); color: #1e1a16; }
+/* la fiche sous la planche : le booster, ses plaques, et les deux boutons */
+.od-side { display: grid; gap: 18px; align-items: center; padding: 24px; border-radius: 28px; min-width: 0; }
+@media (min-width: 900px) { .od-side { grid-template-columns: minmax(0, 1fr) auto; padding: 26px 30px; } }
+.od-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 520px) { .od-side { padding: 20px; } .od-actions .btn-gold { flex: 1; } }
+
+/* les cinq cartes, dos d'abord, qui se retournent une à une ; sur deux rangées au téléphone */
+.od-row { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 0; width: 100%; padding: 10px 0 22px; }
+.od-card {
+  position: relative; flex: none; width: clamp(96px, 17cqw, 200px); aspect-ratio: 63 / 88; perspective: 1400px;
+  margin: 0 clamp(-18px, calc(2cqw - 20px), 10px);
+  animation: od-deal .5s var(--spring) both;
+}
+@media (max-width: 640px) { .od-plank { min-height: 480px; } .od-row { gap: 14px 8px; } .od-card { width: 29%; margin: 0; } }
+@keyframes od-deal { from { opacity: 0; transform: translateY(40px) rotate(-8deg) scale(.85); } }
+.od-flip { position: absolute; inset: 0; display: block; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.8,.3,1.1); }
+.od-card.is-up .od-flip { transform: rotateY(180deg); }
+.od-face { position: absolute; inset: 0; display: block; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.od-front { transform: rotateY(180deg); }
+.od-front .cc { border: 3px solid #1e1a16; }
+.od-card.is-up:hover { z-index: 3; }
+.od-card.is-up:hover .od-flip { transform: rotateY(180deg) translateY(-8px); }
+/* la meilleure carte, cerclée de la couleur de sa rareté */
+.od-card.is-best { z-index: 2; }
+.od-card.is-best::before {
+  content: ""; position: absolute; inset: -8px; border-radius: 18px; z-index: -1;
+  background: var(--glow); border: 3px solid #1e1a16; box-shadow: 0 5px 0 #1e1a16;
+  animation: od-ring .5s var(--spring) both;
+}
+@keyframes od-ring { from { transform: scale(.85); opacity: 0; } }
+.od-tag { position: absolute; left: 50%; bottom: -14px; translate: -50% 0; z-index: 4; animation: od-pop .4s var(--spring) both .35s; }
+@keyframes od-pop { from { transform: scale(.4); opacity: 0; } }
+
+/* ---------- la landing : la planche de fin ---------- */
+.cta {
+  position: relative; overflow: hidden; isolation: isolate; text-align: center;
+  padding: 64px 20px 72px; border: 3px solid #1e1a16; border-radius: 36px; box-shadow: 0 7px 0 #1e1a16;
+  background: linear-gradient(180deg, #ffe45c, #ffd12e 55%, #ffbf1a);
+}
+.cta::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(60% 60% at 50% 100%, #fff4c2 0%, transparent 70%),
+    repeating-conic-gradient(from 0deg at 50% 100%, rgba(255, 255, 255, .35) 0 6deg, transparent 6deg 12deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .od-rays, .od-pack, .od-card, .od-tag, .od-card.is-best::before { animation: none; }
+  .od-flip, .pl-card, .rv-card { transition: none; }
+}

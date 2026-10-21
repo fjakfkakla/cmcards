@@ -17,7 +17,7 @@ export function route<T>(fn: (body: Record<string, unknown>) => Promise<T>) {
     } catch (e) {
       if (e instanceof Oops) return Response.json({ error: e.message }, { status: e.status });
       console.error(e);
-      return Response.json({ error: "Erreur du serveur, réessaie." }, { status: 500 });
+      return Response.json({ error: "Server error, try again." }, { status: 500 });
     }
   };
 }

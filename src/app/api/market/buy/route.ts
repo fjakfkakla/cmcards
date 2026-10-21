@@ -7,6 +7,6 @@ import { needWallet } from "@/lib/server/session";
 export const POST = route(async ({ uid, listing, signature }) => {
   const wallet = await needWallet();
   if (typeof uid !== "string" || typeof listing !== "string" || !isSignature(signature))
-    throw new Oops(400, "Demande invalide.");
+    throw new Oops(400, "Invalid request.");
   return { card: await buy(wallet, uid, listing, signature) };
 });

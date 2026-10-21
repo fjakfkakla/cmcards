@@ -8,13 +8,13 @@ import Icon, { type IconName, Logo } from "./Icon";
 import { useAccount } from "@/lib/account";
 import { short, toSol } from "@/lib/solana";
 
-export type Tab = "accueil" | "boosters" | "marche" | "collection" | "profil" | "cartes";
+export type Tab = "home" | "boosters" | "market" | "collection" | "profile" | "cards";
 const TABS: { id: Tab; href: string; label: string; icon: IconName }[] = [
-  { id: "accueil", href: "/", label: "Accueil", icon: "home" },
+  { id: "home", href: "/", label: "Home", icon: "home" },
   { id: "boosters", href: "/boosters", label: "Boosters", icon: "pack" },
-  { id: "marche", href: "/marche", label: "Marché", icon: "market" },
+  { id: "market", href: "/market", label: "Market", icon: "market" },
   { id: "collection", href: "/collection", label: "Collection", icon: "cards" },
-  { id: "profil", href: "/profil", label: "Profil", icon: "user" },
+  { id: "profile", href: "/profile", label: "Profile", icon: "user" },
 ];
 
 /* La barre : la marque, les écrans au centre, le wallet à droite. Sur téléphone,
@@ -27,7 +27,7 @@ export default function Nav({ at }: { at?: Tab }) {
     <>
       <header className="sticky top-0 z-40 border-b-[2.5px] border-fg bg-bg/95 backdrop-blur-md">
         <div className="mx-auto flex h-[72px] max-w-6xl items-center gap-4 px-4">
-          <Link href="/" aria-label="cm cards, accueil"><Logo size={34} /></Link>
+          <Link href="/" aria-label="cm cards, home"><Logo size={34} /></Link>
           <nav className="mx-auto hidden items-center gap-1.5 md:flex">
             {TABS.slice(1).map((t) => (
               <Link key={t.id} href={t.href} aria-current={t.id === at ? "page" : undefined}
@@ -77,13 +77,13 @@ export function WalletButton() {
     return (
       <button className="btn-gold btn-sm" onClick={signIn} disabled={busy}>
         <Icon name="wallet" size={17} />
-        {busy ? "Signature…" : "Connecter"}
+        {busy ? "Signing…" : "Connect"}
       </button>
     );
   return (
-    <Link href="/profil" className="btn-ghost btn-sm gap-2.5 pl-1.5">
+    <Link href="/profile" className="btn-ghost btn-sm gap-2.5 pl-1.5">
       <span className="grid h-7 w-7 place-items-center rounded-full border-2 border-fg bg-gold"><Icon name="wallet" size={14} /></span>
-      {balance !== null && <span className="num hidden sm:inline">{toSol(balance).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} SOL</span>}
+      {balance !== null && <span className="num hidden sm:inline">{toSol(balance).toLocaleString("en-US", { maximumFractionDigits: 3 })} SOL</span>}
       <span className="num font-sans text-[13.5px] font-bold text-muted">{short(wallet)}</span>
     </Link>
   );
@@ -105,11 +105,11 @@ export function WalletPicker() {
   if (!picker) return null;
   return (
     <div className="fixed inset-0 z-[60] grid place-items-end bg-[rgba(30,26,22,.55)] backdrop-blur-sm sm:place-items-center" onClick={() => setPicker(false)}>
-      <div role="dialog" aria-modal="true" aria-label="Connecter un wallet" onClick={(e) => e.stopPropagation()}
+      <div role="dialog" aria-modal="true" aria-label="Connect a wallet" onClick={(e) => e.stopPropagation()}
         className="surface rise w-full max-w-[420px] rounded-b-none p-6 sm:rounded-[26px]">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Connecter un wallet</h2>
-          <button className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-fg bg-white hover:bg-cream" onClick={() => setPicker(false)} aria-label="Fermer">
+          <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Connect a wallet</h2>
+          <button className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-fg bg-white hover:bg-cream" onClick={() => setPicker(false)} aria-label="Close">
             <Icon name="close" size={18} />
           </button>
         </div>
@@ -124,7 +124,7 @@ export function WalletPicker() {
             </button>
           )) : (
             <>
-              <p className="py-2 font-display text-[17px] font-extrabold">Aucun wallet dans ce navigateur</p>
+              <p className="py-2 font-display text-[17px] font-extrabold">No wallet in this browser</p>
               {[["Phantom", "https://phantom.com/download"], ["Solflare", "https://solflare.com/download"], ["Backpack", "https://backpack.app/download"]].map(([n, href]) => (
                 <a key={n} href={href} target="_blank" rel="noreferrer"
                   className="flex h-12 items-center justify-between rounded-2xl border-2 border-fg bg-white px-4 font-display font-extrabold shadow-[0_3px_0_#1e1a16] transition-transform hover:-translate-y-0.5">
