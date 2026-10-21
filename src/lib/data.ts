@@ -350,15 +350,19 @@ export type Pack = {
   boost?: number;        // multiplie les chances d'OG et de Mythic
   color: string;         // la couleur du papier du booster
   ink: string;           // sa couleur claire
+  cover: Cover;          // le personnage imprimé en grand sur le sachet
 };
+/* La couverture d'un booster : un personnage de la famille, son image, et si elle
+   est détourée (posée sur l'éclat, sans fond) ou cadrée plein sachet. */
+export type Cover = { trader: string; src?: string; pos?: string; cut?: boolean };
 
-const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost">> = {
-  trencher: { price: 0.1, cards: 3 },
-  holder: { price: 0.12, cards: 3 },
-  dev: { price: 0.15, cards: 3 },
-  bundler: { price: 0.2, cards: 3 },
-  famous: { price: 0.35, cards: 4, guarantee: "rare" },
-  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2 },
+const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "cover">> = {
+  trencher: { price: 0.1, cards: 3, cover: { trader: "blu6k", pos: "50% 30%" } },
+  holder: { price: 0.12, cards: 3, cover: { trader: "pain", pos: "50% 30%" } },
+  dev: { price: 0.15, cards: 3, cover: { trader: "superman", pos: "50% 40%" } },
+  bundler: { price: 0.2, cards: 3, cover: { trader: "jack", pos: "50% 30%" } },
+  famous: { price: 0.35, cards: 4, guarantee: "rare", cover: { trader: "cented", pos: "50% 28%" } },
+  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, cover: { trader: "kimchi", src: "/traders/kimchi-aura-cut.webp", pos: "50% 0%", cut: true } },
 };
 
 export const PACKS: Pack[] = CATEGORIES.map((c) => ({

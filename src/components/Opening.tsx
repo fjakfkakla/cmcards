@@ -6,24 +6,30 @@ import "./opening.css";
 import BoosterPack from "./BoosterPack";
 import CollectCard from "./CollectCard";
 import Icon from "./Icon";
+import Medal from "./Medal";
+import { RarityTag } from "./ui";
+import { oddsOf } from "./landing/PackPicker";
 import { api, useAccount } from "@/lib/account";
-import { type Pack, type RarityId, fmtSol, rarity, serialOf, trader } from "@/lib/data";
+import { type Pack, RARITIES, type RarityId, category, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
 import { MEMO, explorer, toLamports } from "@/lib/solana";
 import type { Owned } from "@/lib/types";
 
-/* La couleur de la lumière d'une rareté : celle qui sort du booster, celle du nom. */
-const GLOW: Record<RarityId, string> = {
-  common: "#dfe3ec",
-  rare: "#8fb0ff",
-  shiny: "#bff0ff",
-  og: "#ffdd7a",
-  mythic: "#f6a6cb",
-};
-const CONFETTI = ["#ffdd7a", "#f7c948", "#8fb0ff", "#bff0ff", "#f6a6cb", "#ffffff"];
+/* La lumière d'une rareté : celle qui sort du booster, le cercle de la meilleure carte. */
+const GLOW: Record<RarityId, string> = { common: "#c3ccda", rare: "#3fdcb0", shiny: "#2e63f2", og: "#f6b51f", mythic: "#9fb6f5" };
 
-type Phase = "pay" | "sealed" | "torn" | "reveal" | "done";
+/* L'ouverture, la recette du tirage des persos de memescanner :
+   1. payer (le serveur lit le paiement sur la chaîne, puis tire les cartes) ;
+   2. couper le booster le long de sa ligne ;
+   3. la bande des raretés défile sous un repère, ralentit et s'arrête sur la
+      meilleure rareté du tirage (celle que le serveur a tirée, jamais une autre) ;
+   4. les dos des cartes se retournent un à un, toutes les 420 ms ; « Passer »
+      retourne tout ce qui reste ;
+   5. la ligne du bas dit ce qu'on a eu, la meilleure carte est cerclée de sa
+      couleur ; une carte touchée s'ouvre en grand. Aucun confetti. */
+type Phase = "pay" | "sealed" | "torn" | "spin" | "reveal";
 type Step = "idle" | "sign" | "draw";
 const PENDING = "cmcards:pending"; // un paiement fait dont on n'a pas encore les cartes
+const STRIP = 34, LAND = 29, TILE = 132; // la bande : ses plaques, celle où elle s'arrête, leur pas
 
 export default function Opening({ pack }: { pack: Pack }) {
   const { cfg, ready, wallet, balance, busy, signIn, pay, refresh } = useAccount();
@@ -31,17 +37,16 @@ export default function Opening({ pack }: { pack: Pack }) {
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
-  const best = cards?.[cards.length - 1]?.rarity ?? "common";
-
   const [phase, setPhase] = useState<Phase>("pay");
   const [slit, setSlit] = useState(0);
   const [shaking, setShaking] = useState(false);
-  const [i, setI] = useState(0);
-  const [up, setUp] = useState(false);
-  const [out, setOut] = useState(false);
-  const [fx, setFx] = useState(0); // relance les effets à chaque carte
+  const [shown, setShown] = useState(0);             // cartes retournées
+  const [zoom, setZoom] = useState<Owned | null>(null);
   const drag = useRef<{ x: number; w: number; moved: boolean } | null>(null);
+  const cat = category(pack.pool);
 
+  const best = cards ? cards.reduce<RarityId>((b, c) => (rank(c.rarity) > rank(b) ? c.rarity : b), "common") : "common";
+  const bestUid = cards?.find((c) => c.rarity === best)?.uid;
   const price = toLamports(pack.price);
   const short = balance !== null && balance < price + 10_000;
 
@@ -53,6 +58,7 @@ export default function Opening({ pack }: { pack: Pack }) {
       try { localStorage.removeItem(PENDING); } catch {}
       setPending(null);
       setCards(r.cards);
+      setShown(0);
       setPhase("sealed");
       refresh();
     } catch (e) {
@@ -86,12 +92,13 @@ export default function Opening({ pack }: { pack: Pack }) {
     await claim(sig);
   }
 
+  /* couper : le booster tremble, le haut s'envole, puis la bande des raretés */
   function tear() {
     if (phase !== "sealed") return;
     setSlit(1);
     setShaking(true);
     setTimeout(() => { setShaking(false); setPhase("torn"); }, 1050);
-    setTimeout(() => setPhase("reveal"), 1900);
+    setTimeout(() => setPhase("spin"), 1900);
   }
   function down(e: React.PointerEvent<HTMLDivElement>) {
     if (phase !== "sealed") return;
@@ -107,7 +114,7 @@ export default function Opening({ pack }: { pack: Pack }) {
     setSlit(p);
     if (p >= 1) { drag.current = null; tear(); }
   }
-  function up_() {
+  function up() {
     const d = drag.current;
     drag.current = null;
     if (!d) return;
@@ -116,127 +123,132 @@ export default function Opening({ pack }: { pack: Pack }) {
     else tear();
   }
 
-  function next() {
-    if (out || !cards) return;
-    if (!up) {
-      setUp(true);
-      setFx((n) => n + 1);
-      return;
-    }
-    setOut(true);
-    setTimeout(() => {
-      setOut(false);
-      setUp(false);
-      if (i + 1 >= cards.length) setPhase("done");
-      else setI(i + 1);
-    }, 420);
-  }
+  /* les cartes se retournent une à une */
+  useEffect(() => {
+    if (phase !== "reveal" || !cards || shown >= cards.length) return;
+    const t = setTimeout(() => setShown((n) => n + 1), shown === 0 ? 500 : 420);
+    return () => clearTimeout(t);
+  }, [phase, shown, cards]);
 
   function again() {
-    setCards(null); setPhase("pay"); setSlit(0); setI(0); setUp(false); setOut(false);
+    setCards(null); setPhase("pay"); setSlit(0); setShown(0); setZoom(null);
   }
 
-  const card = cards?.[i];
-  const r = card?.rarity ?? "common";
-  const showFx = phase === "reveal" && up && !out;
-  const stageFx = showFx && r === "og" ? "og-flash" : showFx && r === "mythic" ? "quake" : "";
+  const done = !!cards && phase === "reveal" && shown >= cards.length;
 
   return (
-    <div className={`op-stage ${stageFx}`} key={`stage-${fx}`} style={{ "--glow": GLOW[showFx ? r : best] } as React.CSSProperties}>
-      {showFx && <RevealFx rarity={r} key={`fx-${fx}`} />}
-
+    <div className="op" style={{ "--c": cat.bg, "--glow": GLOW[best] } as React.CSSProperties}>
       {phase === "pay" && (
-        <div className="relative z-[2] flex w-full max-w-md flex-col items-center">
-          <div className="w-[min(58vw,260px)]"><BoosterPack pack={pack} floating /></div>
-          <h1 className="mt-8 font-display text-[36px] leading-none font-extrabold tracking-[-.035em]">Booster {pack.name}</h1>
-          <p className="mt-2 text-[15px] text-muted">{pack.cards} cartes{pack.guarantee ? `, la dernière ${rarity(pack.guarantee).name} ou mieux` : ""}</p>
+        <div className="op-buy">
+          <div className="op-plank">
+            <div className="op-rays" />
+            <div className="op-buy-pack"><BoosterPack pack={pack} floating /></div>
+          </div>
+          <div className="surface p-6 sm:p-7">
+            <h1 className="font-display text-[40px] leading-none font-extrabold tracking-[-.04em]">Booster {pack.name}</h1>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="plate"><b className="num">{pack.cards}</b> cartes</span>
+              {pack.guarantee && <span className="plate"><RarityTag id={pack.guarantee} size="sm" /> garantie</span>}
+            </div>
+            <ul className="mt-5 grid gap-1.5">
+              {oddsOf(pack).map(({ r, pct }) => (
+                <li key={r.id} className="flex items-center gap-3">
+                  <Medal rar={r.id} size={40} />
+                  <span className="flex-1 font-display text-[16px] font-extrabold">{r.name}</span>
+                  <span className="num text-[15px] font-bold">{pct.toLocaleString("fr-FR", { maximumFractionDigits: pct < 1 ? 2 : 1 })} %</span>
+                </li>
+              ))}
+            </ul>
 
-          <div className="mt-8 w-full">
-            {!ready ? (
-              <span className="btn-ghost btn-lg w-full animate-pulse opacity-60">…</span>
-            ) : !cfg.treasury ? (
-              <span className="btn-ghost btn-lg w-full cursor-not-allowed opacity-60">Les paiements ouvrent bientôt</span>
-            ) : !wallet ? (
-              <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
-                <Icon name="wallet" size={18} /> {busy ? "Signature…" : "Connecter mon wallet"}
-              </button>
-            ) : pending ? (
-              <button className="btn-gold btn-lg w-full" onClick={() => claim(pending)} disabled={step !== "idle"}>
-                {step === "draw" ? "Tirage en cours…" : "Récupérer mes cartes"}
-              </button>
-            ) : (
-              <button className="btn-gold btn-lg w-full" onClick={buy} disabled={step !== "idle" || short}>
-                {step === "sign" ? "Valide dans ton wallet…" : step === "draw" ? "Tirage en cours…" : `Payer ${fmtSol(pack.price)}`}
-              </button>
-            )}
-            {short && !pending && <p className="mt-3 text-center text-[14px] font-semibold text-down">Solde insuffisant pour ce booster.</p>}
-            {error && <p className="mt-3 text-center text-[14px] font-semibold text-down">{error}</p>}
-            {pending && (
-              <a href={explorer(pending, cfg.cluster)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[13.5px] text-dim hover:text-muted">
-                Voir le paiement <Icon name="out" size={14} />
-              </a>
-            )}
-            <p className="mt-4 text-center text-[13.5px] text-dim">Le tirage est fait par le serveur une fois le paiement lu sur la chaîne.</p>
+            <div className="mt-6">
+              {!ready ? (
+                <span className="btn-ghost btn-lg w-full animate-pulse">…</span>
+              ) : !cfg.treasury ? (
+                <span className="btn-ghost btn-lg w-full cursor-not-allowed">Les paiements ouvrent bientôt</span>
+              ) : !wallet ? (
+                <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
+                  <Icon name="wallet" size={19} /> {busy ? "Signature…" : "Connecter mon wallet"}
+                </button>
+              ) : pending ? (
+                <button className="btn-gold btn-lg w-full" onClick={() => claim(pending)} disabled={step !== "idle"}>
+                  {step === "draw" ? "Tirage en cours…" : "Récupérer mes cartes"}
+                </button>
+              ) : (
+                <button className="btn-gold btn-lg w-full" onClick={buy} disabled={step !== "idle" || short}>
+                  {step === "sign" ? "Valide dans ton wallet…" : step === "draw" ? "Tirage en cours…" : `Payer ${fmtSol(pack.price)}`}
+                </button>
+              )}
+              {short && !pending && <p className="mt-3 text-center text-[14.5px] font-bold text-down">Solde insuffisant</p>}
+              {error && <p className="mt-3 text-center text-[14.5px] font-bold text-down">{error}</p>}
+              {pending && (
+                <a href={explorer(pending, cfg.cluster)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-semibold text-muted hover:text-fg">
+                  Voir le paiement <Icon name="out" size={14} />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       )}
 
       {(phase === "sealed" || phase === "torn") && (
-        <div className="relative z-[2] flex flex-col items-center">
-          <div
-            className="op-pack"
-            onPointerDown={down}
-            onPointerMove={move}
-            onPointerUp={up_}
-            onPointerCancel={() => { drag.current = null; setSlit(0); }}
-          >
+        <div className="op-center">
+          <div className="op-plank op-plank-full"><div className="op-rays" /></div>
+          <div className="op-pack" onPointerDown={down} onPointerMove={move} onPointerUp={up}
+            onPointerCancel={() => { drag.current = null; setSlit(0); }}>
             <BoosterPack pack={pack} torn={phase === "torn"} shaking={shaking} floating={phase === "sealed" && !shaking} slit={slit} glow={GLOW[best]} />
           </div>
-          <p className="op-hint" style={{ visibility: phase === "sealed" ? "visible" : "hidden" }}>
-            Glisse le long de la ligne pour l&apos;ouvrir
-          </p>
+          <p className="op-hint" style={{ visibility: phase === "sealed" ? "visible" : "hidden" }}>Glisse le long de la ligne</p>
         </div>
       )}
 
-      {phase === "reveal" && cards && card && (
-        <div className="relative z-[2] flex flex-col items-center">
-          <div className={`op-deck ${i === 0 && !up ? "rising" : ""}`}>
-            {/* les cartes encore cachées, en pile */}
-            {cards.slice(i + 1).map((c, k) => (
-              <div key={c.uid} className="op-under" style={{ transform: `translate(${(k + 1) * 6}px, ${(k + 1) * 6}px) rotate(${(k + 1) * 1.5}deg)`, zIndex: 1 - k }}>
-                <div className="cb"><div className="cb-mark" /></div>
-              </div>
-            )).reverse()}
-            <div className={`op-card ${up ? "is-up" : ""} ${out ? "is-out" : ""}`} onClick={next} key={card.uid}>
-              {up && !out && <span className="op-tag" style={{ "--glow": GLOW[r] } as React.CSSProperties}>{rarity(r).name}</span>}
-              <div className="op-flip">
-                <div className="op-face"><div className="cb"><div className="cb-mark" /></div></div>
-                <div className="op-face op-front"><CollectCard card={card} live={up} /></div>
+      {phase === "spin" && <Spin target={best} onDone={() => setPhase("reveal")} />}
+
+      {phase === "reveal" && cards && (
+        <div className="op-reveal">
+          <div className={`op-row n${cards.length}`}>
+            {cards.map((c, k) => {
+              const up_ = k < shown;
+              const isBest = done && c.uid === bestUid && best !== "common";
+              return (
+                <button key={c.uid} type="button" className={`op-card ${up_ ? "is-up" : ""} ${isBest ? "is-best" : ""}`}
+                  style={{ "--glow": GLOW[c.rarity], animationDelay: `${k * 70}ms` } as React.CSSProperties}
+                  onClick={() => up_ && setZoom(c)} disabled={!up_} aria-label={up_ ? `${trader(c.trader).name}, ${rarity(c.rarity).name}` : "Carte cachée"}>
+                  <span className="op-flip">
+                    <span className="op-face"><Back /></span>
+                    <span className="op-face op-front"><CollectCard card={c} /></span>
+                  </span>
+                  {up_ && <span className="op-tag"><RarityTag id={c.rarity} size="sm" /></span>}
+                </button>
+              );
+            })}
+          </div>
+
+          {!done ? (
+            <div className="mt-10 flex items-center gap-4">
+              <span className="num font-display text-[22px] font-extrabold">{shown} / {cards.length}</span>
+              <button className="btn-ghost btn-sm" onClick={() => setShown(cards.length)}>Passer</button>
+            </div>
+          ) : (
+            <div className="op-done">
+              <p className="font-display text-[clamp(1.4rem,3vw,1.9rem)] leading-tight font-extrabold tracking-[-.03em]">{summary(cards)}</p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <button className="btn-gold btn-lg" onClick={again}>Encore un {pack.name}</button>
+                <Link className="btn-ghost btn-lg" href="/collection">Ma collection</Link>
               </div>
             </div>
-          </div>
-          <p className="op-hint">
-            {up ? (i + 1 < cards.length ? `Touche pour la suivante · ${i + 1}/${cards.length}` : "Touche pour voir ton tirage") : `Touche pour la retourner · ${i + 1}/${cards.length}`}
-          </p>
+          )}
         </div>
       )}
 
-      {phase === "done" && cards && (
-        <div className="op-done relative z-[2]">
-          <h1 className="font-display text-[44px] leading-none font-extrabold tracking-[-.035em]">Ton tirage</h1>
-          <p className="mt-2 text-[15px] text-muted">Les cartes sont dans ta collection. Garde-les, ou fixe ton prix sur le marché.</p>
-          <div className="op-row">
-            {cards.map((c, k) => (
-              <div key={c.uid} style={{ animationDelay: `${k * 90}ms` }}>
-                <CollectCard card={c} />
-                <p className="op-in"><b>{trader(c.trader).name}</b>{rarity(c.rarity).name} · n° {serialOf(c)}</p>
-              </div>
-            ))}
+      {zoom && (
+        <div className="op-zoom" role="dialog" aria-modal="true" aria-label={trader(zoom.trader).name} onClick={() => setZoom(null)}>
+          <div className="op-zoom-card" onClick={(e) => e.stopPropagation()}>
+            <CollectCard card={zoom} live />
           </div>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <button className="btn-gold" onClick={again}>Rouvrir un {pack.name}</button>
-            <Link className="btn-ghost" href="/collection">Ma collection</Link>
-            <Link className="btn-ghost" href="/marche">Le marché</Link>
+          <div className="mt-6 flex flex-col items-center gap-2 text-center">
+            <span className="font-display text-[32px] leading-none font-extrabold tracking-[-.03em] text-white [paint-order:stroke_fill] [-webkit-text-stroke:6px_#1e1a16]">{trader(zoom.trader).name}</span>
+            <span className="flex items-center gap-2"><RarityTag id={zoom.rarity} /><span className="num rounded-full border-2 border-fg bg-white px-3 py-0.5 text-[14px] font-bold">n° {serialOf(zoom)}</span></span>
+            <button className="btn-ghost btn-sm mt-3" onClick={() => setZoom(null)}>Retour au tirage</button>
           </div>
         </div>
       )}
@@ -244,44 +256,69 @@ export default function Opening({ pack }: { pack: Pack }) {
   );
 }
 
-/* Les effets d'une rareté, autour de la carte qui se retourne. */
-function RevealFx({ rarity: r }: { rarity: RarityId }) {
-  const bits = (n: number, cls: string, dist: number, colors?: string[]) =>
-    Array.from({ length: n }, (_, k) => {
-      const a = (k / n) * Math.PI * 2 + (k % 2) * 0.3;
-      const d = dist * (0.7 + ((k * 37) % 10) / 20);
-      return (
-        <span
-          key={k}
-          className={`op-bit ${cls}`}
-          style={{
-            "--dx": `${Math.cos(a) * d}px`,
-            "--dy": `${Math.sin(a) * d}px`,
-            "--r": `${(k * 67) % 360}deg`,
-            background: colors ? colors[k % colors.length] : undefined,
-            animationDelay: `${(k % 4) * 40}ms`,
-          } as React.CSSProperties}
-        />
-      );
-    });
+/* « 5 cartes · 1 Shiny · 2 Rares · 2 Communs », de la plus rare à la plus commune */
+function summary(cards: Owned[]) {
+  const parts = [...RARITIES].reverse()
+    .map((r) => [r, cards.filter((c) => c.rarity === r.id).length] as const)
+    .filter(([, n]) => n)
+    .map(([r, n]) => `${n} ${r.name}${n > 1 && r.id !== "og" ? "s" : ""}`);
+  return [`${cards.length} cartes`, ...parts].join(" · ");
+}
 
-  switch (r) {
-    case "rare":
-      return <div className="op-fx">{bits(8, "star", 220)}</div>;
-    case "shiny":
-      return <div className="op-fx"><div className="op-flash" />{bits(18, "star", 280)}</div>;
-    case "og":
-      return <div className="op-fx"><div className="op-flash" style={{ background: "#000" }} /></div>;
-    case "mythic":
-      return (
-        <div className="op-fx">
-          <div className="op-rays multi" />
-          <div className="op-flash" style={{ background: "#fff" }} />
-          {bits(36, "confetti", 420, CONFETTI)}
-          {bits(12, "star", 300)}
+/* Le dos d'une carte : le jaune éponge, ses rayons, la tuile du logo au centre. */
+export function Back() {
+  return (
+    <span className="cb">
+      <span className="cb-rays" />
+      <svg className="cb-mark" viewBox="0 0 100 100" aria-hidden="true">
+        <rect x="6" y="10" width="88" height="88" rx="24" fill="#1e1a16" />
+        <rect x="6" y="4" width="88" height="88" rx="24" fill="#fff4dc" stroke="#1e1a16" strokeWidth="6" />
+        <path fill="#1e1a16" fillRule="evenodd" transform="translate(16 10) scale(.68)"
+          d="M34 11H66Q78 11 78 23V77Q78 89 66 89H34Q22 89 22 77V23Q22 11 34 11ZM50 33C40.6 33 33 40.6 33 50C33 59.4 40.6 67 50 67C59.4 67 67 59.4 67 50C67 40.6 59.4 33 50 33ZM50 42C54.4 42 58 45.6 58 50C58 54.4 54.4 58 50 58C45.6 58 42 54.4 42 50C42 45.6 45.6 42 50 42Z" />
+      </svg>
+    </span>
+  );
+}
+
+/* La bande des raretés : des plaques tirées dans les vraies proportions, qui
+   défilent sous le repère puis s'arrêtent sur `target`, la meilleure du tirage. */
+function Spin({ target, onDone }: { target: RarityId; onDone: () => void }) {
+  const [strip] = useState<RarityId[]>(() => Array.from({ length: STRIP }, (_, k) => {
+    if (k === LAND) return target;
+    const x = Math.random() * 100;
+    // un peu plus de rares qu'en vrai : la bande doit passer devant chaque marche
+    return x < 40 ? "common" : x < 66 ? "rare" : x < 84 ? "shiny" : x < 95 ? "og" : "mythic";
+  }));
+  const [go, setGo] = useState(false);
+  const [landed, setLanded] = useState(false);
+  const [still] = useState(() => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const finish = useRef(onDone);
+  useEffect(() => { finish.current = onDone; });
+
+  useEffect(() => {
+    if (still) { const t = setTimeout(() => finish.current(), 900); return () => clearTimeout(t); }
+    const a = requestAnimationFrame(() => requestAnimationFrame(() => setGo(true)));
+    const b = setTimeout(() => setLanded(true), 3000);
+    const c = setTimeout(() => finish.current(), 4300);
+    return () => { cancelAnimationFrame(a); clearTimeout(b); clearTimeout(c); };
+  }, [still]);
+
+  return (
+    <div className="op-center">
+      <div className="op-spin" style={{ "--glow": GLOW[target] } as React.CSSProperties}>
+        <div className="op-spin-mark" />
+        <div className="op-strip" style={{ transform: `translateX(-${(go || still ? LAND : 2) * TILE + TILE / 2}px)`, transition: go ? "transform 2.9s cubic-bezier(.08,.72,.16,1)" : "none" }}>
+          {strip.map((r, k) => (
+            <div key={k} className={`op-tile ${landed && k === LAND ? "is-landed" : ""}`}>
+              <Medal rar={r} size={r === "mythic" ? 92 : 76} />
+              <span>{rarity(r).name}</span>
+            </div>
+          ))}
         </div>
-      );
-    default:
-      return null;
-  }
+      </div>
+      <p className="op-hint" style={{ visibility: landed ? "visible" : "hidden" }}>
+        <span className="font-display text-[34px] font-extrabold tracking-[-.03em] text-fg">{rarity(target).name}</span>
+      </p>
+    </div>
+  );
 }
