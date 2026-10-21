@@ -260,6 +260,12 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/ethan.webp", pos: "50% 35%" } },
     mythic: { banner: "/art/ethan.webp", avatar: "/art/ethan-face.webp",
       panels: { top: { src: "/art/ethan.webp", pos: "50% 30%" }, left: { src: "/art/ethan.webp", pos: "0% 85%" }, right: { src: "/art/ethan.webp", pos: "80% 75%" } } } },
+  // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
+  // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
+  // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
+  { id: "whashywash", name: "whashywash", handle: "", category: "famous", art: "/art/whashywash.webp", artPos: "48% 45%", tint: "gold",
+    mythic: { banner: "/art/whashywash.webp", avatar: "/art/whashywash.webp",
+      panels: { top: { src: "/art/whashywash.webp", pos: "50% 12%" }, left: { src: "/art/whashywash.webp", pos: "25% 75%" }, right: { src: "/art/whashywash.webp", pos: "75% 85%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
