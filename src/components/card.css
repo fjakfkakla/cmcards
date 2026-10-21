@@ -2,14 +2,17 @@
    pas dans une phrase : chaque marche a sa MISE EN SCÈNE (le décor, la place du
    personnage, la matière du cadre, ce qui bouge), et on la reconnaît de loin.
 
+     Chaque marche a aussi son symbole à côté de son nom : ● ◆ ✦ ⬢ ★.
+
      Commun       le carton nu : le personnage plein cadre, rien ne bouge
-     Rare         l'argent : le cadre en métal brossé, un film holo sous le doigt
+     Rare         l'argent : le cadre en métal biseauté où passe un reflet, le
+                  personnage dans une fenêtre posée sur la trame de sa catégorie
      Shiny        la version « shiny » : le personnage change de couleurs (comme un
-                  shiny dans un jeu), la nacre, un reflet qui balaie l'image, des éclats
+                  shiny dans un jeu), la nacre, le film arc-en-ciel qui coule, des éclats
      OG           le tirage noir et blanc : le grain, les lignes d'un vieil écran,
-                  le vignettage, le cadre noir à filet blanc
-     Mythic       1 sur 1 : la planche du personnage (plusieurs cases, son avatar),
-                  les rayons multicolores, le cadre qui tourne, tous les effets */
+                  le vignettage, le cadre noir à filet blanc, le tampon rouge
+     Mythic       1 sur 1 : la planche du personnage (plusieurs cases, son avatar)
+                  ou son médaillon, les rayons multicolores, le cadre qui tourne */
 
 .cc {
   --ink: #1e1a16;
@@ -67,7 +70,11 @@
   -webkit-text-stroke: 1.6cqw var(--ink); paint-order: stroke fill;
 }
 .cc-serial { text-align: right; font: 900 3cqw/1.15 var(--font-nunito); color: #fff; opacity: .92; }
-.cc-serial b { display: block; font-size: 3.4cqw; letter-spacing: .06em; text-transform: uppercase; color: var(--label, #fff); }
+.cc-serial b {
+  display: flex; align-items: center; justify-content: flex-end; gap: 1cqw;
+  font-size: 3.4cqw; letter-spacing: .06em; text-transform: uppercase; color: var(--label, #fff);
+}
+.cc-mark { width: 3.8cqw; height: 3.8cqw; fill: var(--mark, currentColor); stroke: var(--ink); stroke-width: 2.4; paint-order: stroke; }
 
 .cc-glare {
   position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 8; opacity: 0;
@@ -95,6 +102,7 @@
 .cc.common {
   --frame: #e7dfd0 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .25  0 0 0 0 .1  0 0 0 .25 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   --label: #e7dfd0;
+  --mark: #bdb3a2;
   box-shadow: 0 1cqw 0 -.3cqw rgba(0,0,0,.22), 0 4cqw 7cqw -5cqw rgba(50,25,0,.35);
 }
 .cc.common .cc-art { filter: saturate(.8) contrast(.95); }
@@ -104,11 +112,30 @@
 .cc.rare {
   --frame:
     repeating-linear-gradient(90deg, rgba(255,255,255,.22) 0 .25cqw, transparent .25cqw .7cqw),
-    linear-gradient(150deg, #f4f7fa 0%, #b9c3cf 25%, #eef2f6 45%, #8f9bab 70%, #e3e8ee 100%);
-  --label: #dfe6ee;
-  --name: #eef2f6;
+    linear-gradient(150deg, #f4f7fa 0%, #a9b4c2 25%, #eef2f6 45%, #7f8b9b 70%, #dfe5ec 100%);
+  --label: #e6ecf2;
+  --mark: #cfe3ff;
 }
-.cc.rare .cc-scene { outline-color: #4a5563; }
+.cc.rare .cc-frame { box-shadow: inset 0 0 0 .5cqw rgba(255,255,255,.75), inset 0 0 0 1.1cqw rgba(60,70,85,.35); }
+.cc.rare .cc-frame::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.95) 50%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  animation: cc-sheen 4.2s ease-in-out infinite;
+}
+.cc.rare .cc-scene { z-index: 1; }
+.cc-halftone {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.32) 0 .8cqw, transparent 1cqw) 0 0 / 3.6cqw 3.6cqw,
+    repeating-conic-gradient(from 0deg at 50% 42%, rgba(255,255,255,.16) 0 6deg, transparent 6deg 14deg);
+}
+.cc-window {
+  position: absolute; z-index: 1; left: 8%; right: 8%; top: 13%; bottom: 21%;
+  border-radius: 3cqw; overflow: hidden;
+  border: 1.3cqw solid #eef2f6; outline: .7cqw solid var(--ink);
+  box-shadow: 1.4cqw 1.4cqw 0 var(--ink);
+  transform: rotate(-1.5deg);
+}
 .cc-foil {
   position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay;
   background: linear-gradient(125deg, transparent 20%, rgba(255,255,255,.35) 40%, transparent 55%, rgba(255,255,255,.2) 75%, transparent 90%);
@@ -117,8 +144,9 @@
 /* ================= Shiny : la nacre ================= */
 @property --pearl { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .cc.shiny {
-  --frame: conic-gradient(from var(--pearl), #ffffff, #dff0ff, #eaffe0, #fff3d6, #f7e3ff, #ffffff);
+  --frame: conic-gradient(from var(--pearl), #ffffff, #cfe9ff, #dcffd0, #fff0c4, #f2d6ff, #ffffff);
   --label: #fff;
+  --mark: #9fe0ff;
 }
 .cc.shiny .cc-frame { animation: cc-pearl 6s linear infinite; }
 .cc.shiny .cc-art { filter: hue-rotate(165deg) saturate(1.25) contrast(1.05); }
@@ -130,6 +158,12 @@
   animation: cc-sheen 3.4s ease-in-out infinite;
 }
 @keyframes cc-sheen { 0% { background-position: 150% 0; } 60%, 100% { background-position: -60% 0; } }
+.cc-rainbow {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: color-dodge; opacity: .32;
+  background: repeating-linear-gradient(115deg, #ff7ac8 0, #ffe066 8%, #7dffb0 16%, #69c8ff 24%, #c38bff 32%, #ff7ac8 40%) 0 0 / 200% 200%;
+  animation: cc-rainbow 7s linear infinite;
+}
+@keyframes cc-rainbow { to { background-position: 200% 200%; } }
 @keyframes cc-rot { to { transform: rotate(360deg); } }
 
 /* ================= OG : le tirage noir et blanc ================= */
@@ -138,6 +172,15 @@
   --frame: #0b0b0b;
   --plate: rgba(0,0,0,.95);
   --label: #fff;
+  --mark: #fff;
+}
+/* le tampon : la seule couleur de la carte */
+.cc-stamp {
+  position: absolute; z-index: 5; top: 13%; right: 6%;
+  padding: .4cqw 2.2cqw; border: .9cqw solid #ff3b30; border-radius: 2cqw;
+  font: 400 10cqw/1 var(--font-chewy); letter-spacing: .04em; color: #ff3b30;
+  transform: rotate(12deg); opacity: .92;
+  box-shadow: inset 0 0 0 .4cqw rgba(255,59,48,.35);
 }
 .cc.og .cc-frame { box-shadow: inset 0 0 0 1.6cqw #000, inset 0 0 0 2cqw #fff; }
 .cc.og .cc-scene { outline-color: #fff; background: #222; }
@@ -171,6 +214,7 @@
     conic-gradient(from var(--spin), #ff4b3e, #ff9a1f, #ffd12e, #3dcb6c, #4da8ff, #a77bff, #ff5fb4, #ff4b3e);
   --label: #ffd12e;
   --name: #ffd12e;
+  --mark: #ffd12e;
 }
 .cc.mythic .cc-frame { animation: cc-spin 8s linear infinite; }
 @keyframes cc-spin { to { --spin: 360deg; } }
@@ -200,6 +244,14 @@
   box-shadow: 1.2cqw 1.2cqw 0 var(--ink);
 }
 .cc-sticker img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* sans planche : le personnage en médaillon au milieu des rayons */
+.cc-medal {
+  position: absolute; z-index: 2; left: 50%; top: 45%; width: 80%; aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(-4deg);
+  border-radius: 50%; overflow: hidden;
+  border: 1.8cqw solid #fff; outline: .8cqw solid var(--ink);
+  box-shadow: 1.6cqw 1.6cqw 0 var(--ink), 0 0 9cqw 2cqw rgba(255,255,255,.7);
+}
 .cc.mythic .cc-plate { background: none; padding-top: 0; align-items: center; }
 .cc.mythic .cc-serial { background: var(--ink); border-radius: 1.6cqw; padding: 1.2cqw 2cqw; opacity: 1; }
 .cc.mythic .cc-name { font-size: 11cqw; }
