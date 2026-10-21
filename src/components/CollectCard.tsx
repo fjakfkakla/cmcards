@@ -15,14 +15,17 @@ const GLYPH: Record<CategoryId, string> = {
 
 const SPARKS = [[18, 22, 0], [74, 16, 0.9], [62, 48, 1.7], [26, 58, 0.4], [82, 64, 2.1]];
 const BUBBLES = [[10, 3.4, 7], [30, 2.4, 9], [58, 4.2, 6.5], [76, 2.8, 8.5], [90, 3.6, 10], [44, 3, 11]];
+const BILLS = [[6, 0, 7, -20], [22, 2.6, 8, 15], [70, 1.2, 7.5, -10], [86, 3.8, 9, 25], [48, 5, 8.5, -30], [36, 6.4, 7, 10]];
+const DUST = [[14, 30, 0], [80, 22, 1.1], [24, 70, 2], [86, 60, 0.6], [50, 12, 1.6], [66, 78, 2.4], [8, 50, 3]];
 
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const t = trader(card.trader);
   const cat = category(t.category);
   const r = rarity(card.rarity);
-  const theme = card.rarity === "mythic" ? t.theme ?? "" : "";
-  const mythic = card.rarity === "mythic" ? t.mythic : undefined;
+  const theme = r.id === "mythic" ? t.theme ?? "" : "";
+  const mythic = r.id === "mythic" ? t.mythic : undefined;
+  const serial = r.supply === 1 ? "1/1" : `${String(card.serial).padStart(String(r.supply).length, "0")}/${r.supply}`;
 
   function move(e: React.PointerEvent) {
     const el = ref.current;
@@ -40,6 +43,82 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     if (ref.current) ref.current.style.transform = "";
   }
 
+  const art = t.art && (
+    <img className="cc-art" src={t.art} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
+  );
+
+  /* Chaque rareté a sa mise en scène : le décor, la place du personnage, l'effet. */
+  let scene: React.ReactNode;
+  switch (r.id) {
+    case "millionaire":
+      scene = (
+        <>
+          <div className="cc-note" />
+          {BILLS.map(([x, d, dur, rot], i) => (
+            <span key={i} className="cc-bill" style={{ left: `${x}%`, animationDelay: `${d}s`, animationDuration: `${dur}s`, "--rot": `${rot}deg` } as React.CSSProperties} />
+          ))}
+          <div className="cc-oval">{art}<div className="cc-engrave" /></div>
+          <span className="cc-denom tl">1M</span>
+          <span className="cc-denom tr">1M</span>
+        </>
+      );
+      break;
+    case "legendary":
+      scene = (
+        <>
+          <div className="cc-sun" />
+          {DUST.map(([x, y, d], i) => (
+            <span key={i} className="cc-dust" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
+          ))}
+          <div className="cc-arch">{art}<div className="cc-holo" /></div>
+        </>
+      );
+      break;
+    case "og":
+      scene = (
+        <>
+          {art}
+          <div className="cc-scan" />
+          <div className="cc-grain" />
+          <div className="cc-vignette" />
+        </>
+      );
+      break;
+    case "mythic":
+      scene = mythic ? (
+        <>
+          <div className="cc-rays" />
+          <div className="cc-panel top"><img src={mythic.banner} alt="" style={{ objectPosition: "50% 48%" }} draggable={false} /></div>
+          <div className="cc-panel left"><img src={mythic.banner} alt="" style={{ objectPosition: "8% 40%" }} draggable={false} /></div>
+          <div className="cc-panel right"><img src={mythic.banner} alt="" style={{ objectPosition: "92% 38%" }} draggable={false} /></div>
+          <div className="cc-sticker"><img src={mythic.avatar} alt={t.name} draggable={false} /></div>
+          {SPARKS.map(([x, y, d], i) => (
+            <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
+          ))}
+          {theme === "sponge" &&
+            BUBBLES.map(([x, s, d], i) => (
+              <span key={i} className="cc-bubble" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${d}s`, animationDelay: `${i * 1.2}s` }} />
+            ))}
+        </>
+      ) : (
+        <>{art}<div className="cc-holo" /></>
+      );
+      break;
+    case "shiny":
+      scene = (
+        <>
+          {art}
+          <div className="cc-sheen" />
+          {SPARKS.map(([x, y, d], i) => (
+            <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
+          ))}
+        </>
+      );
+      break;
+    default:
+      scene = art;
+  }
+
   return (
     <div
       ref={ref}
@@ -50,47 +129,14 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     >
       <div className="cc-frame">
         <div className="cc-scene">
-          {mythic ? (
-            <>
-              <div className="cc-rays" />
-              <div className="cc-panel top"><img src={mythic.banner} alt="" style={{ objectPosition: "50% 48%" }} draggable={false} /></div>
-              <div className="cc-panel left"><img src={mythic.banner} alt="" style={{ objectPosition: "8% 40%" }} draggable={false} /></div>
-              <div className="cc-panel right"><img src={mythic.banner} alt="" style={{ objectPosition: "92% 38%" }} draggable={false} /></div>
-              <div className="cc-sticker"><img src={mythic.avatar} alt={t.name} draggable={false} /></div>
-            </>
-          ) : (
-            t.art && <img className="cc-art" src={t.art} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
-          )}
-
-          <div className="cc-fx">
-            {(r.id === "shiny" || r.id === "mythic") &&
-              SPARKS.map(([x, y, d], i) => (
-                <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
-              ))}
-            {r.id === "millionaire" && <div className="cc-guilloche" />}
-            {(r.id === "legendary" || r.id === "mythic") && <div className="cc-holo" />}
-            {r.id === "og" && <div className="cc-grain" />}
-            {theme === "sponge" &&
-              BUBBLES.map(([x, s, d], i) => (
-                <span
-                  key={i}
-                  className="cc-bubble"
-                  style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${d}s`, animationDelay: `${i * 1.2}s` }}
-                />
-              ))}
-          </div>
-
+          {scene}
           <span className="cc-cat">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GLYPH[cat.id]} /></svg>
             {cat.name}
           </span>
-
           <div className="cc-plate">
             <span className="cc-name">{t.name}</span>
-            <span className="cc-serial">
-              <b>{r.name}</b>
-              {r.supply === 1 ? "1/1" : `${String(card.serial).padStart(String(r.supply).length, "0")}/${r.supply}`}
-            </span>
+            <span className="cc-serial"><b>{r.name}</b>{serial}</span>
           </div>
         </div>
       </div>
