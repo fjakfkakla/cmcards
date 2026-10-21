@@ -434,6 +434,42 @@
   animation: cc-glow 1.2s ease-in-out infinite;
 }
 
+/* ---- le thème cash : il pleut des billets (Yenni) ---- */
+.cc.mythic.cash .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #2b2a52 0 9deg, #ff8fcb 9deg 18deg, #3dcb6c 18deg 27deg, #4da8ff 27deg 36deg);
+}
+.cc.mythic.cash { --label: #7fd47f; --name: #ffd6ec; --mark: #7fd47f; }
+.cc.mythic.cash .cc-panel::after { background: none; }
+.cc.mythic.cash .cc-panel.left img { transform: scale(2); }
+.cc.mythic.cash .cc-panel.right img { transform: scale(1.1); }
+.cc.mythic.cash .cc-sticker {
+  border-color: #ff8fcb;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 6cqw 1.2cqw rgba(61,203,108,.7);
+  animation: cc-sway 3s ease-in-out infinite;
+}
+@keyframes cc-sway {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-8deg); }
+  50% { transform: translate(-50%, -54%) rotate(4deg); }
+}
+/* un billet : vert, le liseré, le rond au milieu ; il tombe en se balançant */
+.cc-bill {
+  position: absolute; z-index: 3; top: -14%; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, #2e7d46 0 20%, transparent 22%),
+    linear-gradient(#7fd47f, #7fd47f) 50% 50% / calc(100% - 1.4cqw) calc(100% - 1.4cqw) no-repeat,
+    #3dcb6c;
+  border: .5cqw solid var(--ink); border-radius: .6cqw;
+  box-shadow: .5cqw .5cqw 0 var(--ink);
+  animation: cc-fall linear infinite;
+}
+@keyframes cc-fall {
+  0% { transform: translate(0, 0) rotate(0); opacity: 0; }
+  8% { opacity: 1; }
+  50% { transform: translate(-6cqw, 70cqw) rotate(28deg); }
+  92% { opacity: 1; }
+  100% { transform: translate(4cqw, 150cqw) rotate(-24deg); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cc *, .cc .cc-frame { animation: none !important; }
 }

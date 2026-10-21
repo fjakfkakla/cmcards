@@ -32,6 +32,8 @@ const DOODLE: Record<"star" | "heart" | "sun", string> = {
 };
 /* Les gélules du thème pump : x, la taille, la durée, le délai. */
 const PILLS = [[8, 9, 7.5, 0], [26, 6, 9, 2.2], [48, 8, 6.8, 4.1], [68, 5.5, 8.4, 1.1], [86, 7, 10, 3.3], [38, 5, 7.2, 5.4]];
+/* Les billets du thème cash : x, la largeur, la durée, le délai, l'inclinaison. */
+const BILLS = [[6, 13, 6.5, 0, -24], [28, 10, 8, 2.6, 18], [50, 14, 7.2, 4.4, -10], [70, 11, 9, 1.3, 28], [88, 12, 6.8, 3.5, -18], [40, 9, 8.6, 5.8, 12]];
 
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -134,6 +136,10 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
           {theme === "bling" &&
             SPARKS.map(([x, y, d], i) => (
               <span key={`b${i}`} className="cc-spark gold" style={{ left: `${(x + 40) % 100}%`, top: `${(y + 35) % 100}%`, animationDelay: `${d + .9}s` }} />
+            ))}
+          {theme === "cash" &&
+            BILLS.map(([x, w, dur, d, rot], i) => (
+              <span key={i} className="cc-bill" style={{ left: `${x}%`, width: `${w}cqw`, height: `${w / 2.3}cqw`, rotate: `${rot}deg`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
             ))}
           {theme === "call" && (
             <>
