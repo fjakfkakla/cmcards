@@ -143,6 +143,14 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/profit-ghost.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/profit-ghost.webp", avatar: "/art/profit-face.webp",
       panels: { top: { src: "/art/profit-ghost.webp", pos: "50% 45%" }, left: { src: "/art/profit-ghost.webp", pos: "0% 50%" }, right: { src: "/art/profit-ghost.webp", pos: "66% 46%" } } } },
+  // Unipcs : le petit robot jaune (sa pdp, un rendu 3D : sa Shiny est en or) en
+  // principale ; sa bannière (le robot devant son armée dans le désert) sur son OG
+  // et dans la planche de sa Mythic : le robot et l'armée en haut, l'armée en rang
+  // à gauche, son casque en gros plan à droite, la pdp en sticker. Un Famous.
+  { id: "unipcs", name: "Unipcs", handle: "", category: "famous", art: "/art/unipcs-face.webp", artPos: "50% 42%", tint: "gold",
+    shots: { og: { src: "/art/unipcs-army.webp", pos: "72% 50%" } },
+    mythic: { banner: "/art/unipcs-army.webp", avatar: "/art/unipcs-face.webp",
+      panels: { top: { src: "/art/unipcs-army.webp", pos: "72% 50%" }, left: { src: "/art/unipcs-army.webp", pos: "30% 55%" }, right: { src: "/art/unipcs-army.webp", pos: "80% 12%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.
