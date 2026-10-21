@@ -3,7 +3,7 @@ import Nav from "@/components/Nav";
 import { RARITIES, TRADERS, type Card } from "@/lib/data";
 
 /* La planche des raretés : chaque personnage, du plus commun au plus rare, avec la
-   chance de la tirer dans un booster Classique. */
+   chance de la tirer dans un booster. */
 export default function Page() {
   return (
     <>

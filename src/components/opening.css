@@ -82,8 +82,6 @@
   to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--r)) scale(1); opacity: 0; }
 }
 .op-bit.star { width: 26px; height: 26px; background: #fff; clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); filter: drop-shadow(0 0 6px #fff); }
-.op-bit.bill { width: 54px; height: 26px; background: radial-gradient(ellipse, #3e9b66 0 30%, transparent 32%), #8cc77a; border: 2.5px solid #12382a; border-radius: 3px; }
-.op-bit.gold { width: 14px; height: 14px; border-radius: 50%; background: #ffe27a; box-shadow: 0 0 10px 3px rgba(255,200,60,.9); }
 .op-bit.confetti { width: 12px; height: 20px; border: 2px solid #1e1a16; border-radius: 2px; }
 .op-stage.og-flash { animation: op-og 1s steps(1) both; }
 @keyframes op-og { 0% { filter: grayscale(1) contrast(1.6); } 15% { filter: grayscale(1) invert(1); } 30% { filter: grayscale(1) contrast(1.4); } 100% { filter: none; } }

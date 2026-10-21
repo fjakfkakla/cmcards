@@ -2,13 +2,10 @@
    pas dans une phrase : chaque marche a sa MISE EN SCÈNE (le décor, la place du
    personnage, la matière du cadre, ce qui bouge), et on la reconnaît de loin.
 
-     Common       le carton nu : le personnage plein cadre, rien ne bouge
+     Commun       le carton nu : le personnage plein cadre, rien ne bouge
+     Rare         l'argent : le cadre en métal brossé, un film holo sous le doigt
      Shiny        la version « shiny » : le personnage change de couleurs (comme un
                   shiny dans un jeu), la nacre, un reflet qui balaie l'image, des éclats
-     Millionaire  le billet : le personnage gravé en vert dans un médaillon ovale,
-                  la guilloche, la valeur dans les coins, des billets qui tombent
-     Legendary    l'or : le personnage sous une arche dorée, un soleil qui tourne,
-                  une poussière d'or, le holo sous le doigt
      OG           le tirage noir et blanc : le grain, les lignes d'un vieil écran,
                   le vignettage, le cadre noir à filet blanc
      Mythic       1 sur 1 : la planche du personnage (plusieurs cases, son avatar),
@@ -51,6 +48,13 @@
   box-shadow: .7cqw .7cqw 0 var(--ink);
 }
 .cc-cat svg { width: 4.4cqw; height: 4.4cqw; fill: currentColor; }
+/* Les Legend sont les plus recherchées : leur pastille est en or, et elle brille. */
+.cc-cat.legend {
+  color: #3a2400; overflow: hidden;
+  background: linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
+  animation: cc-gold 3s linear infinite;
+}
+@keyframes cc-gold { to { background-position: -250% 0; } }
 
 .cc-plate {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
@@ -96,6 +100,20 @@
 .cc.common .cc-art { filter: saturate(.8) contrast(.95); }
 .cc.common .cc-glare { display: none; }
 
+/* ================= Rare : l'argent ================= */
+.cc.rare {
+  --frame:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.22) 0 .25cqw, transparent .25cqw .7cqw),
+    linear-gradient(150deg, #f4f7fa 0%, #b9c3cf 25%, #eef2f6 45%, #8f9bab 70%, #e3e8ee 100%);
+  --label: #dfe6ee;
+  --name: #eef2f6;
+}
+.cc.rare .cc-scene { outline-color: #4a5563; }
+.cc-foil {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: overlay;
+  background: linear-gradient(125deg, transparent 20%, rgba(255,255,255,.35) 40%, transparent 55%, rgba(255,255,255,.2) 75%, transparent 90%);
+}
+
 /* ================= Shiny : la nacre ================= */
 @property --pearl { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
 .cc.shiny {
@@ -112,89 +130,7 @@
   animation: cc-sheen 3.4s ease-in-out infinite;
 }
 @keyframes cc-sheen { 0% { background-position: 150% 0; } 60%, 100% { background-position: -60% 0; } }
-
-/* ================= Millionaire : le billet ================= */
-.cc.millionaire {
-  --ink: #12382a;
-  --cat: #2f8f5b;
-  --frame:
-    repeating-radial-gradient(circle at 0 0, transparent 0 1.4cqw, rgba(18,56,42,.35) 1.4cqw 1.6cqw),
-    repeating-radial-gradient(circle at 100% 100%, transparent 0 1.4cqw, rgba(18,56,42,.35) 1.4cqw 1.6cqw),
-    linear-gradient(160deg, #e9f2df, #c9dcb8 50%, #e2edd4);
-  --plate: rgba(18,56,42,.92);
-  --label: #b9e3a0;
-  --name: #e9f2df;
-}
-.cc-note {
-  position: absolute; inset: 0;
-  background:
-    repeating-conic-gradient(from 0deg at 50% 46%, rgba(18,56,42,.12) 0 2deg, transparent 2deg 6deg),
-    repeating-radial-gradient(circle at 50% 46%, transparent 0 2.2cqw, rgba(18,56,42,.16) 2.2cqw 2.5cqw),
-    linear-gradient(180deg, #d9e8c8, #b8d2a0);
-}
-.cc-oval {
-  position: absolute; z-index: 2; left: 14%; right: 14%; top: 13%; bottom: 22%;
-  border-radius: 50%; overflow: hidden;
-  border: 1.2cqw solid #12382a;
-  box-shadow: 0 0 0 1cqw #e9f2df, 0 0 0 1.6cqw #12382a;
-}
-.cc-oval .cc-art { filter: grayscale(1) sepia(1) hue-rotate(65deg) saturate(1.5) contrast(1.35) brightness(.95); }
-.cc-engrave {
-  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
-  background: repeating-linear-gradient(0deg, rgba(10,40,25,.45) 0 .35cqw, transparent .35cqw 1cqw);
-}
-.cc-denom {
-  position: absolute; z-index: 3; font: 400 7cqw/1 var(--font-chewy); color: #12382a;
-  -webkit-text-stroke: .5cqw #e9f2df; paint-order: stroke fill;
-}
-.cc-denom.tl { top: 4cqw; right: 4cqw; }
-.cc-denom.tr { top: 58%; right: 4cqw; }
-.cc.millionaire .cc-cat { box-shadow: .7cqw .7cqw 0 #12382a; }
-.cc-bill {
-  position: absolute; z-index: 1; top: -12%; width: 13cqw; height: 6.4cqw; pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 50%, #3e9b66 0 30%, transparent 32%),
-    linear-gradient(#8cc77a, #6fb35e);
-  border: .45cqw solid #12382a; border-radius: .6cqw;
-  animation: cc-fall linear infinite;
-}
-@keyframes cc-fall {
-  0% { transform: translate(0, 0) rotate(var(--rot)) rotateX(0); opacity: 0; }
-  8% { opacity: 1; }
-  50% { transform: translate(3cqw, 70cqw) rotate(calc(var(--rot) * -1)) rotateX(180deg); }
-  100% { transform: translate(-2cqw, 150cqw) rotate(var(--rot)) rotateX(360deg); opacity: 0; }
-}
-
-/* ================= Legendary : l'or ================= */
-.cc.legendary {
-  --ink: #3a2400;
-  --frame:
-    repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.18) 0 3deg, transparent 3deg 9deg),
-    radial-gradient(circle at 20% 10%, rgba(255,255,255,.7), transparent 30%),
-    linear-gradient(150deg, #fff1a8 0%, #f5c242 22%, #b8860b 45%, #ffe27a 62%, #c8941a 80%, #fff0a0 100%);
-  --plate: rgba(58,36,0,.9);
-  --label: #ffd75e;
-  --name: #ffd75e;
-}
-.cc.legendary .cc-scene { background: #2a1800; }
-.cc-sun {
-  position: absolute; inset: -50%;
-  background: repeating-conic-gradient(from 0deg, #ffcf3a 0 7deg, #b8860b 7deg 14deg);
-  animation: cc-rot 22s linear infinite;
-}
 @keyframes cc-rot { to { transform: rotate(360deg); } }
-.cc-arch {
-  position: absolute; z-index: 2; left: 11%; right: 11%; top: 15%; bottom: 20%;
-  border-radius: 50% 50% 3cqw 3cqw / 34% 34% 3cqw 3cqw; overflow: hidden;
-  border: 1.4cqw solid #ffe27a;
-  box-shadow: 0 0 0 .8cqw #3a2400, 0 0 6cqw 1cqw rgba(255,214,90,.8);
-}
-.cc-dust {
-  position: absolute; z-index: 3; width: 1.6cqw; height: 1.6cqw; border-radius: 50%;
-  background: #fff3b0; box-shadow: 0 0 1.6cqw .6cqw rgba(255,210,80,.9);
-  animation: cc-dust 3.2s ease-in-out infinite;
-}
-@keyframes cc-dust { 0%, 100% { opacity: 0; transform: translateY(2cqw) scale(.4); } 50% { opacity: 1; transform: translateY(-2cqw) scale(1); } }
 
 /* ================= OG : le tirage noir et blanc ================= */
 .cc.og {

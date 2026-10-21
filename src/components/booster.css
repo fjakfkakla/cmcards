@@ -41,11 +41,6 @@
 .bp-motif { position: absolute; inset: 0; }
 .bp-motif.dots { background: radial-gradient(circle, var(--m) 0 1.6cqw, transparent 1.8cqw) 0 0 / 7cqw 7cqw; }
 .bp-motif.stripes { background: repeating-linear-gradient(-35deg, var(--m) 0 3cqw, transparent 3cqw 9cqw); }
-.bp-motif.bills {
-  background:
-    repeating-radial-gradient(circle at 50% 42%, transparent 0 3cqw, var(--m) 3cqw 3.5cqw),
-    linear-gradient(var(--c), var(--c));
-}
 .bp-motif.rays {
   background: repeating-conic-gradient(from 0deg at 50% 42%, var(--m) 0 6deg, transparent 6deg 14deg);
 }
@@ -74,6 +69,7 @@
   background: #fff4dc;
 }
 .bp-window img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bp-glyph { width: 100%; height: 100%; padding: 18%; display: block; stroke: #1e1a16; stroke-width: .8; paint-order: stroke; }
 .bp-name {
   position: absolute; z-index: 5; left: 4%; right: 4%; top: 67%; text-align: center;
   font: 400 15cqw/.9 var(--font-chewy); color: #fff4dc;

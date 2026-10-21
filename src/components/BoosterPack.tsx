@@ -1,6 +1,6 @@
 import "./booster.css";
 import Pic from "./Pic";
-import { CATEGORIES, type Pack, trader } from "@/lib/data";
+import { type Pack, category, packTraders } from "@/lib/data";
 import { portraitSources, portraitUri } from "@/lib/portrait";
 
 /* Le booster fermé. `torn` le coupe le long de la ligne : le haut s'envole et la
@@ -24,13 +24,18 @@ export default function BoosterPack({
   glow?: string;
   className?: string;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  const face = trader(pack.face);
+  const cat = category(pack.pool);
+  const face = packTraders(pack)[0]; // la vitrine : le premier personnage de la catégorie
   const bag = (
     <div className="bp-bag">
       <div className={`bp-motif ${pack.motif}`} />
       <span className="bp-brand">cm cards</span>
       <div className="bp-window">
-        <Pic srcs={portraitSources(face)} fallback={portraitUri(face.name, CATEGORIES.find((c) => c.id === face.category)?.bg)} alt="" style={{ objectPosition: face.artPos }} draggable={false} />
+        {face ? (
+          <Pic srcs={portraitSources(face)} fallback={portraitUri(face.name, cat.bg)} alt="" style={{ objectPosition: face.artPos }} draggable={false} />
+        ) : (
+          <svg className="bp-glyph" viewBox="0 0 24 24" aria-hidden="true" style={{ fill: cat.bg }}><path d={cat.glyph} /></svg>
+        )}
       </div>
       <span className="bp-name">{pack.name}</span>
       <span className="bp-count">{pack.cards} cartes</span>
