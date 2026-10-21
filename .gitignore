@@ -41,4 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Les photos des traders : jamais dans le dépôt sans leur accord écrit
-/public/traders/
+/public/traders/*
+# Kimchi : versionnées à la demande du propriétaire du projet
+!/public/traders/kimchi-*
