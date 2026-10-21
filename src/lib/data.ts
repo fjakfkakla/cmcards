@@ -24,8 +24,8 @@ export const RARITIES: Rarity[] = [
 export const rarity = (id: RarityId) => RARITIES.find((r) => r.id === id)!;
 
 /* Les catégories, de la plus courante à la plus recherchée : les Trencher sont la
-   base, les Legend en dernier. */
-export type CategoryId = "trencher" | "dev" | "bundler" | "famous" | "legend";
+   base, puis les Holder, les Legend en dernier. */
+export type CategoryId = "trencher" | "holder" | "dev" | "bundler" | "famous" | "legend";
 export type Category = {
   id: CategoryId; name: string; tagline: string;
   bg: string;    // le fond des cartes, le papier du booster
@@ -35,6 +35,8 @@ export type Category = {
 export const CATEGORIES: Category[] = [
   { id: "trencher", name: "Trencher", tagline: "La base", bg: "#ff9a1f", ink: "#ffbb63",
     glyph: "M15.5 2 22 8.5l-1.4 1.4-1.6-1.6-4.3 4.3 1.1 1.1-3 3a3 3 0 0 1-4.2 0l-.3-.3-4.9 4.9L2 19.9 6.9 15l-.3-.3a3 3 0 0 1 0-4.2l3-3 1.1 1.1 4.3-4.3-1.6-1.6z" },
+  { id: "holder", name: "Holder", tagline: "Mains de diamant", bg: "#2fa8ff", ink: "#74c6ff",
+    glyph: "M6 3h12l4 6-10 12L2 9z" },
   { id: "dev", name: "Dev", tagline: "Les bons", bg: "#3dcb6c", ink: "#6fdd92",
     glyph: "M8.6 6.4 3 12l5.6 5.6 1.4-1.4L5.8 12 10 7.8zm6.8 0L14 7.8l4.2 4.2-4.2 4.2 1.4 1.4L21 12z" },
   { id: "bundler", name: "Bundler", tagline: "Toxique", bg: "#a77bff", ink: "#c3a4ff",
@@ -202,6 +204,12 @@ export const TRADERS: Trader[] = [
   { id: "megga", name: "MEGGA", handle: "", category: "famous", art: "/art/megga.webp", artPos: "42% 45%", tint: "gold",
     mythic: { banner: "/art/megga.webp", avatar: "/art/megga.webp",
       panels: { top: { src: "/art/megga.webp", pos: "42% 35%" }, left: { src: "/art/megga.webp", pos: "20% 55%" }, right: { src: "/art/megga.webp", pos: "60% 60%" } } } },
+  // Pain : une seule image, la sienne partout : le ninja au bandeau frontal, les
+  // yeux du Rinnegan, la foudre sur fond rouge. Sa Shiny est en or (pas de peau verte).
+  // Pas de thème pour sa Mythic. Le premier Holder.
+  { id: "pain", name: "Pain", handle: "", category: "holder", art: "/art/pain.webp", artPos: "50% 38%", tint: "gold",
+    mythic: { banner: "/art/pain.webp", avatar: "/art/pain.webp",
+      panels: { top: { src: "/art/pain.webp", pos: "50% 20%" }, left: { src: "/art/pain.webp", pos: "12% 70%" }, right: { src: "/art/pain.webp", pos: "88% 25%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
@@ -250,6 +258,7 @@ export type Pack = {
 
 const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif" | "skin">> = {
   trencher: { price: 0.1, cards: 3, motif: "stripes" },
+  holder: { price: 0.12, cards: 3, motif: "dots" },
   dev: { price: 0.15, cards: 3, motif: "dots" },
   bundler: { price: 0.2, cards: 3, motif: "rays" },
   famous: { price: 0.35, cards: 4, guarantee: "rare", motif: "rays" },
