@@ -183,11 +183,11 @@ export const TRADERS: Trader[] = [
   { id: "cooker", name: "Cooker", handle: "", category: "trencher", art: "/art/cooker-face.webp", artPos: "50% 38%",
     mythic: { banner: "/art/cooker.webp", avatar: "/art/cooker-face.webp",
       panels: { top: { src: "/art/cooker.webp", pos: "62% 50%" }, left: { src: "/art/cooker.webp", pos: "10% 45%" }, right: { src: "/art/cooker.webp", pos: "96% 65%" } } } },
-  // Trencher : une seule image, la sienne partout : le gardien aux cheveux blancs,
+  // Dior : une seule image, la sienne partout : le gardien aux cheveux blancs,
   // en noir et blanc (manga). Sa Shiny est en bleu électrique. Pas de thème pour sa Mythic.
-  { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
-    mythic: { banner: "/art/trencher.webp", avatar: "/art/trencher.webp",
-      panels: { top: { src: "/art/trencher.webp", pos: "50% 20%" }, left: { src: "/art/trencher.webp", pos: "12% 55%" }, right: { src: "/art/trencher.webp", pos: "88% 55%" } } } },
+  { id: "dior", name: "Dior", handle: "", category: "trencher", art: "/art/dior.webp", artPos: "50% 40%", tint: "blue",
+    mythic: { banner: "/art/dior.webp", avatar: "/art/dior.webp",
+      panels: { top: { src: "/art/dior.webp", pos: "50% 20%" }, left: { src: "/art/dior.webp", pos: "12% 55%" }, right: { src: "/art/dior.webp", pos: "88% 55%" } } } },
   // Superman : une seule image, la sienne partout : à genoux, enchaîné, bras en
   // croix devant le mur blanc. Un rendu 3D, comme une photo : sa Shiny est en or.
   // Pas de thème pour sa Mythic. Le premier Dev.
@@ -269,6 +269,26 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/nyhrox-porsche.webp", pos: "30% 50%" } },
     mythic: { banner: "/art/nyhrox-porsche.webp", avatar: "/art/nyhrox.webp",
       panels: { top: { src: "/art/nyhrox-porsche.webp", pos: "50% 30%" }, left: { src: "/art/nyhrox-porsche.webp", pos: "20% 38%" }, right: { src: "/art/nyhrox-porsche.webp", pos: "56% 62%" } } } },
+  // Matt : une seule image, la sienne partout : le Ken des Oscars, le costume rose à
+  // strass, les lunettes noires, les bras ouverts devant les danseurs en smoking et
+  // chapeau de cow-boy. Une photo : sa Shiny est en or. Pas de thème pour sa Mythic.
+  // Un Trencher.
+  { id: "matt", name: "Matt", handle: "", category: "trencher", art: "/art/matt.webp", artPos: "56% 40%", tint: "gold",
+    mythic: { banner: "/art/matt.webp", avatar: "/art/matt.webp",
+      panels: { top: { src: "/art/matt.webp", pos: "56% 30%" }, left: { src: "/art/matt.webp", pos: "10% 55%" }, right: { src: "/art/matt.webp", pos: "90% 30%" } } } },
+  // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
+  // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
+  // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
+  { id: "whashywash", name: "whashywash", handle: "", category: "famous", art: "/art/whashywash.webp", artPos: "48% 45%", tint: "gold",
+    mythic: { banner: "/art/whashywash.webp", avatar: "/art/whashywash.webp",
+      panels: { top: { src: "/art/whashywash.webp", pos: "50% 12%" }, left: { src: "/art/whashywash.webp", pos: "25% 75%" }, right: { src: "/art/whashywash.webp", pos: "75% 85%" } } } },
+  // dv : une seule image, la sienne partout : la Porsche orange, la roue aux étriers
+  // jaunes, et lui debout à côté, les sneakers noires à la croix rouge. Une photo de
+  // nuit, presque noire : l'or la verdit, sa Shiny est en bleu électrique. Pas de
+  // thème pour sa Mythic. Un Famous.
+  { id: "dv", name: "dv", handle: "", category: "famous", art: "/art/dv.webp", artPos: "62% 50%", tint: "blue",
+    mythic: { banner: "/art/dv.webp", avatar: "/art/dv.webp",
+      panels: { top: { src: "/art/dv.webp", pos: "50% 70%" }, left: { src: "/art/dv.webp", pos: "10% 30%" }, right: { src: "/art/dv.webp", pos: "80% 65%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
