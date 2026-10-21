@@ -384,6 +384,20 @@
 .cc.mythic.duo { --label: #ffd0cc; --name: #fff; --mark: #9ad1ff; }
 .cc.mythic.duo .cc-sticker { border-color: #fff; box-shadow: 1.2cqw 1.2cqw 0 var(--ink), -2cqw 0 5cqw rgba(255,75,62,.7), 2cqw 0 5cqw rgba(154,209,255,.8); }
 
+/* ---- le thème bling : l'or et les perles (Frank) ---- */
+.cc.mythic.bling .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #ffd12e 0 9deg, #fff6d6 9deg 18deg, #d9a21a 18deg 27deg, #ffb7d5 27deg 36deg);
+}
+.cc.mythic.bling { --label: #ffd12e; --name: #fff6d6; --mark: #ffd12e; }
+.cc.mythic.bling .cc-panel::after { background: none; }
+.cc.mythic.bling .cc-sticker {
+  border-color: #ffd12e;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 6cqw 1.2cqw rgba(255,209,46,.75);
+  animation: cc-gold-ring 2.4s ease-in-out infinite;
+}
+@keyframes cc-gold-ring { 0%, 100% { border-color: #ffd12e; } 50% { border-color: #fff6d6; } }
+.cc-spark.gold { background: #ffd12e; filter: drop-shadow(0 0 1cqw rgba(255,209,46,.95)); width: 7cqw; height: 7cqw; }
+
 @media (prefers-reduced-motion: reduce) {
   .cc *, .cc .cc-frame { animation: none !important; }
 }
