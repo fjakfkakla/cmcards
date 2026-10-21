@@ -82,8 +82,8 @@ export type Trader = {
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
   // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant,
-  // les billets qui tombent, les yeux laser
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash" | "laser";
+  // les billets qui tombent, les yeux laser, les trophées et les confettis
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash" | "laser" | "trophy";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -260,6 +260,15 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/ethan.webp", pos: "50% 35%" } },
     mythic: { banner: "/art/ethan.webp", avatar: "/art/ethan-face.webp",
       panels: { top: { src: "/art/ethan.webp", pos: "50% 30%" }, left: { src: "/art/ethan.webp", pos: "0% 85%" }, right: { src: "/art/ethan.webp", pos: "80% 75%" } } } },
+  // Nyhrox : sa photo de dos (le t-shirt GALLERY DEPT., le pantalon crème, la
+  // casquette à la main) en principale ; une photo : sa Shiny est en or. Sa seconde
+  // image (lui et la 911 grise chez Porsche) sur son OG et dans la planche de sa
+  // Mythic : lui, PORSCHE et la voiture en haut, lui à la portière à gauche, le
+  // capot et l'écusson à droite. Un champion : sa Mythic est en trophées. Un Holder.
+  { id: "nyhrox", name: "Nyhrox", handle: "", category: "holder", art: "/art/nyhrox.webp", artPos: "48% 50%", tint: "gold", theme: "trophy",
+    shots: { og: { src: "/art/nyhrox-porsche.webp", pos: "30% 50%" } },
+    mythic: { banner: "/art/nyhrox-porsche.webp", avatar: "/art/nyhrox.webp",
+      panels: { top: { src: "/art/nyhrox-porsche.webp", pos: "50% 30%" }, left: { src: "/art/nyhrox-porsche.webp", pos: "20% 38%" }, right: { src: "/art/nyhrox-porsche.webp", pos: "56% 62%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {

@@ -34,6 +34,14 @@ const DOODLE: Record<"star" | "heart" | "sun", string> = {
 const PILLS = [[8, 9, 7.5, 0], [26, 6, 9, 2.2], [48, 8, 6.8, 4.1], [68, 5.5, 8.4, 1.1], [86, 7, 10, 3.3], [38, 5, 7.2, 5.4]];
 /* Les billets du thème cash : x, la largeur, la durée, le délai, l'inclinaison. */
 const BILLS = [[6, 13, 6.5, 0, -24], [28, 10, 8, 2.6, 18], [50, 14, 7.2, 4.4, -10], [70, 11, 9, 1.3, 28], [88, 12, 6.8, 3.5, -18], [40, 9, 8.6, 5.8, 12]];
+/* Les trophées du thème trophy : x, y, la taille, le délai, l'inclinaison (grille de 24 : une coupe). */
+const CUPS = [[6, 10, 11, -12, 0], [38, 3, 7, 0, 1.6], [87, 40, 8, 10, 1.1], [86, 68, 10, 8, 2], [5, 70, 8, -8, .6]];
+const CUP = "M7 2h10v2h4v3a5 5 0 0 1-4.6 5A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 7.6 12 5 5 0 0 1 3 7V4h4zM5 6v1a3 3 0 0 0 2 2.8V6zm14 0h-2v3.8A3 3 0 0 0 19 7z";
+/* Les confettis du thème trophy : x, la couleur, la durée, le délai, l'inclinaison. */
+const CONFETTI: [number, string, number, number, number][] = [
+  [8, "#ffd12e", 5.6, 0, 20], [22, "#fff6d6", 7, 2.1, -30], [36, "#2fa8ff", 6.2, 3.8, 45], [54, "#ffd12e", 7.6, 1, -15],
+  [66, "#ff5fb4", 5.9, 4.6, 30], [80, "#fff6d6", 6.8, 2.9, -40], [92, "#ffd12e", 7.2, .5, 10], [44, "#3dcb6c", 6.5, 5.4, -25],
+];
 
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -141,6 +149,19 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             BILLS.map(([x, w, dur, d, rot], i) => (
               <span key={i} className="cc-bill" style={{ left: `${x}%`, width: `${w}cqw`, height: `${w / 2.3}cqw`, rotate: `${rot}deg`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
             ))}
+          {theme === "trophy" && (
+            <>
+              {CUPS.map(([x, y, sz, rot, d], i) => (
+                <svg key={i} className="cc-cup" viewBox="0 0 24 24" aria-hidden="true" style={{ left: `${x}%`, top: `${y}%`, width: `${sz}cqw`, rotate: `${rot}deg`, animationDelay: `${d}s` }}>
+                  <path d={CUP} />
+                </svg>
+              ))}
+              {CONFETTI.map(([x, color, dur, d, rot], i) => (
+                <span key={`c${i}`} className="cc-confetti" style={{ left: `${x}%`, background: color, rotate: `${rot}deg`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
+              ))}
+              <span className="cc-champ">Champion</span>
+            </>
+          )}
           {theme === "call" && (
             <>
               <span className="cc-ring a" /><span className="cc-ring b" /><span className="cc-ring c" />

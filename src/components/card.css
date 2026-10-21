@@ -507,6 +507,43 @@
   animation: cc-flicker 2.6s steps(1) infinite;
 }
 
+/* ---- le thème trophy : les coupes et les confettis du champion (Nyhrox) ---- */
+.cc.mythic.trophy .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #ffd12e 0 9deg, #1e1a16 9deg 18deg, #fff6d6 18deg 27deg, #2fa8ff 27deg 36deg);
+}
+.cc.mythic.trophy { --label: #ffd12e; --name: #fff6d6; --mark: #ffd12e; }
+.cc.mythic.trophy .cc-panel::after { background: none; }
+/* lui à la portière à gauche, l'écusson sur le capot à droite */
+.cc.mythic.trophy .cc-panel.left img { transform: scale(1.7); }
+.cc.mythic.trophy .cc-panel.right img { transform: scale(1.9); }
+/* le sticker en médaille d'or : le liseré qui brille */
+.cc.mythic.trophy .cc-sticker {
+  width: 30%;
+  border-color: #ffd12e;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 6cqw 1.4cqw rgba(255,209,46,.8);
+  animation: cc-gold-ring 2.4s ease-in-out infinite;
+}
+/* une coupe d'or : elle flotte, elle brille */
+.cc-cup {
+  position: absolute; z-index: 4; pointer-events: none; aspect-ratio: 1;
+  fill: #ffd12e; fill-rule: evenodd; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; paint-order: stroke;
+  filter: drop-shadow(.5cqw .5cqw 0 rgba(30,26,22,.4)) drop-shadow(0 0 2cqw rgba(255,209,46,.7));
+  animation: cc-lift 3.2s ease-in-out infinite;
+}
+@keyframes cc-lift { 0%, 100% { translate: 0 0; } 50% { translate: 0 -2.4cqw; } }
+/* un confetti : un ruban qui tombe en tournant */
+.cc-confetti {
+  position: absolute; z-index: 3; top: -8%; width: 2cqw; height: 3.6cqw; pointer-events: none;
+  border: .35cqw solid var(--ink); border-radius: .3cqw;
+  animation: cc-fall linear infinite;
+}
+.cc-champ {
+  position: absolute; z-index: 6; right: 3.6cqw; top: 5cqw; pointer-events: none;
+  font: 900 4.4cqw/1 var(--font-nunito); letter-spacing: .14em; text-transform: uppercase; color: #ffd12e;
+  text-shadow: 0 0 1.2cqw var(--ink), .5cqw .5cqw 0 var(--ink);
+  animation: cc-glow 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cc *, .cc .cc-frame { animation: none !important; }
 }
