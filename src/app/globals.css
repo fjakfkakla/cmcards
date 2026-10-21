@@ -56,111 +56,6 @@ body {
   paint-order: stroke fill;
 }
 
-/* ---------- les raretés : une couleur, un fond, un geste ---------- */
-.r-commune     { --r: #cfc6b8; --r-deep: #8f8576; --r-soft: #efe9df; }
-.r-peu-commune { --r: #3dcb6c; --r-deep: #1f8a43; --r-soft: #d9f6e3; }
-.r-rare        { --r: #4da8ff; --r-deep: #1f6fd1; --r-soft: #dcecff; }
-.r-epique      { --r: #ff4b3e; --r-deep: #c72a1f; --r-soft: #ffe0dc; }
-.r-legendaire  { --r: #ff9a1f; --r-deep: #c86a00; --r-soft: #ffe9cc; }
-.r-exclusive   { --r: #ffd12e; --r-deep: #d9a400; --r-soft: #fff3c2; }
-
-/* La carte : un cadre de la couleur de la rareté, le contour d'encre. */
-.card {
-  position: relative;
-  aspect-ratio: 63 / 88;
-  border-radius: 7% / 5%;
-  background: var(--r);
-  border: 3px solid var(--ink);
-  box-shadow: 5px 5px 0 var(--ink);
-  transform-style: preserve-3d;
-  transition: transform .18s ease-out, box-shadow .18s ease-out;
-  container-type: inline-size;
-}
-.card-inner {
-  position: absolute; inset: 4.2%;
-  display: flex; flex-direction: column; gap: 3.2cqw;
-}
-.card-name {
-  font-family: var(--font-display);
-  font-size: 9.5cqw; line-height: 1;
-  color: #fff;
-  -webkit-text-stroke: 1.6cqw var(--ink);
-  paint-order: stroke fill;
-  letter-spacing: .01em;
-}
-.card-art {
-  position: relative; flex: 1; overflow: hidden;
-  border: 2.4cqw solid var(--ink);
-  border-radius: 5cqw;
-  background: var(--r-soft);
-}
-.card-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card-plate {
-  display: flex; align-items: center; gap: 3cqw;
-  background: var(--color-paper);
-  border: 1.8cqw solid var(--ink);
-  border-radius: 4.5cqw;
-  padding: 2.6cqw 3.4cqw;
-}
-.card-foot {
-  display: flex; justify-content: space-between; align-items: center;
-  font-weight: 900; font-size: 4.6cqw; color: var(--ink);
-}
-
-/* Le dos de la carte */
-.card-back {
-  background:
-    radial-gradient(circle at 50% 50%, #ffd12e 0 17%, transparent 17.5%),
-    repeating-linear-gradient(45deg, #ff4b3e 0 6%, #ff6a5e 6% 12%);
-}
-
-/* Le reflet : il suit le doigt. Les raretés hautes ont l'holo. */
-.card .shine {
-  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255,255,255,.55), transparent 45%);
-  mix-blend-mode: soft-light; opacity: 0; transition: opacity .2s;
-}
-.card:hover .shine, .card.is-live .shine { opacity: 1; }
-.card.holo .shine {
-  background:
-    radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255,255,255,.6), transparent 40%),
-    linear-gradient(115deg, transparent 20%, rgba(255,0,170,.35) 36%, rgba(0,255,230,.35) 50%, rgba(255,230,0,.35) 64%, transparent 80%);
-  background-size: 100% 100%, 250% 250%;
-  background-position: 0 0, var(--hx, 50%) var(--hy, 50%);
-  mix-blend-mode: color-dodge;
-}
-
-/* Exclusive : l'éponge (des trous), des bulles qui montent. */
-.r-exclusive .card-art {
-  background:
-    radial-gradient(circle at 18% 22%, #e9b800 0 6%, transparent 6.5%),
-    radial-gradient(circle at 72% 14%, #e9b800 0 4%, transparent 4.5%),
-    radial-gradient(circle at 84% 64%, #e9b800 0 7%, transparent 7.5%),
-    radial-gradient(circle at 30% 78%, #e9b800 0 5%, transparent 5.5%),
-    radial-gradient(circle at 55% 48%, #e9b800 0 3%, transparent 3.5%),
-    #ffd12e;
-}
-.r-exclusive.card {
-  background:
-    radial-gradient(circle at 12% 8%, #f0bd00 0 3%, transparent 3.4%),
-    radial-gradient(circle at 90% 30%, #f0bd00 0 4%, transparent 4.4%),
-    radial-gradient(circle at 8% 70%, #f0bd00 0 3.5%, transparent 3.9%),
-    radial-gradient(circle at 92% 92%, #f0bd00 0 3%, transparent 3.4%),
-    #ffd12e;
-}
-.bubble {
-  position: absolute; bottom: -12%; border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.95);
-  background: radial-gradient(circle at 32% 30%, rgba(255,255,255,.9) 0 18%, rgba(255,255,255,.12) 20%);
-  animation: bubble-up linear infinite;
-  pointer-events: none;
-}
-@keyframes bubble-up {
-  0% { transform: translateY(0) translateX(0); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(-140cqh) translateX(10px); opacity: 0; }
-}
-
 /* ---------- le booster ---------- */
 .pack {
   position: relative;
@@ -201,18 +96,12 @@ body {
 .pop-in { animation: pop-in .45s cubic-bezier(.2,.9,.3,1.3) both; }
 @keyframes burst { 0% { transform: scale(.2); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
 .burst { animation: burst .9s ease-out forwards; }
-@keyframes rays { to { transform: rotate(360deg); } }
-.rays {
-  background: repeating-conic-gradient(from 0deg, var(--r) 0 8deg, transparent 8deg 20deg);
-  animation: rays 14s linear infinite;
-  mask: radial-gradient(circle, #000 20%, transparent 70%);
-}
 .flip { transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.8,.3,1); }
 .flip.is-flipped { transform: rotateY(180deg); }
 .face { position: absolute; inset: 0; backface-visibility: hidden; }
 .face-front { transform: rotateY(180deg); }
 
 @media (prefers-reduced-motion: reduce) {
-  .floaty, .bubble, .rays, .is-shaking, .pack:hover .pack-foil { animation: none !important; }
+  .floaty, .is-shaking, .pack:hover .pack-foil { animation: none !important; }
   .flip { transition: none; }
 }

@@ -1,25 +1,39 @@
 /* Le catalogue de la saison 1. Les montants et les prix sont ceux de la démo
    (devnet) : ils seront lus sur la chaîne et chez Jupiter au branchement. */
 
-export type RarityId = "commune" | "peu-commune" | "rare" | "epique" | "legendaire" | "exclusive";
+/* Le système de cm cards : une carte = un personnage, une catégorie, une rareté.
+   La catégorie donne le fond, la rareté donne la bordure et l'effet. */
+
+export type RarityId = "common" | "shiny" | "millionaire" | "legendary" | "og" | "mythic";
 
 export type Rarity = {
   id: RarityId;
   name: string;
-  odds: number;        // probabilité dans le booster Classique, en %
+  odds: number;          // probabilité dans le booster Classique, en %
   usd: [number, number]; // fourchette de la valeur en coins à l'intérieur
-  holo: boolean;
+  supply: number;        // exemplaires numérotés par personnage
 };
 
 export const RARITIES: Rarity[] = [
-  { id: "commune", name: "Commune", odds: 55, usd: [0.5, 2], holo: false },
-  { id: "peu-commune", name: "Peu commune", odds: 25, usd: [2, 6], holo: false },
-  { id: "rare", name: "Rare", odds: 12, usd: [6, 20], holo: false },
-  { id: "epique", name: "Épique", odds: 5.5, usd: [20, 80], holo: true },
-  { id: "legendaire", name: "Légendaire", odds: 2.2, usd: [80, 400], holo: true },
-  { id: "exclusive", name: "Exclusive", odds: 0.3, usd: [400, 2500], holo: true },
+  { id: "common", name: "Common", odds: 70, usd: [0.5, 3], supply: 5000 },
+  { id: "shiny", name: "Shiny", odds: 20, usd: [3, 15], supply: 1000 },
+  { id: "millionaire", name: "Millionaire", odds: 7, usd: [15, 80], supply: 250 },
+  { id: "legendary", name: "Legendary", odds: 2.5, usd: [80, 400], supply: 50 },
+  { id: "og", name: "OG", odds: 0.45, usd: [400, 1500], supply: 10 },
+  { id: "mythic", name: "Mythic", odds: 0.05, usd: [1500, 5000], supply: 1 },
 ];
 export const rarity = (id: RarityId) => RARITIES.find((r) => r.id === id)!;
+
+export type CategoryId = "top10" | "trader" | "dev" | "sniper" | "bundler";
+export type Category = { id: CategoryId; name: string; bg: string };
+export const CATEGORIES: Category[] = [
+  { id: "top10", name: "Top 10", bg: "#ff9a1f" },
+  { id: "trader", name: "Trader", bg: "#4da8ff" },
+  { id: "dev", name: "Dev", bg: "#3dcb6c" },
+  { id: "sniper", name: "Sniper", bg: "#ff4b3e" },
+  { id: "bundler", name: "Bundler", bg: "#a77bff" },
+];
+export const category = (id: CategoryId) => CATEGORIES.find((c) => c.id === id)!;
 
 export type Coin = { ticker: string; name: string; price: number; color: string };
 export const COINS: Record<string, Coin> = {
@@ -30,10 +44,16 @@ export const COINS: Record<string, Coin> = {
   FWOG: { ticker: "FWOG", name: "Fwog", price: 0.087, color: "#7fd47f" },
 };
 
-export type Trader = { id: string; name: string; handle: string; art?: string; artPos?: string; artZoom?: number };
+export type Trader = {
+  id: string; name: string; handle: string; category: CategoryId;
+  art?: string; artPos?: string;
+  theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
+  mythic?: { banner: string; avatar: string }; // les images de sa Mythic
+};
 export const TRADERS: Trader[] = [
-  { id: "mitch", name: "Mitch", handle: "@mitch", art: "/traders/mitch.png", artPos: "50% 60%" },
-  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", art: "/traders/cupsey-banner.webp", artPos: "93% 30%" },
+  { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
+  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
+    mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 
@@ -44,15 +64,9 @@ export type Card = {
   coin: string;
   amount: number;   // nombre de coins dans la carte
   serial: number;
-  supply: number;
 };
 
 export const usdOf = (c: Card) => c.amount * COINS[c.coin].price;
-
-/* Le tirage par carte : chaque rareté a son tirage limité et numéroté. */
-export const SUPPLY: Record<RarityId, number> = {
-  commune: 5000, "peu-commune": 2000, rare: 800, epique: 250, legendaire: 50, exclusive: 5,
-};
 
 export type Pack = {
   id: string;
@@ -80,14 +94,14 @@ export const PACKS: Pack[] = [
     cards: 5,
     bg: "linear-gradient(160deg,#ffe45c 0%,#ffd12e 50%,#ffb41a 100%)",
     face: "cupsey",
-    boost: "Exclusive ×5",
+    boost: "OG et Mythic ×5",
   },
 ];
 export const pack = (id: string) => PACKS.find((p) => p.id === id);
 
 /* Le tirage de la démo (au branchement : le serveur, avec la preuve publiée). */
 export function drawRarity(rand: number, boost = 1): RarityId {
-  const w = RARITIES.map((r) => (r.id === "exclusive" ? r.odds * boost : r.odds));
+  const w = RARITIES.map((r) => (r.id === "mythic" || r.id === "og" ? r.odds * boost : r.odds));
   const total = w.reduce((a, b) => a + b, 0);
   let x = rand * total;
   for (let i = RARITIES.length - 1; i >= 0; i--) {
@@ -95,7 +109,7 @@ export function drawRarity(rand: number, boost = 1): RarityId {
     if (x < w[i]) return RARITIES[i].id;
     x -= w[i];
   }
-  return "commune";
+  return "common";
 }
 
 export function drawCard(seed: number, boost = 1): Card {
@@ -113,8 +127,7 @@ export function drawCard(seed: number, boost = 1): Card {
     rarity: r,
     coin,
     amount,
-    serial: 1 + Math.floor(rnd() * SUPPLY[r]),
-    supply: SUPPLY[r],
+    serial: 1 + Math.floor(rnd() * rarity(r).supply),
   };
 }
 
@@ -131,48 +144,3 @@ export const fmtAmount = (n: number) =>
   n >= 1e6 ? `${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)} M` : n >= 1e3 ? `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1)} k` : `${n}`;
 export const fmtUsd = (n: number) =>
   `${n.toLocaleString("fr-FR", { maximumFractionDigits: n < 10 ? 2 : 0 })} $`;
-
-/* Le texte imprimé de chaque trader : ses attaques, sa ligne du bas, sa mention.
-   C'est le jeu de la carte ; la valeur réelle, c'est ce qu'elle contient. */
-export type Move = { cost: number; name: string; dmg: string; text: string };
-export type CardText = {
-  stage: string;
-  strip: string;
-  value: string;
-  moves: Move[];
-  weak: string;
-  resist: string;
-  retreat: number;
-  flavor: string;
-  illus: string;
-};
-export const CARD_TEXT: Record<string, CardText> = {
-  cupsey: {
-    stage: "Trader",
-    strip: "Trader Solana · @Cupseyy · Saison 1",
-    value: "220",
-    moves: [
-      { cost: 1, name: "Garde-à-vous", dmg: "30", text: "Tous les traders de ton banc se mettent au garde-à-vous. Le prochain achat ne coûte rien." },
-      { cost: 2, name: "Entrée au fond", dmg: "120", text: "Lance une pièce. Face : double les dégâts. Pile : le marché ne dumpe pas ce tour." },
-    ],
-    weak: "Rug ×2",
-    resist: "FUD −30",
-    retreat: 1,
-    flavor: "Il a vu le fond deux fois. Il n'a jamais vendu.",
-    illus: "@Cupseyy",
-  },
-  mitch: {
-    stage: "Trader",
-    strip: "Trader Solana · @mitch · Saison 1",
-    value: "180",
-    moves: [
-      { cost: 1, name: "Regard fixe", dmg: "20", text: "Le défenseur ne peut pas vendre au prochain tour." },
-      { cost: 2, name: "Pinceau rouge", dmg: "100", text: "Repeins le graphique. Si le coin est en perte, il passe en vert." },
-    ],
-    weak: "Rug ×2",
-    resist: "FUD −20",
-    retreat: 2,
-    flavor: "On ne sait jamais ce qu'il regarde. Lui, si.",
-    illus: "@mitch",
-  },
-};
