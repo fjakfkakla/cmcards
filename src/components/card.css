@@ -398,6 +398,42 @@
 @keyframes cc-gold-ring { 0%, 100% { border-color: #ffd12e; } 50% { border-color: #fff6d6; } }
 .cc-spark.gold { background: #ffd12e; filter: drop-shadow(0 0 1cqw rgba(255,209,46,.95)); width: 7cqw; height: 7cqw; }
 
+/* ---- le thème call : l'appel entrant (Jack Duval, « The Duve is calling… ») ---- */
+.cc.mythic.call .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #1e1a16 0 9deg, #34c759 9deg 18deg, #f2f2f7 18deg 27deg, #ff3b30 27deg 36deg);
+}
+.cc.mythic.call { --label: #34c759; --name: #fff; --mark: #34c759; }
+.cc.mythic.call .cc-panel::after { background: none; }
+.cc.mythic.call .cc-panel.left img, .cc.mythic.call .cc-panel.right img { transform: scale(1.7); }
+/* le téléphone vibre : l'avatar sonne, les ondes partent de lui */
+.cc.mythic.call .cc-sticker {
+  border-color: #f2f2f7;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 5cqw 1cqw rgba(52,199,89,.7);
+  animation: cc-buzz .5s linear infinite;
+}
+@keyframes cc-buzz {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-8deg); }
+  20% { transform: translate(-52%, -51%) rotate(-11deg); }
+  40% { transform: translate(-48%, -49%) rotate(-5deg); }
+  60% { transform: translate(-51%, -48%) rotate(-10deg); }
+  80% { transform: translate(-49%, -52%) rotate(-6deg); }
+}
+.cc-ring {
+  position: absolute; z-index: 3; left: 50%; top: 55%; width: 26%; aspect-ratio: 1; pointer-events: none;
+  border-radius: 50%; border: 1cqw solid #34c759;
+  translate: -50% -50%;
+  animation: cc-ringout 2.4s ease-out infinite;
+}
+.cc-ring.b { animation-delay: .8s; }
+.cc-ring.c { animation-delay: 1.6s; border-color: #f2f2f7; }
+@keyframes cc-ringout { 0% { scale: 1; opacity: .9; } 100% { scale: 3.2; opacity: 0; } }
+.cc-calling {
+  position: absolute; z-index: 6; right: 3.6cqw; top: 5cqw; pointer-events: none;
+  font: 900 4cqw/1 var(--font-nunito); letter-spacing: .14em; text-transform: uppercase; color: #f2f2f7;
+  text-shadow: 0 0 1.2cqw var(--ink), .5cqw .5cqw 0 var(--ink);
+  animation: cc-glow 1.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cc *, .cc .cc-frame { animation: none !important; }
 }

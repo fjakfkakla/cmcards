@@ -135,6 +135,12 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             SPARKS.map(([x, y, d], i) => (
               <span key={`b${i}`} className="cc-spark gold" style={{ left: `${(x + 40) % 100}%`, top: `${(y + 35) % 100}%`, animationDelay: `${d + .9}s` }} />
             ))}
+          {theme === "call" && (
+            <>
+              <span className="cc-ring a" /><span className="cc-ring b" /><span className="cc-ring c" />
+              <span className="cc-calling">is calling…</span>
+            </>
+          )}
           {theme === "mist" && (
             <>
               <div className="cc-fog a" />

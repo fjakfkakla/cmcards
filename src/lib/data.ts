@@ -82,8 +82,8 @@ export type Trader = {
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
-  // d'enfant, les gélules pump.fun, le feu et la glace, le bling
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling";
+  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -117,6 +117,11 @@ export const TRADERS: Trader[] = [
   { id: "alon", name: "Alon", handle: "", category: "dev", art: "/art/alon-face.webp", artPos: "50% 38%", theme: "pump",
     mythic: { banner: "/art/alon.webp", avatar: "/art/alon-face.webp",
       panels: { top: { src: "/art/alon.webp", pos: "50% 30%" }, left: { src: "/art/alon.webp", pos: "0% 55%" }, right: { src: "/art/alon.webp", pos: "100% 55%" } } } },
+  // Jack Duval : sa pdp en principale ; « The Duve is calling… » dans la planche de
+  // sa Mythic, qui sonne : son visage en haut, Decline à gauche, Accept à droite.
+  { id: "jack", name: "Jack Duval", handle: "", category: "bundler", art: "/art/duve-face.webp", artPos: "50% 32%", theme: "call", tint: "blue",
+    mythic: { banner: "/art/duve-call.webp", avatar: "/art/duve-face.webp",
+      panels: { top: { src: "/art/duve-call.webp", pos: "50% 38%" }, left: { src: "/art/duve-call.webp", pos: "18% 90%" }, right: { src: "/art/duve-call.webp", pos: "82% 90%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.
