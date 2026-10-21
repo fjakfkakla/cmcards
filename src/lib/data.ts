@@ -388,6 +388,16 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/kevszn.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/kevszn.webp", avatar: "/art/kevszn-face.webp",
       panels: { top: { src: "/art/kevszn.webp", pos: "50% 25%" }, left: { src: "/art/kevszn.webp", pos: "8% 70%" }, right: { src: "/art/kevszn.webp", pos: "92% 45%" } } } },
+  // clukz : sa pdp (le singe de Super Monkey Ball au bonnet de Noël, le flingue au
+  // poing, l'éclair du coup et les impacts dans le ciel bleu) en principale ; un rendu
+  // 3D : sa Shiny est en or. Sa bannière (Monkey Park, la grande roue, le dirigeable
+  // jaune) sur son OG (la grande roue) et dans la planche de sa Mythic : le panneau
+  // MONKEY et le dirigeable en haut, le moyeu de la roue à gauche, le dirigeable à
+  // droite, la pdp en sticker. Pas de thème. Un Famous.
+  { id: "clukz", name: "clukz", handle: "", category: "famous", art: "/art/clukz-face.webp", artPos: "35% 45%", tint: "gold",
+    shots: { og: { src: "/art/clukz.webp", pos: "20% 50%" } },
+    mythic: { banner: "/art/clukz.webp", avatar: "/art/clukz-face.webp",
+      panels: { top: { src: "/art/clukz.webp", pos: "70% 45%" }, left: { src: "/art/clukz.webp", pos: "20% 75%" }, right: { src: "/art/clukz.webp", pos: "85% 35%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
