@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import "./collection.css";
-import "./opening.css"; // le dos de carte
 import CollectCard from "./CollectCard";
+import Icon from "./Icon";
 import Sell from "./Sell";
-import { CategoryTag, ConnectCard, Empty, Filter, Modal, PageHead, RarityTag, Seg, Stats } from "./ui";
+import Quest from "./landing/Quest";
+import { CategoryTag, ConnectCard, Empty, FamilyCoin, Filter, Modal, PageHead, RarityTag, Seg, Stats } from "./ui";
 import { useAccount } from "@/lib/account";
 import {
   CATEGORIES, RARITIES, TRADERS, type CategoryId, type RarityId,
@@ -33,7 +34,7 @@ const SLOTS = TRADERS.length * RARITIES.length;
    voit ce qui manque. Une carte touchée s'ouvre avec sa fiche et la vente. */
 export default function Collection() {
   const { me, wallet } = useAccount();
-  const [view, setView] = useState<"cards" | "album">("cards");
+  const [view, setView] = useState<"cards" | "album" | "quest">("cards");
   const [cat, setCat] = useState<CategoryId | null>(null);
   const [rar, setRar] = useState<RarityId | null>(null);
   const [sort, setSort] = useState<Sort>("rarity");
@@ -54,7 +55,7 @@ export default function Collection() {
 
   return (
     <>
-      <PageHead title="Collection" sub="Tes cartes de traders. Garde-les, complète l'album, ou vends-les au prix que tu fixes.">
+      <PageHead title="Collection">
         {wallet && (
           <div className="w-full sm:w-auto sm:min-w-[420px]">
             <Stats items={[
@@ -67,14 +68,16 @@ export default function Collection() {
       </PageHead>
 
       <div className="mt-8">
-        <Seg value={view} onChange={setView} options={[["cards", "Mes cartes"], ["album", "L'album"]]} />
+        <Seg value={view} onChange={setView} options={[["cards", "Mes cartes"], ["album", "L'album"], ["quest", "Les succès"]]} />
       </div>
 
-      {loading ? <Skeleton /> : view === "cards" ? (
+      {loading ? <Skeleton /> : view === "quest" ? (
+        <div className="mt-8"><Quest /></div>
+      ) : view === "cards" ? (
         !wallet ? (
-          <ConnectCard text="Tes cartes sont rangées sous ton wallet : connecte-le pour les voir, les vendre, en acheter." />
+          <ConnectCard />
         ) : owned.length === 0 ? (
-          <Empty icon="pack" title="Pas encore de carte" text="Ouvre un booster ou achète une carte sur le marché : elle arrive ici." href="/boosters" cta="Ouvrir un booster" />
+          <Empty title="Aucune carte" href="/boosters" cta="Ouvrir un booster" />
         ) : (
           <>
             <div className="mt-6 flex flex-col gap-3">
@@ -83,7 +86,7 @@ export default function Collection() {
                 {CATS.map((c) => (
                   <Filter key={c.id} on={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}
                     count={owned.filter((o) => trader(o.trader).category === c.id).length}>
-                    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" style={{ color: c.bg }} aria-hidden="true"><path d={c.glyph} /></svg>
+                    <FamilyCoin id={c.id} size={24} className="-ml-2" />
                     {c.name}
                   </Filter>
                 ))}
@@ -93,12 +96,12 @@ export default function Collection() {
                 {RARITIES.map((r) => (
                   <Filter key={r.id} on={rar === r.id} onClick={() => setRar(rar === r.id ? null : r.id)}
                     count={owned.filter((o) => o.rarity === r.id).length}>
-                    <i className={`rar-${r.id} h-2.5 w-2.5 rounded-full`} />
+                    <i className={`rar-${r.id} -ml-1 h-4 w-4 rounded-full border-2 border-fg`} />
                     {r.name}
                   </Filter>
                 ))}
                 <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Trier"
-                  className="chip ml-auto h-9 cursor-pointer appearance-none pr-4 text-fg outline-none">
+                  className="chip ml-auto h-10 cursor-pointer appearance-none pr-4 font-display font-extrabold outline-none">
                   <option value="rarity">Plus rares</option>
                   <option value="recent">Dernières</option>
                   <option value="serial">Plus petits numéros</option>
@@ -118,7 +121,7 @@ export default function Collection() {
               </div>
             ) : (
               <div className="mt-12 text-center">
-                <p className="text-[17px] font-semibold">Aucune carte avec ces filtres.</p>
+                <p className="font-display text-[22px] font-extrabold">Rien avec ces filtres</p>
                 <button className="btn-ghost btn-sm mt-4" onClick={() => { setCat(null); setRar(null); }}>Tout afficher</button>
               </div>
             )}
@@ -139,7 +142,7 @@ export default function Collection() {
 function Skeleton() {
   return (
     <div className="col-grid mt-8">
-      {Array.from({ length: 4 }, (_, k) => <div key={k} className="aspect-[63/88] animate-pulse rounded-[14px] bg-white/[.04]" />)}
+      {Array.from({ length: 4 }, (_, k) => <div key={k} className="aspect-[63/88] animate-pulse rounded-[14px] bg-raised" />)}
     </div>
   );
 }
@@ -149,12 +152,12 @@ function Caption({ card, listing }: { card: Owned; listing?: Listing }) {
   return (
     <span className="mt-3 block text-left">
       <span className="flex items-center justify-between gap-2">
-        <span className="min-w-0 truncate font-display text-[19px] leading-tight font-bold tracking-[-.02em]">{trader(card.trader).name}</span>
-        <RarityTag id={card.rarity} />
+        <span className="min-w-0 truncate font-display text-[20px] leading-tight font-extrabold tracking-[-.02em]">{trader(card.trader).name}</span>
+        <RarityTag id={card.rarity} size="sm" />
       </span>
       <span className="mt-1 flex items-center justify-between gap-2 text-[13.5px]">
-        <span className="num text-dim">n° {serialOf(card)}</span>
-        {listing && <span className="num font-semibold text-gold">{fmtSol(toSol(listing.lamports))}</span>}
+        <span className="num font-semibold text-muted">n° {serialOf(card)}</span>
+        {listing && <span className="num rounded-full border-2 border-fg bg-gold px-2 font-display text-[14px] font-extrabold">{fmtSol(toSol(listing.lamports))}</span>}
       </span>
     </span>
   );
@@ -171,10 +174,9 @@ function Album({ owned, onOpen }: { owned: Owned[]; onOpen: (items: Owned[]) => 
         return (
           <section key={t.id}>
             <div className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-2">
-              <h2 className="font-display text-[30px] leading-none font-extrabold tracking-[-.03em]">{t.name}</h2>
-              {t.handle && <span className="text-[15px] text-dim">{t.handle}</span>}
+              <h2 className="font-display text-[32px] leading-none font-extrabold tracking-[-.035em]">{t.name}</h2>
               {t.category && <CategoryTag id={t.category} />}
-              <span className="num ml-auto chip h-8">{have}/{RARITIES.length}</span>
+              <span className="num ml-auto chip h-9 font-display font-extrabold">{have}/{RARITIES.length}</span>
             </div>
             <div className="col-album">
               {RARITIES.map((r) => {
@@ -193,10 +195,7 @@ function Album({ owned, onOpen }: { owned: Owned[]; onOpen: (items: Owned[]) => 
                         <span className="col-slot-odds">{r.odds.toLocaleString("fr-FR")} %</span>
                       </div>
                     )}
-                    <p className="mt-2.5 flex items-center justify-center gap-1.5 text-center text-[13.5px] font-semibold text-muted">
-                      <i className={`rar-${r.id} h-2.5 w-2.5 rounded-full`} />
-                      {r.name}
-                    </p>
+                    <p className="mt-2.5 flex justify-center"><RarityTag id={r.id} size="sm" /></p>
                   </div>
                 );
               })}
@@ -245,9 +244,9 @@ function Sheet({ items, at, listed, onMove, onClose }: {
         <CollectCard card={c} live key={c.uid} />
         {many && (
           <div className="mt-5 flex items-center justify-center gap-3">
-            <button type="button" className="btn-ghost btn-sm" onClick={prev} aria-label="Carte précédente">←</button>
-            <span className="num min-w-[64px] text-center text-[14px] font-semibold text-muted">{at + 1} / {items.length}</span>
-            <button type="button" className="btn-ghost btn-sm" onClick={next} aria-label="Carte suivante">→</button>
+            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={prev} aria-label="Carte précédente"><Icon name="back" size={18} /></button>
+            <span className="num min-w-[64px] text-center font-display text-[17px] font-extrabold">{at + 1} / {items.length}</span>
+            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={next} aria-label="Carte suivante"><Icon name="arrow" size={18} /></button>
           </div>
         )}
       </div>
@@ -256,13 +255,12 @@ function Sheet({ items, at, listed, onMove, onClose }: {
           {t.category && <CategoryTag id={t.category} />}
           <RarityTag id={c.rarity} />
         </div>
-        <h2 className="mt-3 font-display text-[44px] leading-none font-extrabold tracking-[-.035em] sm:text-[52px]">{t.name}</h2>
-        {t.handle && <p className="mt-1 text-[15px] text-dim">{t.handle}</p>}
-        <dl className="mt-5 divide-y divide-white/[.06]">
+        <h2 className="mt-3 font-display text-[46px] leading-none font-extrabold tracking-[-.04em] sm:text-[54px]">{t.name}</h2>
+        <dl className="mt-5 divide-y-2 divide-fg/10">
           {rows.map(([k, v]) => (
             <div key={k} className="flex items-baseline justify-between gap-4 py-2.5">
               <dt className="label shrink-0">{k}</dt>
-              <dd className="num text-right text-[15px] font-semibold">{v}</dd>
+              <dd className="num text-right font-display text-[16px] font-extrabold">{v}</dd>
             </div>
           ))}
         </dl>

@@ -298,6 +298,19 @@ export const TRADERS: Trader[] = [
   { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
     mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
       panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
+  // trey : une seule image, la sienne partout : l'homme sans nom de profil, le chapeau,
+  // la barbe et le cigarillo, le poncho brun devant les collines. Une photo : sa Shiny
+  // est en or. Pas de thème pour sa Mythic. Un Holder.
+  { id: "trey", name: "trey", handle: "", category: "holder", art: "/art/trey.webp", artPos: "55% 40%", tint: "gold",
+    mythic: { banner: "/art/trey.webp", avatar: "/art/trey.webp",
+      panels: { top: { src: "/art/trey.webp", pos: "55% 25%" }, left: { src: "/art/trey.webp", pos: "30% 80%" }, right: { src: "/art/trey.webp", pos: "85% 62%" } } } },
+  // Dani : sa pdp (le dos d'Hercule en marbre, sur fond noir) en principale ; en noir
+  // et blanc : sa Shiny est en bleu électrique. Sa bannière (le ciel étoilé, les nuées
+  // dans les coins) dans les trois cases de la planche Mythic, la pdp en sticker.
+  // Pas de thème. Un Holder.
+  { id: "dani", name: "Dani", handle: "", category: "holder", art: "/art/dani-face.webp", artPos: "60% 40%", tint: "blue",
+    mythic: { banner: "/art/dani.webp", avatar: "/art/dani-face.webp",
+      panels: { top: { src: "/art/dani.webp", pos: "55% 50%" }, left: { src: "/art/dani.webp", pos: "8% 85%" }, right: { src: "/art/dani.webp", pos: "98% 40%" } } } },
   // west : sa pdp (en voiture, les lunettes rondes, l'éventail de billets) en
   // principale ; une photo aux tons chauds : l'or la verdit, sa Shiny est en bleu
   // électrique. Sa bannière (le casque blanc dans sa chambre, « it's impossible to
@@ -346,15 +359,19 @@ export type Pack = {
   boost?: number;        // multiplie les chances d'OG et de Mythic
   color: string;         // la couleur du papier du booster
   ink: string;           // sa couleur claire
+  cover: Cover;          // le personnage imprimé en grand sur le sachet
 };
+/* La couverture d'un booster : un personnage de la famille, son image, et si elle
+   est détourée (posée sur l'éclat, sans fond) ou cadrée plein sachet. */
+export type Cover = { trader: string; src?: string; pos?: string; cut?: boolean };
 
-const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost">> = {
-  trencher: { price: 0.1, cards: 3 },
-  holder: { price: 0.12, cards: 3 },
-  dev: { price: 0.15, cards: 3 },
-  bundler: { price: 0.2, cards: 3 },
-  famous: { price: 0.35, cards: 4, guarantee: "rare" },
-  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2 },
+const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "cover">> = {
+  trencher: { price: 0.1, cards: 3, cover: { trader: "blu6k", pos: "50% 30%" } },
+  holder: { price: 0.12, cards: 3, cover: { trader: "pain", pos: "50% 30%" } },
+  dev: { price: 0.15, cards: 3, cover: { trader: "superman", pos: "50% 40%" } },
+  bundler: { price: 0.2, cards: 3, cover: { trader: "jack", pos: "50% 30%" } },
+  famous: { price: 0.35, cards: 4, guarantee: "rare", cover: { trader: "cented", pos: "50% 28%" } },
+  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, cover: { trader: "kimchi", src: "/traders/kimchi-aura-cut.webp", pos: "50% 0%", cut: true } },
 };
 
 export const PACKS: Pack[] = CATEGORIES.map((c) => ({
