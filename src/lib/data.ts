@@ -23,8 +23,9 @@ export const RARITIES: Rarity[] = [
 ];
 export const rarity = (id: RarityId) => RARITIES.find((r) => r.id === id)!;
 
-/* Les catégories, de la plus courante à la plus recherchée : les Legend en dernier. */
-export type CategoryId = "trader" | "trencher" | "dev" | "sniper" | "bundler" | "famous" | "legend";
+/* Les catégories, de la plus courante à la plus recherchée : les Trencher sont la
+   base, les Legend en dernier. */
+export type CategoryId = "trencher" | "dev" | "bundler" | "famous" | "legend";
 export type Category = {
   id: CategoryId; name: string; tagline: string;
   bg: string;    // le fond des cartes, le papier du booster
@@ -32,14 +33,10 @@ export type Category = {
   glyph: string; // dessiné sur une grille de 24
 };
 export const CATEGORIES: Category[] = [
-  { id: "trader", name: "Trader", tagline: "La base", bg: "#4da8ff", ink: "#7cc0ff",
-    glyph: "M5 3h2v4h2v8H7v6H5v-6H3V7h2zm10 4h2v3h2v7h-2v4h-2v-4h-2v-7h2z" },
-  { id: "trencher", name: "Trencher", tagline: "Le trader, en plus stylé", bg: "#ff9a1f", ink: "#ffbb63",
+  { id: "trencher", name: "Trencher", tagline: "La base", bg: "#ff9a1f", ink: "#ffbb63",
     glyph: "M15.5 2 22 8.5l-1.4 1.4-1.6-1.6-4.3 4.3 1.1 1.1-3 3a3 3 0 0 1-4.2 0l-.3-.3-4.9 4.9L2 19.9 6.9 15l-.3-.3a3 3 0 0 1 0-4.2l3-3 1.1 1.1 4.3-4.3-1.6-1.6z" },
   { id: "dev", name: "Dev", tagline: "Les bons", bg: "#3dcb6c", ink: "#6fdd92",
     glyph: "M8.6 6.4 3 12l5.6 5.6 1.4-1.4L5.8 12 10 7.8zm6.8 0L14 7.8l4.2 4.2-4.2 4.2 1.4 1.4L21 12z" },
-  { id: "sniper", name: "Sniper", tagline: "Ceux qui rentrent au début", bg: "#ff4b3e", ink: "#ff7b70",
-    glyph: "M11 2h2v3.1A7 7 0 0 1 18.9 11H22v2h-3.1A7 7 0 0 1 13 18.9V22h-2v-3.1A7 7 0 0 1 5.1 13H2v-2h3.1A7 7 0 0 1 11 5.1zm1 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" },
   { id: "bundler", name: "Bundler", tagline: "Toxique", bg: "#a77bff", ink: "#c3a4ff",
     glyph: "M12 2a8 8 0 0 0-8 8c0 2.8 1.4 4.6 3 5.6V19a1 1 0 0 0 1 1h1v2h2v-2h2v2h2v-2h1a1 1 0 0 0 1-1v-3.4c1.6-1 3-2.8 3-5.6a8 8 0 0 0-8-8zM8.5 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 13.5l1.3 2.5h-2.6z" },
   { id: "famous", name: "Famous", tagline: "Tout le monde les connaît", bg: "#ff5fb4", ink: "#ff8fcb",
@@ -98,7 +95,7 @@ const BANNER = {
 };
 export const TRADERS: Trader[] = [
   // ses images sont versionnées (public/art/) : elles s'affichent aussi sur Vercel
-  { id: "mitch", name: "Mitch", handle: "", category: "trader", art: "/art/mitch.webp", artPos: "50% 42%",
+  { id: "mitch", name: "Mitch", handle: "", category: "trencher", art: "/art/mitch.webp", artPos: "50% 42%",
     mythic: { banner: "/art/mitch.webp", avatar: "/art/mitch-face.webp" } },
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
     mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
@@ -193,11 +190,9 @@ export type Pack = {
 };
 
 const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif" | "skin">> = {
-  trader: { price: 0.1, cards: 3, motif: "dots" },
-  trencher: { price: 0.15, cards: 3, motif: "stripes" },
+  trencher: { price: 0.1, cards: 3, motif: "stripes" },
   dev: { price: 0.15, cards: 3, motif: "dots" },
-  sniper: { price: 0.2, cards: 3, motif: "rays" },
-  bundler: { price: 0.2, cards: 3, motif: "stripes" },
+  bundler: { price: 0.2, cards: 3, motif: "rays" },
   famous: { price: 0.35, cards: 4, guarantee: "rare", motif: "rays" },
   legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, motif: "rays", skin: "multiverse" },
 };
