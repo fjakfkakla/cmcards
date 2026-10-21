@@ -81,18 +81,19 @@ export type Trader = {
   id: string; name: string; handle: string;
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
-  theme?: "sponge" | "volt" | "mist"; // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume
+  // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
+  // d'enfant, les gélules pump.fun, le feu et la glace
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
   mythic?: Mythic;       // les images de sa Mythic
   aura?: AuraArt;        // son set signature : une carte différente par rareté
 };
-/* Les illustrations : la bannière X publique du trader, servie par X (rien dans
-   le dépôt). Si elle change sur X, l'URL ici est à mettre à jour. */
+/* Les illustrations sont les images qu'on nous donne, versionnées dans public/art/.
+   Cupsey est le dernier à dépendre de X : sa bannière publique, servie par X. */
 const BANNER = {
   cupsey: "https://pbs.twimg.com/profile_banners/1168903946989010944/1766688794/1500x500",
-  cented: "https://pbs.twimg.com/profile_banners/1048768598494199809/1745814342/1500x500",
 };
 export const TRADERS: Trader[] = [
   // ses images sont versionnées (public/art/) : elles s'affichent aussi sur Vercel
@@ -100,7 +101,18 @@ export const TRADERS: Trader[] = [
     mythic: { banner: "/art/mitch.webp", avatar: "/art/mitch-face.webp" } },
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
     mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
-  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: BANNER.cented, artPos: "65% 45%" },
+  // Cented : sa pdp (Todoroki, le feu et la glace) en principale, sa bannière dans la planche
+  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: "/art/cented-face.webp", artPos: "50% 35%", theme: "duo",
+    mythic: { banner: "/art/cented.webp", avatar: "/art/cented-face.webp",
+      panels: { top: { src: "/art/cented.webp", pos: "62% 50%" }, left: { src: "/art/cented.webp", pos: "26% 62%" }, right: { src: "/art/cented.webp", pos: "80% 24%" } } } },
+  // Gake : une seule image, la sienne partout ; sa Mythic est un dessin d'enfant
+  { id: "gake", name: "Gake", handle: "", category: "famous", art: "/art/gake.webp", artPos: "50% 40%", theme: "crayon",
+    mythic: { banner: "/art/gake.webp", avatar: "/art/gake.webp",
+      panels: { top: { src: "/art/gake.webp", pos: "50% 22%" }, left: { src: "/art/gake.webp", pos: "4% 62%" }, right: { src: "/art/gake.webp", pos: "96% 60%" } } } },
+  // Alon : pump.fun. Sa pdp en principale, sa bannière (les gélules) dans la planche, le vert pump.fun
+  { id: "alon", name: "Alon", handle: "", category: "dev", art: "/art/alon-face.webp", artPos: "50% 38%", theme: "pump",
+    mythic: { banner: "/art/alon.webp", avatar: "/art/alon-face.webp",
+      panels: { top: { src: "/art/alon.webp", pos: "50% 30%" }, left: { src: "/art/alon.webp", pos: "0% 55%" }, right: { src: "/art/alon.webp", pos: "100% 55%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.

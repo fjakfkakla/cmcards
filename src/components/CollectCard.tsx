@@ -21,6 +21,17 @@ const BUBBLES = [[10, 3.4, 7], [30, 2.4, 9], [58, 4.2, 6.5], [76, 2.8, 8.5], [90
 /* La foudre du thème volt : x, y, le délai, la taille (grille de 24 : un éclair). */
 const BOLTS = [[9, 16, 0, 11], [79, 9, 1.4, 8], [72, 66, 2.3, 10], [14, 70, .8, 7], [46, 10, 3.1, 6]];
 const BOLT = "M13 2 3 14h7l-1 8 10-12h-7z";
+/* Les gommettes du thème crayon : x, y, la forme, la couleur, l'inclinaison. */
+const DOODLES: [number, number, "star" | "heart" | "sun", string, number][] = [
+  [8, 10, "star", "#ffd12e", -12], [84, 7, "sun", "#ff9a1f", 8], [90, 70, "heart", "#ff5fb4", 14], [6, 76, "star", "#4da8ff", 10], [50, 6, "heart", "#ff4b3e", -6],
+];
+const DOODLE: Record<"star" | "heart" | "sun", string> = {
+  star: "M12 2.5c.6 2.6 1.4 5 2.4 7.1 2.3.3 4.6.3 7.1.3-2 1.4-3.9 2.9-5.6 4.6.9 2.3 1.5 4.7 1.9 7.2-2-1.5-4-3-5.8-4.7-1.9 1.6-3.9 3.1-6 4.4.6-2.4 1.2-4.8 2.1-7.1C6.3 12.7 4.4 11.3 2.5 9.9c2.4 0 4.8-.1 7.1-.4 1-2.3 1.8-4.6 2.4-7z",
+  heart: "M12 21c-4.6-3.8-9-7.2-9-12 0-2.8 2.1-5 4.8-5 1.8 0 3.3 1 4.2 2.6C12.9 5 14.4 4 16.2 4 18.9 4 21 6.2 21 9c0 4.8-4.4 8.2-9 12z",
+  sun: "M12 6.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zM12 1l1.2 3H10.8zM12 23l-1.2-3h2.4zM1 12l3-1.2v2.4zM23 12l-3 1.2v-2.4zM4.2 4.2l3 1.3-1.7 1.7zM19.8 19.8l-3-1.3 1.7-1.7zM4.2 19.8l1.3-3 1.7 1.7zM19.8 4.2l-1.3 3-1.7-1.7z",
+};
+/* Les gélules du thème pump : x, la taille, la durée, le délai. */
+const PILLS = [[8, 9, 7.5, 0], [26, 6, 9, 2.2], [48, 8, 6.8, 4.1], [68, 5.5, 8.4, 1.1], [86, 7, 10, 3.3], [38, 5, 7.2, 5.4]];
 
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -109,6 +120,16 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
           {theme === "sponge" &&
             BUBBLES.map(([x, s, d], i) => (
               <span key={i} className="cc-bubble" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${d}s`, animationDelay: `${i * 1.2}s` }} />
+            ))}
+          {theme === "crayon" &&
+            DOODLES.map(([x, y, kind, color, rot], i) => (
+              <svg key={i} className="cc-doodle" viewBox="0 0 24 24" aria-hidden="true" style={{ left: `${x}%`, top: `${y}%`, color, rotate: `${rot}deg`, animationDelay: `${i * .4}s` }}>
+                <path d={DOODLE[kind]} />
+              </svg>
+            ))}
+          {theme === "pump" &&
+            PILLS.map(([x, s, dur, d], i) => (
+              <span key={i} className="cc-pill" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s * 2.1}cqw`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
             ))}
           {theme === "mist" && (
             <>
