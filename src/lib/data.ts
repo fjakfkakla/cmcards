@@ -293,6 +293,12 @@ export const TRADERS: Trader[] = [
   { id: "jidn", name: "Jidn", handle: "", category: "trencher", art: "/art/jidn.webp", artPos: "55% 40%", tint: "gold",
     mythic: { banner: "/art/jidn.webp", avatar: "/art/jidn.webp",
       panels: { top: { src: "/art/jidn.webp", pos: "60% 35%" }, left: { src: "/art/jidn.webp", pos: "15% 70%" }, right: { src: "/art/jidn.webp", pos: "90% 40%" } } } },
+  // iceman77x : une seule image, la sienne partout : la silhouette en veste sombre,
+  // à contre-jour, le soleil qui perce derrière l'épaule dans un ciel bleu pâle et ses
+  // nuages. Une photo : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "iceman77x", name: "iceman77x", handle: "", category: "trencher", art: "/art/iceman77x.webp", artPos: "50% 35%", tint: "gold",
+    mythic: { banner: "/art/iceman77x.webp", avatar: "/art/iceman77x.webp",
+      panels: { top: { src: "/art/iceman77x.webp", pos: "50% 20%" }, left: { src: "/art/iceman77x.webp", pos: "10% 40%" }, right: { src: "/art/iceman77x.webp", pos: "90% 60%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
