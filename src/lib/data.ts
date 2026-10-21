@@ -45,7 +45,8 @@ export const COINS: Record<string, Coin> = {
 };
 
 export type Trader = {
-  id: string; name: string; handle: string; category: CategoryId;
+  id: string; name: string; handle: string;
+  category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
@@ -54,6 +55,7 @@ export const TRADERS: Trader[] = [
   { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
     mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
+  { id: "cented", name: "Cented", handle: "@Cented7" },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 

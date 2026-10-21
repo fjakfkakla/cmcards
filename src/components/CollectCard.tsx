@@ -2,7 +2,9 @@
 
 import { useRef } from "react";
 import "./card.css";
+import Pic from "./Pic";
 import { type Card, type CategoryId, category, rarity, trader } from "@/lib/data";
+import { portraitSources, portraitUri } from "@/lib/portrait";
 
 /* Les glyphes des catégories, dessinés sur une grille de 24. */
 const GLYPH: Record<CategoryId, string> = {
@@ -21,7 +23,7 @@ const DUST = [[14, 30, 0], [80, 22, 1.1], [24, 70, 2], [86, 60, 0.6], [50, 12, 1
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const t = trader(card.trader);
-  const cat = category(t.category);
+  const cat = t.category ? category(t.category) : undefined;
   const r = rarity(card.rarity);
   const theme = r.id === "mythic" ? t.theme ?? "" : "";
   const mythic = r.id === "mythic" ? t.mythic : undefined;
@@ -43,8 +45,9 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     if (ref.current) ref.current.style.transform = "";
   }
 
-  const art = t.art && (
-    <img className="cc-art" src={t.art} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
+  const fallback = portraitUri(t.name, cat?.bg);
+  const art = (
+    <Pic className="cc-art" srcs={portraitSources(t)} fallback={fallback} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
   );
 
   /* Chaque rareté a sa mise en scène : le décor, la place du personnage, l'effet. */
@@ -88,10 +91,10 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
       scene = mythic ? (
         <>
           <div className="cc-rays" />
-          <div className="cc-panel top"><img src={mythic.banner} alt="" style={{ objectPosition: "50% 48%" }} draggable={false} /></div>
-          <div className="cc-panel left"><img src={mythic.banner} alt="" style={{ objectPosition: "8% 40%" }} draggable={false} /></div>
-          <div className="cc-panel right"><img src={mythic.banner} alt="" style={{ objectPosition: "92% 38%" }} draggable={false} /></div>
-          <div className="cc-sticker"><img src={mythic.avatar} alt={t.name} draggable={false} /></div>
+          <div className="cc-panel top"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "50% 48%" }} draggable={false} /></div>
+          <div className="cc-panel left"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "8% 40%" }} draggable={false} /></div>
+          <div className="cc-panel right"><Pic srcs={portraitSources(t, mythic.banner)} fallback={fallback} alt="" style={{ objectPosition: "92% 38%" }} draggable={false} /></div>
+          <div className="cc-sticker"><Pic srcs={portraitSources(t, mythic.avatar)} fallback={fallback} alt={t.name} draggable={false} /></div>
           {SPARKS.map(([x, y, d], i) => (
             <span key={i} className="cc-spark" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />
           ))}
@@ -123,17 +126,19 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     <div
       ref={ref}
       className={`cc ${r.id} ${theme} ${live ? "is-live" : ""} ${className}`}
-      style={{ "--cat": cat.bg } as React.CSSProperties}
+      style={{ "--cat": cat?.bg ?? "#8a8079" } as React.CSSProperties}
       onPointerMove={move}
       onPointerLeave={leave}
     >
       <div className="cc-frame">
         <div className="cc-scene">
           {scene}
-          <span className="cc-cat">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GLYPH[cat.id]} /></svg>
-            {cat.name}
-          </span>
+          {cat && (
+            <span className="cc-cat">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d={GLYPH[cat.id]} /></svg>
+              {cat.name}
+            </span>
+          )}
           <div className="cc-plate">
             <span className="cc-name">{t.name}</span>
             <span className="cc-serial"><b>{r.name}</b>{serial}</span>

@@ -1,5 +1,7 @@
 import "./booster.css";
-import { type Pack, trader } from "@/lib/data";
+import Pic from "./Pic";
+import { CATEGORIES, type Pack, trader } from "@/lib/data";
+import { portraitSources, portraitUri } from "@/lib/portrait";
 
 /* Le booster fermé. `torn` le coupe le long de la ligne : le haut s'envole et la
    lumière de `glow` sort par l'ouverture. Le haut et le corps sont deux copies du
@@ -27,7 +29,9 @@ export default function BoosterPack({
     <div className="bp-bag">
       <div className={`bp-motif ${pack.motif}`} />
       <span className="bp-brand">cm cards</span>
-      <div className="bp-window">{face.art && <img src={face.art} alt="" style={{ objectPosition: face.artPos }} draggable={false} />}</div>
+      <div className="bp-window">
+        <Pic srcs={portraitSources(face)} fallback={portraitUri(face.name, CATEGORIES.find((c) => c.id === face.category)?.bg)} alt="" style={{ objectPosition: face.artPos }} draggable={false} />
+      </div>
       <span className="bp-name">{pack.name}</span>
       <span className="bp-count">{pack.cards} cartes</span>
       <div className="bp-foil" />
