@@ -110,6 +110,11 @@ export const TRADERS: Trader[] = [
   { id: "gake", name: "Gake", handle: "", category: "famous", art: "/art/gake.webp", artPos: "50% 40%", theme: "crayon",
     mythic: { banner: "/art/gake.webp", avatar: "/art/gake.webp",
       panels: { top: { src: "/art/gake.webp", pos: "50% 22%" }, left: { src: "/art/gake.webp", pos: "4% 62%" }, right: { src: "/art/gake.webp", pos: "96% 60%" } } } },
+  // Rice : une seule image, la sienne partout : Pepe le fermier, le chapeau de
+  // paille et le fusil dans son champ. Pas de thème pour sa Mythic : la planche de base.
+  { id: "rice", name: "Rice", handle: "", category: "famous", art: "/art/rice.webp", artPos: "50% 55%",
+    mythic: { banner: "/art/rice.webp", avatar: "/art/rice.webp",
+      panels: { top: { src: "/art/rice.webp", pos: "50% 18%" }, left: { src: "/art/rice.webp", pos: "8% 60%" }, right: { src: "/art/rice.webp", pos: "92% 60%" } } } },
   // Frank : son dessin en principale ; sa Mythic montre sa photo, le dessin en sticker. Thème bling.
   { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
     mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
