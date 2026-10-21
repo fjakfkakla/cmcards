@@ -83,8 +83,8 @@ export type Trader = {
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
   // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant,
-  // les yeux laser
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "laser";
+  // les billets qui tombent, les yeux laser
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash" | "laser";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -110,6 +110,11 @@ export const TRADERS: Trader[] = [
   { id: "gake", name: "Gake", handle: "", category: "famous", art: "/art/gake.webp", artPos: "50% 40%", theme: "crayon",
     mythic: { banner: "/art/gake.webp", avatar: "/art/gake.webp",
       panels: { top: { src: "/art/gake.webp", pos: "50% 22%" }, left: { src: "/art/gake.webp", pos: "4% 62%" }, right: { src: "/art/gake.webp", pos: "96% 60%" } } } },
+  // Rice : une seule image, la sienne partout : Pepe le fermier, le chapeau de
+  // paille et le fusil dans son champ. Pas de thème pour sa Mythic : la planche de base.
+  { id: "rice", name: "Rice", handle: "", category: "famous", art: "/art/rice.webp", artPos: "50% 55%",
+    mythic: { banner: "/art/rice.webp", avatar: "/art/rice.webp",
+      panels: { top: { src: "/art/rice.webp", pos: "50% 18%" }, left: { src: "/art/rice.webp", pos: "8% 60%" }, right: { src: "/art/rice.webp", pos: "92% 60%" } } } },
   // Frank : son dessin en principale ; sa Mythic montre sa photo, le dessin en sticker. Thème bling.
   { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
     mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
@@ -123,6 +128,13 @@ export const TRADERS: Trader[] = [
   { id: "jack", name: "Jack Duval", handle: "", category: "bundler", art: "/art/duve-face.webp", artPos: "50% 32%", theme: "call", tint: "blue",
     mythic: { banner: "/art/duve-call.webp", avatar: "/art/duve-face.webp",
       panels: { top: { src: "/art/duve-call.webp", pos: "50% 38%" }, left: { src: "/art/duve-call.webp", pos: "18% 90%" }, right: { src: "/art/duve-call.webp", pos: "82% 90%" } } } },
+  // Yenni : le chat rose, un Trencher. Sa pdp en principale ; un chat qui compte en
+  // billets : sa Shiny est en or. Sa bannière (YENNI, la lune, les billets) dans la
+  // planche de sa Mythic : le nom et la lune en haut, le pistolet à billets à gauche,
+  // le chat à lunettes à droite ; il pleut des billets.
+  { id: "yenni", name: "Yenni", handle: "", category: "trencher", art: "/art/yenni-face.webp", artPos: "50% 55%", theme: "cash", tint: "gold",
+    mythic: { banner: "/art/yenni.webp", avatar: "/art/yenni-face.webp",
+      panels: { top: { src: "/art/yenni.webp", pos: "11% 50%" }, left: { src: "/art/yenni.webp", pos: "61% 60%" }, right: { src: "/art/yenni.webp", pos: "100% 50%" } } } },
   // Profit : le chat noir aux yeux bleus en principale ; le fantôme pixel (sa
   // seconde image) sur son OG et dans la planche de sa Mythic, aux yeux laser.
   { id: "profit", name: "Profit", handle: "", category: "sniper", art: "/art/profit-face.webp", artPos: "50% 45%", theme: "laser", tint: "blue",
@@ -140,6 +152,11 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/ansem-bull.webp", pos: "50% 40%" } },
     mythic: { banner: "/art/ansem.webp", avatar: "/art/ansem-face.webp",
       panels: { top: { src: "/art/ansem-bull.webp", pos: "50% 18%" }, left: { src: "/art/ansem.webp", pos: "22% 50%" }, right: { src: "/art/ansem-bull.webp", pos: "50% 92%" } } } },
+  // Trunoest : sa pdp (la silhouette dans la lueur rouge) en principale ; sa
+  // bannière (les nuées rouges) dans les trois cases de la planche Mythic, la pdp en sticker.
+  { id: "trunoest", name: "Trunoest", handle: "", category: "trencher", art: "/art/trunoest-face.webp", artPos: "50% 40%",
+    mythic: { banner: "/art/trunoest.webp", avatar: "/art/trunoest-face.webp",
+      panels: { top: { src: "/art/trunoest.webp", pos: "50% 50%" }, left: { src: "/art/trunoest.webp", pos: "18% 50%" }, right: { src: "/art/trunoest.webp", pos: "82% 50%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
