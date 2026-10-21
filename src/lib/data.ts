@@ -260,6 +260,13 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/ethan.webp", pos: "50% 35%" } },
     mythic: { banner: "/art/ethan.webp", avatar: "/art/ethan-face.webp",
       panels: { top: { src: "/art/ethan.webp", pos: "50% 30%" }, left: { src: "/art/ethan.webp", pos: "0% 85%" }, right: { src: "/art/ethan.webp", pos: "80% 75%" } } } },
+  // Matt : une seule image, la sienne partout : le Ken des Oscars, le costume rose à
+  // strass, les lunettes noires, les bras ouverts devant les danseurs en smoking et
+  // chapeau de cow-boy. Une photo : sa Shiny est en or. Pas de thème pour sa Mythic.
+  // Un Trencher.
+  { id: "matt", name: "Matt", handle: "", category: "trencher", art: "/art/matt.webp", artPos: "56% 40%", tint: "gold",
+    mythic: { banner: "/art/matt.webp", avatar: "/art/matt.webp",
+      panels: { top: { src: "/art/matt.webp", pos: "56% 30%" }, left: { src: "/art/matt.webp", pos: "10% 55%" }, right: { src: "/art/matt.webp", pos: "90% 30%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
