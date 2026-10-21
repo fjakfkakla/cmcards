@@ -222,6 +222,12 @@ export const TRADERS: Trader[] = [
   { id: "pain", name: "Pain", handle: "", category: "holder", art: "/art/pain.webp", artPos: "50% 38%", tint: "gold",
     mythic: { banner: "/art/pain.webp", avatar: "/art/pain.webp",
       panels: { top: { src: "/art/pain.webp", pos: "50% 20%" }, left: { src: "/art/pain.webp", pos: "12% 70%" }, right: { src: "/art/pain.webp", pos: "88% 25%" } } } },
+  // blu6k : une seule image, la sienne partout : la grenouille peinte en mafieux,
+  // le borsalino et le costume bleus, le cigare au bec, la pochette rouge. Une peau
+  // verte : sa Shiny est en bleu électrique. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "blu6k", name: "blu6k", handle: "", category: "trencher", art: "/art/blu6k.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/blu6k.webp", avatar: "/art/blu6k.webp",
+      panels: { top: { src: "/art/blu6k.webp", pos: "50% 25%" }, left: { src: "/art/blu6k.webp", pos: "15% 55%" }, right: { src: "/art/blu6k.webp", pos: "80% 85%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
