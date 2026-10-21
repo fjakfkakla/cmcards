@@ -3,7 +3,7 @@ import { Logo } from "./Icon";
 
 /* Le pied de page : la marque et sa phrase, en grand ; les écrans ; c'est tout. */
 const COLS: [string, [string, string][]][] = [
-  ["Jouer", [["/#boosters", "Boosters"], ["/marche", "Marché"]]],
+  ["Jouer", [["/boosters", "Boosters"], ["/marche", "Marché"]]],
   ["Cartes", [["/cartes", "Toutes les cartes"], ["/collection", "Collection"]]],
   ["Compte", [["/profil", "Profil"]]],
 ];

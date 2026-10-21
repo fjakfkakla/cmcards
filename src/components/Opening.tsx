@@ -15,7 +15,7 @@ import { MEMO, explorer, toLamports } from "@/lib/solana";
 import type { Owned } from "@/lib/types";
 
 /* La lumière d'une rareté : celle qui sort du booster, le cercle de la meilleure carte. */
-const GLOW: Record<RarityId, string> = { common: "#c3ccda", rare: "#3fdcb0", shiny: "#2e63f2", og: "#f6b51f", mythic: "#9fb6f5" };
+export const GLOW: Record<RarityId, string> = { common: "#c3ccda", rare: "#3fdcb0", shiny: "#2e63f2", og: "#f6b51f", mythic: "#9fb6f5" };
 
 /* L'ouverture, la recette du tirage des persos de memescanner :
    1. payer (le serveur lit le paiement sur la chaîne, puis tire les cartes) ;
