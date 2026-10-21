@@ -82,8 +82,8 @@ export type Trader = {
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
-  // d'enfant, les gélules pump.fun, le feu et la glace, l'appel entrant
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "call";
+  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -109,6 +109,10 @@ export const TRADERS: Trader[] = [
   { id: "gake", name: "Gake", handle: "", category: "famous", art: "/art/gake.webp", artPos: "50% 40%", theme: "crayon",
     mythic: { banner: "/art/gake.webp", avatar: "/art/gake.webp",
       panels: { top: { src: "/art/gake.webp", pos: "50% 22%" }, left: { src: "/art/gake.webp", pos: "4% 62%" }, right: { src: "/art/gake.webp", pos: "96% 60%" } } } },
+  // Frank : son dessin en principale ; sa Mythic montre sa photo, le dessin en sticker. Thème bling.
+  { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
+    mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
+      panels: { top: { src: "/art/frank-photo.webp", pos: "50% 28%" }, left: { src: "/art/frank-photo.webp", pos: "30% 30%" }, right: { src: "/art/frank-photo.webp", pos: "60% 70%" } } } },
   // Alon : pump.fun. Sa pdp en principale, sa bannière (les gélules) dans la planche, le vert pump.fun
   { id: "alon", name: "Alon", handle: "", category: "dev", art: "/art/alon-face.webp", artPos: "50% 38%", theme: "pump",
     mythic: { banner: "/art/alon.webp", avatar: "/art/alon-face.webp",
