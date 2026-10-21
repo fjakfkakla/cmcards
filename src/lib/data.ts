@@ -317,18 +317,16 @@ export type Pack = {
   guarantee?: RarityId;  // la dernière carte est au moins de cette rareté
   boost?: number;        // multiplie les chances d'OG et de Mythic
   color: string;         // la couleur du papier du booster
-  ink: string;           // la couleur de son motif
-  motif: "dots" | "stripes" | "rays";
-  skin?: "multiverse"; // le sachet des Legend : le multivers, pas le papier de la catégorie
+  ink: string;           // sa couleur claire
 };
 
-const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost" | "motif" | "skin">> = {
-  trencher: { price: 0.1, cards: 3, motif: "stripes" },
-  holder: { price: 0.12, cards: 3, motif: "dots" },
-  dev: { price: 0.15, cards: 3, motif: "dots" },
-  bundler: { price: 0.2, cards: 3, motif: "rays" },
-  famous: { price: 0.35, cards: 4, guarantee: "rare", motif: "rays" },
-  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, motif: "rays", skin: "multiverse" },
+const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" | "boost">> = {
+  trencher: { price: 0.1, cards: 3 },
+  holder: { price: 0.12, cards: 3 },
+  dev: { price: 0.15, cards: 3 },
+  bundler: { price: 0.2, cards: 3 },
+  famous: { price: 0.35, cards: 4, guarantee: "rare" },
+  legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2 },
 };
 
 export const PACKS: Pack[] = CATEGORIES.map((c) => ({

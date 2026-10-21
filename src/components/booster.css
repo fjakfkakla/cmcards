@@ -1,6 +1,6 @@
 /* Le booster : un sachet de film métallisé, serti en haut et en bas comme un vrai
-   paquet de cartes. La plaque du nom, l'éventail des cartes qu'il contient, le film
-   holographique qui suit la lumière. Il se coupe le long de la ligne : le haut
+   paquet de cartes. Chaque famille a son décor et son titre (en bas du fichier), les
+   personnages qui en sortent, le film holographique qui suit la lumière. Il se coupe le long de la ligne : le haut
    (.bp-top) s'envole, la lumière de la meilleure carte sort. */
 
 .bp {
@@ -30,13 +30,10 @@
     radial-gradient(90% 55% at 50% 64%, color-mix(in srgb, var(--m) 70%, #fff) 0%, transparent 70%),
     linear-gradient(165deg, color-mix(in srgb, var(--c) 70%, #fff) 0%, var(--c) 34%, color-mix(in srgb, var(--c) 55%, #0b0d18) 100%);
 }
-/* le motif embossé dans le film, très léger */
-.bp-motif { position: absolute; inset: 0; opacity: .22; mix-blend-mode: soft-light; }
-.bp-motif.dots { background: radial-gradient(circle, #fff 0 1.1cqw, transparent 1.3cqw) 0 0 / 6cqw 6cqw; }
-.bp-motif.stripes { background: repeating-linear-gradient(-35deg, #fff 0 2cqw, transparent 2cqw 7cqw); }
-.bp-motif.rays { background: repeating-conic-gradient(from 0deg at 50% 64%, #fff 0 5deg, transparent 5deg 14deg); }
+/* la scène de la famille : un dessin de 100 × 160, la taille exacte du sachet */
+.bp-scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-/* les sertissages : du métal strié, teinté par la catégorie */
+/* les sertissages : du métal strié, teinté par la famille */
 .bp-crimp {
   position: absolute; left: 0; right: 0; height: 7.5%; z-index: 6;
   background:
@@ -47,50 +44,27 @@
 .bp-crimp.top { top: 0; }
 .bp-crimp.bottom { bottom: 0; transform: scaleY(-1); }
 
-/* la plaque du nom : un cartouche sombre cerclé d'or */
-.bp-plate {
-  position: absolute; z-index: 7; top: 13.5%; left: 9%; right: 9%;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 3cqw 2cqw 3.4cqw; border-radius: 4.5cqw;
-  border: .8cqw solid transparent;
-  background:
-    linear-gradient(180deg, rgba(14,16,28,.92), rgba(8,9,16,.9)) padding-box,
-    linear-gradient(135deg, #fff3c4, #f7c948 40%, #b8780c 70%, #ffe08a) border-box;
-  box-shadow: 0 3cqw 6cqw -2cqw rgba(0,0,0,.6), inset 0 .4cqw 0 rgba(255,255,255,.08);
+/* le titre : sous la ligne de découpe, son dessin change avec la famille */
+.bp-title {
+  position: absolute; z-index: 7; top: 13%; left: 0; right: 0;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
 }
 .bp-brand {
-  font: 700 3.3cqw/1 var(--font-sans); letter-spacing: .32em; text-transform: uppercase;
-  color: #f7c948; opacity: .9; padding-left: .32em;
-}
-.bp-name {
-  margin-top: 1.6cqw;
-  font: 800 14.5cqw/.92 var(--font-display); letter-spacing: -.035em;
-  background: linear-gradient(180deg, #fff6d6 0%, #ffdd7a 38%, #f7c948 55%, #c8860f 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 .5cqw 0 rgba(0,0,0,.55));
-}
-.bp-kind {
-  margin-top: 1.4cqw;
-  font: 700 3.2cqw/1 var(--font-sans); letter-spacing: .4em; text-transform: uppercase; color: rgba(255,255,255,.72);
-  padding-left: .4em;
+  font: 800 3.2cqw/1 var(--font-sans); letter-spacing: .32em; text-transform: uppercase; padding-left: .32em;
 }
 
-/* l'éventail : les cartes qu'il contient, de dos sur les côtés, un personnage au milieu */
+/* l'éventail : les personnages qui sortent du décor, le premier devant */
 .bp-fan { position: absolute; z-index: 5; left: 0; right: 0; top: 47%; bottom: 17%; }
-.bp-glow {
-  position: absolute; z-index: 4; left: 10%; right: 10%; top: 44%; aspect-ratio: 1;
-  background: radial-gradient(circle, rgba(255,255,255,.55), transparent 62%);
-}
 .bp-mini {
   position: absolute; left: 50%; bottom: 0; width: 32cqw; aspect-ratio: 63 / 88;
   translate: -50% 0; transform-origin: 50% 110%;
   border-radius: 2.6cqw; overflow: hidden;
   border: .9cqw solid #fff;
   background: #10121b;
-  box-shadow: 0 3cqw 5cqw -1cqw rgba(0,0,0,.5);
+  box-shadow: 0 3cqw 5cqw -1cqw rgba(0,0,0,.55);
 }
 .bp-mini img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.bp-mini.side { width: 28cqw; filter: saturate(.85) brightness(.92); }
+.bp-mini.side { width: 28cqw; filter: saturate(.85) brightness(.9); }
 .bp-mini.left { transform: rotate(-16deg) translateX(-6cqw); }
 .bp-mini.right { transform: rotate(16deg) translateX(6cqw); }
 .bp-mini.mid { z-index: 2; }
@@ -98,6 +72,10 @@
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.35) 50%, transparent 65%);
 }
+
+/* les éclats qui scintillent (diamant) et les flashs (tapis rouge) */
+@keyframes bp-glint { 0%, 100% { transform: scale(0) rotate(0); opacity: 0; } 45%, 55% { transform: scale(1) rotate(45deg); opacity: 1; } }
+.bp-glints path, .fm-flashes path { animation: bp-glint 3.2s ease-in-out infinite; filter: drop-shadow(0 0 1.2px #fff); }
 
 /* le bas : combien de cartes, la garantie */
 .bp-meta {
@@ -167,23 +145,7 @@
   .bp.floating, .bp.is-shaking { animation: none; }
 }
 
-/* ================= Le sachet des Legend : le multivers =================
-   Pas le papier de la catégorie, pas de marque, pas de personnage : le ciel
-   profond, les nébuleuses, deux profondeurs d'étoiles qui dérivent, le portail
-   (les anneaux multicolores des Mythic, qui tournent) autour de la couronne, le
-   film holographique. Tout est centré et droit : rien ne penche. */
-.bp.multiverse { --c: #0d0a1f; --m: #ffd12e; --gold: #ffd12e; }
-.bp-bag.mv-bag { background: #0d0a1f; }
-/* les bandes serties, en or qui brille (le même or que la pastille Legend des cartes) */
-.bp-bag.mv-bag::before, .bp-bag.mv-bag::after {
-  filter: none;
-  background:
-    repeating-linear-gradient(90deg, rgba(0,0,0,.26) 0 .6cqw, rgba(255,255,255,.16) .6cqw 1.6cqw),
-    linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
-  animation: mv-gold 3s linear infinite;
-  box-shadow: 0 0 0 .5cqw #1e1a16 inset;
-}
-@keyframes mv-gold { to { background-position: 0 0, -250% 0; } }
+/* ================= Le multivers (Legend) : son ciel, son portail ================= */
 
 /* le ciel : du violet profond au bord du vide, avec une lueur au centre */
 .mv-space {
@@ -304,48 +266,173 @@
 .bp:hover .mv-holo { opacity: .45; }
 @keyframes mv-holo { to { background-position: 300% 300%; } }
 
-/* le nom : en or, centré, droit, l'encre autour */
-.mv-name {
-  position: absolute; z-index: 5; left: 4%; right: 4%; top: 61%; text-align: center;
-  font: 400 19cqw/.9 var(--font-chewy); color: var(--gold);
-  -webkit-text-stroke: 2.2cqw #1e1a16; paint-order: stroke fill;
-  letter-spacing: .01em;
-  filter: drop-shadow(1cqw 1cqw 0 #1e1a16) drop-shadow(0 0 2cqw rgba(255,226,122,.3));
+/* ================= Trencher : la tranchée ================= */
+.bp.d-trencher { --c: #ff9a1f; }
+.tr-title { top: 16%; height: 18%; }
+.tr-tape {
+  position: absolute; left: -8%; right: -8%; top: 50%;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  box-shadow: 0 2cqw 3cqw -1cqw rgba(60,15,0,.6);
 }
-@supports (-webkit-background-clip: text) or (background-clip: text) {
-  .mv-name {
-    background: linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: mv-gold 3s linear infinite;
-  }
+.tr-tape.front {
+  height: 15cqw; margin-top: -4cqw; transform: rotate(-5deg);
+  background:
+    repeating-linear-gradient(-45deg, #120a02 0 2.4cqw, #ffd31a 2.4cqw 4.8cqw) top / 100% 2.4cqw no-repeat,
+    repeating-linear-gradient(-45deg, #120a02 0 2.4cqw, #ffd31a 2.4cqw 4.8cqw) bottom / 100% 2.4cqw no-repeat,
+    #ffd31a;
 }
-/* la pastille : l'autocollant or, comme la pastille Legend des cartes */
-.mv-count {
-  position: absolute; z-index: 5; bottom: 10.5%; left: 50%; transform: translateX(-50%);
-  white-space: nowrap;
-  background: var(--gold); color: #3a2400; border: .7cqw solid #1e1a16; border-radius: 99px;
-  padding: 1.6cqw 4cqw; box-shadow: .8cqw .8cqw 0 #1e1a16;
-  font: 900 4.2cqw/1 var(--font-nunito); letter-spacing: .06em; text-transform: uppercase;
+.tr-tape.front span {
+  font: 800 12.5cqw/1 var(--font-display); letter-spacing: -.02em; text-transform: uppercase; color: #140b02;
+  text-shadow: 0 .4cqw 0 rgba(255,255,255,.45);
 }
-/* la ligne de découpe, en or sur le ciel */
-.bp.multiverse .bp-cut { border-top-color: rgba(255,209,46,.95); }
-.bp.multiverse .bp-cut::before { background: var(--gold); }
-.bp.multiverse .bp-foil {
+.tr-tape.back {
+  height: 7cqw; margin-top: -9cqw; transform: rotate(7deg);
+  background: #1a0e04; border-block: .5cqw solid #ffd31a;
+}
+.tr-tape.back span {
+  font: 800 3.2cqw/1 var(--font-sans); letter-spacing: .3em; text-transform: uppercase; color: #ffd31a; white-space: nowrap;
+}
+
+/* ================= Holder : le diamant ================= */
+.bp.d-holder { --c: #6cc4ff; }
+.hd-title { top: 14%; }
+.hd-title .bp-brand { color: #cfeaff; opacity: .9; }
+.hd-name {
+  margin-top: 1.4cqw;
+  font: 800 italic 17cqw/.9 var(--font-display); letter-spacing: -.04em; text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 0%, #e4f3ff 42%, #6d93c4 50%, #f0f8ff 66%, #a9cdf0 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 .5cqw 0 #062254) drop-shadow(0 1.4cqw 2cqw rgba(0,20,60,.5));
+  padding: 0 2cqw;
+}
+.hd-sub, .lg-sub {
+  margin-top: 1.8cqw; display: flex; align-items: center; gap: 2cqw;
+  font: 800 2.9cqw/1 var(--font-sans); letter-spacing: .26em; text-transform: uppercase; color: #bfe6ff;
+}
+.hd-sub i, .lg-sub i { width: 7cqw; height: .4cqw; background: currentColor; opacity: .6; }
+.hd-rays { transform-origin: 50px 100px; animation: hd-spin 60s linear infinite; }
+@keyframes hd-spin { to { transform: rotate(360deg); } }
+
+/* ================= Dev : le terminal ================= */
+.bp.d-dev { --c: #2a3a30; }
+.bp.d-dev .bp-crimp {
+  background:
+    repeating-linear-gradient(90deg, rgba(61,255,138,.28) 0 .45cqw, rgba(0,0,0,.35) .45cqw 1.2cqw),
+    linear-gradient(180deg, #3a4a40, #121a15);
+}
+.dv-code text { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; opacity: .2; }
+.bp.d-dev .bp-bag::after {
+  content: ""; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 .5cqw, transparent .5cqw 1.3cqw);
+}
+.dv-title { top: 14%; left: 8%; right: 8%; align-items: stretch; text-align: left; }
+.dv-title > * { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+.dv-bar {
+  display: flex; align-items: center; gap: 1.4cqw; height: 6cqw; padding: 0 2.4cqw;
+  background: #18221c; border-radius: 3cqw 3cqw 0 0;
+  box-shadow: inset 0 0 0 .4cqw rgba(61,255,138,.25);
+}
+.dv-bar i { width: 2cqw; height: 2cqw; border-radius: 50%; background: #ff5f57; }
+.dv-bar i:nth-child(2) { background: #febc2e; }
+.dv-bar i:nth-child(3) { background: #28c840; }
+.dv-bar span { margin-left: auto; font-size: 2.8cqw; font-weight: 700; color: #6fdd92; letter-spacing: .08em; }
+.dv-body {
+  display: flex; flex-direction: column; padding: 2.4cqw 3.4cqw 3cqw;
+  background: rgba(2,10,6,.94); border-radius: 0 0 3cqw 3cqw;
+  box-shadow: inset 0 0 0 .4cqw rgba(61,255,138,.25), 0 3cqw 6cqw -2cqw rgba(0,0,0,.7), 0 0 8cqw -2cqw rgba(61,255,138,.35);
+}
+.dv-cmd { font-size: 3.2cqw; font-weight: 700; color: #6fdd92; }
+.dv-name {
+  display: flex; align-items: center; gap: 1.6cqw; margin-top: .8cqw;
+  font-size: 17cqw; line-height: .9; font-weight: 800; letter-spacing: -.06em; color: #3dff8a;
+  text-shadow: 0 0 3cqw rgba(61,255,138,.75);
+}
+.dv-name b { width: 7cqw; height: 13cqw; background: #3dff8a; box-shadow: 0 0 3cqw rgba(61,255,138,.75); animation: dv-caret 1.1s steps(1) infinite; }
+@keyframes dv-caret { 50% { opacity: 0; } }
+
+/* ================= Bundler : le labo toxique ================= */
+.bp.d-bundler { --c: #a77bff; }
+.bd-title { top: 14%; left: 14%; right: 14%; }
+.bd-sign {
+  width: 100%; padding: 1.4cqw; border-radius: 3cqw;
+  background: repeating-linear-gradient(-45deg, #ffd400 0 2.2cqw, #120720 2.2cqw 4.4cqw);
+  box-shadow: 0 3cqw 5cqw -2cqw rgba(0,0,0,.7);
+}
+.bd-sign > * { display: flex; justify-content: center; }
+.bd-warn {
+  align-items: center; gap: 1.4cqw; padding: 2.2cqw 0 0; border-radius: 2cqw 2cqw 0 0; background: #120720;
+  font: 800 2.7cqw/1 var(--font-sans); letter-spacing: .2em; text-transform: uppercase; color: #ffd400;
+}
+.bd-warn svg { width: 4.4cqw; height: 4.4cqw; }
+.bd-name {
+  padding: .6cqw 0 2.2cqw; border-radius: 0 0 2cqw 2cqw; background: #120720;
+  font: 400 15cqw/.95 var(--font-chewy); letter-spacing: .01em; color: #b6ff3b;
+  text-shadow: 0 0 3cqw rgba(182,255,59,.6), 0 .6cqw 0 #3d7a00;
+}
+.bd-bubbles circle { animation: bd-rise 4.2s ease-in infinite; }
+@keyframes bd-rise { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-40px); opacity: 0; } }
+
+/* ================= Famous : le tapis rouge ================= */
+.bp.d-famous { --c: #ff5fb4; }
+.fm-title { top: 13.5%; left: 10%; right: 10%; }
+.fm-marquee {
+  width: 100%; padding: 2.4cqw; border-radius: 4cqw;
+  background:
+    radial-gradient(circle, #fffbe0 0 .7cqw, #ffd34d 1cqw, transparent 1.3cqw) 0 0 / 4cqw 4cqw,
+    linear-gradient(180deg, #ffcf4a, #c27a12);
+  box-shadow: 0 0 6cqw -1cqw rgba(255,215,90,.8), 0 3cqw 5cqw -2cqw rgba(60,0,30,.7);
+  animation: fm-bulbs 1.6s steps(2) infinite;
+}
+@keyframes fm-bulbs { 50% { background-position: 2cqw 0, 0 0; } }
+.fm-inner {
+  display: flex; flex-direction: column; align-items: center; padding: 2.4cqw 0 2.2cqw;
+  border-radius: 2cqw; background: radial-gradient(120% 90% at 50% 0%, #4a0a2c, #1a0410);
+  box-shadow: inset 0 0 0 .4cqw rgba(0,0,0,.5);
+}
+.fm-inner .bp-brand { color: #ffd34d; }
+.fm-name {
+  margin-top: 1.2cqw;
+  font: 800 15.5cqw/.9 var(--font-display); letter-spacing: -.04em; text-transform: uppercase;
+  color: #fff0f8; text-shadow: 0 0 1cqw #ff5fb4, 0 0 4cqw #ff5fb4, 0 0 9cqw rgba(255,95,180,.7);
+}
+.fm-stars { display: flex; gap: 1.2cqw; margin-top: 1.6cqw; }
+.fm-stars svg { width: 3.4cqw; height: 3.4cqw; fill: #ffd34d; }
+.fm-beams { mix-blend-mode: screen; animation: fm-sweep 6s ease-in-out infinite alternate; transform-origin: 50px 160px; }
+@keyframes fm-sweep { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+
+/* ================= Legend : le multivers ================= */
+.bp.d-legend { --c: #0d0a1f; --m: #ffd12e; --gold: #ffd12e; }
+.bp.d-legend .bp-bag { background: #0d0a1f; }
+.bp.d-legend .bp-crimp {
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 .45cqw, rgba(0,0,0,.25) .45cqw 1.2cqw),
+    linear-gradient(115deg, #ffe7a3, #d9a21a 40%, #fff3b0 50%, #b8780c 60%, #ffe7a3) 0 0 / 250% 100%;
+  animation: mv-gold 3s linear infinite;
+}
+@keyframes mv-gold { to { background-position: 0 0, -250% 0; } }
+.lg-title { top: 14.5%; }
+.lg-title .bp-brand { color: #ffe08a; }
+.lg-name {
+  margin-top: 1.4cqw;
+  font: 800 18cqw/.9 var(--font-display); letter-spacing: -.045em; text-transform: uppercase;
+  background: linear-gradient(115deg, #ffe27a, #f5c242 40%, #fff3b0 50%, #d9a21a 60%, #ffe27a) 0 0 / 250% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 .6cqw 0 #3a2400) drop-shadow(0 0 3cqw rgba(255,209,46,.45));
+  animation: lg-gold 3s linear infinite;
+}
+@keyframes lg-gold { to { background-position: -250% 0; } }
+.lg-sub { color: #ffe08a; }
+.bp.d-legend .mv-portal { top: 45%; left: 21%; right: 21%; filter: drop-shadow(0 3cqw 5cqw rgba(0,0,0,.6)); }
+.bp.d-legend .bp-cut { border-top-color: rgba(255,224,138,.9); }
+.bp.d-legend .bp-cut::before { background: var(--gold); }
+.bp.d-legend .bp-foil {
   background:
     linear-gradient(115deg, transparent 30%, rgba(255,255,255,.35) 44%, transparent 56%) var(--sx, 140%) 0 / 300% 100% no-repeat,
     linear-gradient(90deg, rgba(255,255,255,.12), transparent 20%, transparent 80%, rgba(0,0,0,.3));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bp-bag.mv-bag::before, .bp-bag.mv-bag::after, .mv-nebula::before, .mv-nebula::after, .mv-stars,
-  .mv-ring, .mv-core, .mv-rays, .mv-crown, .mv-spark, .mv-holo, .mv-name { animation: none; }
+  .bp-glints path, .fm-flashes path, .hd-rays, .dv-name b, .bd-bubbles circle, .fm-marquee, .fm-beams,
+  .bp.d-legend .bp-crimp, .lg-name, .mv-nebula::before, .mv-nebula::after, .mv-stars,
+  .mv-ring, .mv-core, .mv-rays, .mv-crown, .mv-spark, .mv-holo { animation: none; }
 }
-
-/* Le multivers dans le nouveau sachet : le portail sous la plaque, le métal doré. */
-.bp.multiverse .mv-portal { top: 45%; left: 21%; right: 21%; filter: drop-shadow(0 3cqw 5cqw rgba(0,0,0,.6)); }
-.bp.multiverse .bp-crimp {
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0 .45cqw, rgba(0,0,0,.25) .45cqw 1.2cqw),
-    linear-gradient(180deg, #ffe7a3, #b8780c);
-}
-.bp.multiverse .bp-cut { border-top-color: rgba(255,224,138,.9); }

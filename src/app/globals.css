@@ -2,7 +2,9 @@
 
 /* cm cards : la nuit, des objets imprimés posés dessus. Une seule couleur d'action,
    l'or du logo ; le reste est du verre sombre et des lignes fines. Bricolage pour
-   les grands titres, Inter pour tout le reste. Pas d'emoji, pas de halo, pas de mono.
+   les grands titres, Inter pour tout le reste. Pas d'emoji, pas de halo, pas de mono :
+   sauf sur la page d'accueil, qui suit la DA Kol Market (le vert acide qui luit, les
+   chiffres en JetBrains Mono).
    Les cartes gardent leur propre dessin (card.css) : --ink reste leur encre. */
 
 @font-face {
@@ -12,6 +14,11 @@
 @font-face {
   font-family: "Inter"; src: url("/fonts/inter-var-latin.woff2") format("woff2");
   font-weight: 100 900; font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono"; src: url("/fonts/jetbrains-mono-var-latin.woff2") format("woff2");
+  font-weight: 400 700; font-display: swap;
 }
 
 @theme inline {
@@ -36,11 +43,15 @@
   --color-blue: #4c7dff;
   --color-up: #2ee27a;
   --color-down: #ff6b6b;
-  /* le papier de la page d'accueil */
-  --color-paper: #fbfcff;
-  --color-paper-2: #f2f4fa;
-  --color-paper-ink: #0a0f1e;
-  --color-paper-muted: #5b6478;
+  /* la page d'accueil : le noir teinté de vert, le vert acide qui luit (la DA Kol Market) */
+  --color-night: #080a08;
+  --color-night-card: #0e100e;
+  --color-night-2: #181c19;
+  --color-night-line: rgba(38, 42, 39, .9);
+  --color-night-muted: #8b918c;
+  --color-lime: #acf93f;
+  --color-lime-ink: #060e07;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 :root {
@@ -85,6 +96,16 @@ body {
   }
   &:hover::after { transform: translateX(130%); }
 }
+/* le vert acide de la page d'accueil, et sa lueur */
+@utility btn-lime {
+  @apply btn;
+  background: var(--color-lime); color: var(--color-lime-ink);
+  box-shadow: 0 0 0 1px rgba(172, 249, 63, .4), 0 0 40px rgba(172, 249, 63, .35), 0 0 80px rgba(172, 249, 63, .15);
+  &:hover { filter: brightness(1.1); }
+}
+@utility text-glow { text-shadow: 0 0 24px rgba(172, 249, 63, .45); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee 40s linear infinite; }
 @utility btn-ghost {
   @apply btn;
   background: rgba(255, 255, 255, .05);
@@ -136,5 +157,5 @@ body {
 .rise { animation: rise .7s var(--ease-out) both; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise { animation: none; }
+  .rise, .marquee { animation: none; }
 }

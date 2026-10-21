@@ -71,7 +71,7 @@ export function Pastille({ name, color = "#f7c948", size = 40, solid = false }: 
 }
 
 /* La marque : la tuile d'or du logo (la carte et son anneau), et le nom. */
-export function Logo({ size = 32, word = true, light = false }: { size?: number; word?: boolean; light?: boolean }) {
+export function Logo({ size = 32, word = true }: { size?: number; word?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <svg viewBox="0 0 1000 1000" width={size} height={size} aria-hidden="true">
@@ -84,7 +84,7 @@ export function Logo({ size = 32, word = true, light = false }: { size?: number;
         <path fill="#1e1a16" transform="translate(115.4 115.4) scale(7.6923)" d="M34 11H66Q78 11 78 23V77Q78 89 66 89H34Q22 89 22 77V23Q22 11 34 11ZM50 33C40.6 33 33 40.6 33 50C33 59.4 40.6 67 50 67C59.4 67 67 59.4 67 50C67 40.6 59.4 33 50 33ZM50 42C54.4 42 58 45.6 58 50C58 54.4 54.4 58 50 58C45.6 58 42 54.4 42 50C42 45.6 45.6 42 50 42Z" />
       </svg>
       {word && (
-        <span className={`font-display text-[22px] leading-none tracking-[-.03em] ${light ? "text-paper-ink" : "text-fg"}`}>
+        <span className="font-display text-[22px] leading-none tracking-[-.03em] text-fg">
           <b className="font-extrabold">cm</b> <span className="font-medium text-gold-3">cards</span>
         </span>
       )}

@@ -7,7 +7,8 @@ import { WalletPicker } from "./Nav";
 import { useAccount } from "@/lib/account";
 import { short } from "@/lib/solana";
 
-/* La barre de la page d'accueil : du papier dépoli, qui prend une ombre au défilement. */
+/* La barre de la page d'accueil : une pilule de verre sombre qui flotte en haut,
+   et prend une ombre au défilement. */
 export default function LandingNav() {
   const { me, wallet, busy, signIn } = useAccount();
   const [scrolled, setScrolled] = useState(false);
@@ -20,25 +21,23 @@ export default function LandingNav() {
 
   return (
     <>
-    <header className={`sticky top-0 z-40 border-b border-[rgba(10,15,30,.08)] backdrop-blur-xl transition-[background-color,box-shadow] ${scrolled ? "bg-paper/95 shadow-[0_8px_30px_rgba(13,32,84,.1)]" : "bg-paper/80"}`}>
-      <div className="mx-auto flex h-[72px] max-w-6xl items-center gap-6 px-4">
-        <Link href="/" aria-label="cm cards"><Logo size={32} light /></Link>
+    <header className="sticky top-4 z-40 mx-auto w-full max-w-6xl px-4">
+      <div className={`flex items-center gap-4 rounded-full border border-night-line py-2 pr-2 pl-4 backdrop-blur-xl transition-[background-color,box-shadow] ${scrolled ? "bg-night-card/90 shadow-[0_18px_40px_-18px_rgba(0,0,0,.9)]" : "bg-night-card/60"}`}>
+        <Link href="/" aria-label="cm cards"><Logo size={28} /></Link>
         <nav className="hidden items-center gap-1 md:flex">
-          {[["/boosters", "Boosters"], ["/marche", "Marché"], ["/collection", "Collection"]].map(([href, label]) => (
-            <Link key={href} href={href} className="flex h-10 items-center rounded-xl px-3.5 text-[14.5px] font-semibold text-paper-muted hover:text-paper-ink">{label}</Link>
+          {[["#marche", "Marché"], ["#boosters", "Boosters"], ["/collection", "Collection"]].map(([href, label], k) => (
+            <Link key={href} href={href} className={`rounded-full px-4 py-2 text-[14px] font-medium transition ${k === 0 ? "bg-night-2 text-fg" : "text-night-muted hover:text-fg"}`}>{label}</Link>
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
           {wallet ? (
-            <Link href="/profil" className="btn btn-sm bg-white text-paper-ink shadow-[inset_0_0_0_1.5px_rgba(10,15,30,.14)]">
-              <span className="num">{short(wallet)}</span>
-            </Link>
+            <Link href="/profil" className="btn btn-sm border border-night-line bg-night-2 font-mono text-[13px] text-fg">{short(wallet)}</Link>
           ) : me && (
-            <button onClick={signIn} disabled={busy} className="btn btn-sm hidden bg-white text-paper-ink shadow-[inset_0_0_0_1.5px_rgba(10,15,30,.14)] sm:inline-flex">
+            <button onClick={signIn} disabled={busy} className="btn btn-sm hidden border border-night-line bg-night-2 text-fg sm:inline-flex">
               <Icon name="wallet" size={16} /> {busy ? "Signature…" : "Connecter"}
             </button>
           )}
-          <Link href="/boosters" className="btn-gold btn-sm">Entrer</Link>
+          <Link href="/boosters" className="btn-lime btn-sm">Entrer</Link>
         </div>
       </div>
     </header>
