@@ -279,6 +279,12 @@ export const TRADERS: Trader[] = [
   { id: "cap", name: "Cap", handle: "", category: "trencher", art: "/art/cap.webp", artPos: "58% 45%",
     mythic: { banner: "/art/cap.webp", avatar: "/art/cap.webp",
       panels: { top: { src: "/art/cap.webp", pos: "60% 20%" }, left: { src: "/art/cap.webp", pos: "10% 45%" }, right: { src: "/art/cap.webp", pos: "80% 55%" } } } },
+  // Jidn : une seule image, la sienne partout : le chat persan crème, la mine boudeuse,
+  // tenu à bout de bras devant un mur de briques tagué de noir et d'orange. Une photo :
+  // sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "jidn", name: "Jidn", handle: "", category: "trencher", art: "/art/jidn.webp", artPos: "55% 40%", tint: "gold",
+    mythic: { banner: "/art/jidn.webp", avatar: "/art/jidn.webp",
+      panels: { top: { src: "/art/jidn.webp", pos: "60% 35%" }, left: { src: "/art/jidn.webp", pos: "15% 70%" }, right: { src: "/art/jidn.webp", pos: "90% 40%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
