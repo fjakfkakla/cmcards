@@ -82,8 +82,9 @@ export type Trader = {
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
-  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call";
+  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant,
+  // les billets qui tombent
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -127,6 +128,13 @@ export const TRADERS: Trader[] = [
   { id: "jack", name: "Jack Duval", handle: "", category: "bundler", art: "/art/duve-face.webp", artPos: "50% 32%", theme: "call", tint: "blue",
     mythic: { banner: "/art/duve-call.webp", avatar: "/art/duve-face.webp",
       panels: { top: { src: "/art/duve-call.webp", pos: "50% 38%" }, left: { src: "/art/duve-call.webp", pos: "18% 90%" }, right: { src: "/art/duve-call.webp", pos: "82% 90%" } } } },
+  // Yenni : le chat rose, un Trencher. Sa pdp en principale ; un chat qui compte en
+  // billets : sa Shiny est en or. Sa bannière (YENNI, la lune, les billets) dans la
+  // planche de sa Mythic : le nom et la lune en haut, le pistolet à billets à gauche,
+  // le chat à lunettes à droite ; il pleut des billets.
+  { id: "yenni", name: "Yenni", handle: "", category: "trencher", art: "/art/yenni-face.webp", artPos: "50% 55%", theme: "cash", tint: "gold",
+    mythic: { banner: "/art/yenni.webp", avatar: "/art/yenni-face.webp",
+      panels: { top: { src: "/art/yenni.webp", pos: "11% 50%" }, left: { src: "/art/yenni.webp", pos: "61% 60%" }, right: { src: "/art/yenni.webp", pos: "100% 50%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.
