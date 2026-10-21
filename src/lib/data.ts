@@ -266,6 +266,12 @@ export const TRADERS: Trader[] = [
   { id: "matt", name: "Matt", handle: "", category: "trencher", art: "/art/matt.webp", artPos: "56% 40%", tint: "gold",
     mythic: { banner: "/art/matt.webp", avatar: "/art/matt.webp",
       panels: { top: { src: "/art/matt.webp", pos: "56% 30%" }, left: { src: "/art/matt.webp", pos: "10% 55%" }, right: { src: "/art/matt.webp", pos: "90% 30%" } } } },
+  // jijo : une seule image, la sienne partout : le fantôme aux yeux noirs, peint en
+  // arc-en-ciel dans les remous de couleurs. Déjà toutes les teintes : sa Shiny les
+  // décale. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "jijo", name: "jijo", handle: "", category: "trencher", art: "/art/jijo.webp", artPos: "50% 45%",
+    mythic: { banner: "/art/jijo.webp", avatar: "/art/jijo.webp",
+      panels: { top: { src: "/art/jijo.webp", pos: "50% 30%" }, left: { src: "/art/jijo.webp", pos: "10% 40%" }, right: { src: "/art/jijo.webp", pos: "90% 15%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
