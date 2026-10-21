@@ -228,6 +228,14 @@ export const TRADERS: Trader[] = [
   { id: "theo", name: "théo", handle: "", category: "trencher", art: "/art/theo.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/theo.webp", avatar: "/art/theo.webp",
       panels: { top: { src: "/art/theo.webp", pos: "50% 30%" }, left: { src: "/art/theo.webp", pos: "20% 60%" }, right: { src: "/art/theo.webp", pos: "80% 60%" } } } },
+  // ART : sa pdp (Guts sous la neige, l'épée sur l'épaule) en principale ; un dessin
+  // en couleurs aux tons froids : sa Shiny est en bleu électrique. Sa bannière (ART,
+  // Guts et sa Berserker Armor dans la brume) dans la planche de sa Mythic : le nom
+  // et l'armure en haut, Guts à gauche, la bête qui hurle à droite, la pdp en
+  // sticker. Pas de thème. Un Trencher.
+  { id: "art", name: "ART", handle: "", category: "trencher", art: "/art/art-face.webp", artPos: "50% 35%", tint: "blue",
+    mythic: { banner: "/art/art.webp", avatar: "/art/art-face.webp",
+      panels: { top: { src: "/art/art.webp", pos: "55% 35%" }, left: { src: "/art/art.webp", pos: "12% 40%" }, right: { src: "/art/art.webp", pos: "88% 50%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
