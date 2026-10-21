@@ -298,6 +298,15 @@ export const TRADERS: Trader[] = [
   { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
     mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
       panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
+  // west : sa pdp (en voiture, les lunettes rondes, l'éventail de billets) en
+  // principale ; une photo aux tons chauds : l'or la verdit, sa Shiny est en bleu
+  // électrique. Sa bannière (le casque blanc dans sa chambre, « it's impossible to
+  // quit now… until your death » en sous-titre) ne sert qu'à la planche de sa
+  // Mythic : lui et le sous-titre en haut, son visage à gauche, l'étagère à droite,
+  // la pdp en sticker. Pas de thème. Un Dev.
+  { id: "west", name: "west", handle: "", category: "dev", art: "/art/west.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/west-banner.webp", avatar: "/art/west.webp",
+      panels: { top: { src: "/art/west-banner.webp", pos: "50% 75%" }, left: { src: "/art/west-banner.webp", pos: "47% 0%" }, right: { src: "/art/west-banner.webp", pos: "92% 0%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
