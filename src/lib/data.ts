@@ -298,6 +298,15 @@ export const TRADERS: Trader[] = [
   { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
     mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
       panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
+  // Kevszn : sa pdp (El Chavo, la casquette à carreaux verts, le t-shirt rayé et la
+  // salopette jaune rapiécée) en principale ; un dessin en couleurs : sa Shiny décale
+  // ses teintes. Sa bannière (KEVSZNX en lettres de lianes, lui dans la jungle) sur son
+  // OG et dans la planche de sa Mythic : le nom et lui en haut, les fougères à gauche,
+  // la jungle à droite, la pdp en sticker. Pas de thème. Un Trencher.
+  { id: "kevszn", name: "Kevszn", handle: "", category: "trencher", art: "/art/kevszn-face.webp", artPos: "50% 40%",
+    shots: { og: { src: "/art/kevszn.webp", pos: "50% 50%" } },
+    mythic: { banner: "/art/kevszn.webp", avatar: "/art/kevszn-face.webp",
+      panels: { top: { src: "/art/kevszn.webp", pos: "50% 25%" }, left: { src: "/art/kevszn.webp", pos: "8% 70%" }, right: { src: "/art/kevszn.webp", pos: "92% 45%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
