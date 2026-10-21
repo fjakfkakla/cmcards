@@ -266,6 +266,12 @@ export const TRADERS: Trader[] = [
   { id: "matt", name: "Matt", handle: "", category: "trencher", art: "/art/matt.webp", artPos: "56% 40%", tint: "gold",
     mythic: { banner: "/art/matt.webp", avatar: "/art/matt.webp",
       panels: { top: { src: "/art/matt.webp", pos: "56% 30%" }, left: { src: "/art/matt.webp", pos: "10% 55%" }, right: { src: "/art/matt.webp", pos: "90% 30%" } } } },
+  // jijo : une seule image, la sienne partout : le fantôme aux yeux noirs, peint en
+  // arc-en-ciel dans les remous de couleurs. Déjà toutes les teintes : sa Shiny les
+  // décale. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "jijo", name: "jijo", handle: "", category: "trencher", art: "/art/jijo.webp", artPos: "50% 45%",
+    mythic: { banner: "/art/jijo.webp", avatar: "/art/jijo.webp",
+      panels: { top: { src: "/art/jijo.webp", pos: "50% 30%" }, left: { src: "/art/jijo.webp", pos: "10% 40%" }, right: { src: "/art/jijo.webp", pos: "90% 15%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
@@ -279,6 +285,19 @@ export const TRADERS: Trader[] = [
   { id: "dv", name: "dv", handle: "", category: "famous", art: "/art/dv.webp", artPos: "62% 50%", tint: "blue",
     mythic: { banner: "/art/dv.webp", avatar: "/art/dv.webp",
       panels: { top: { src: "/art/dv.webp", pos: "50% 70%" }, left: { src: "/art/dv.webp", pos: "10% 30%" }, right: { src: "/art/dv.webp", pos: "80% 65%" } } } },
+  // Schoen : une seule image, la sienne partout : le portrait sur fond gris clair, les
+  // lunettes noires, la chemise blanche ouverte, la chaîne au cou. Une photo sur fond
+  // clair : l'or la jaunit et verdit ses cheveux, sa Shiny est en bleu électrique. Pas
+  // de thème pour sa Mythic. Un Trencher.
+  { id: "schoen", name: "Schoen", handle: "", category: "trencher", art: "/art/schoen.webp", artPos: "52% 40%", tint: "blue",
+    mythic: { banner: "/art/schoen.webp", avatar: "/art/schoen.webp",
+      panels: { top: { src: "/art/schoen.webp", pos: "50% 38%" }, left: { src: "/art/schoen.webp", pos: "30% 90%" }, right: { src: "/art/schoen.webp", pos: "85% 40%" } } } },
+  // Bean : une seule image, la sienne partout : Lelouch, les cheveux noirs, le haut
+  // col de sa cape et le jabot blanc. En noir et blanc (manga) : sa Shiny est en bleu
+  // électrique. Pas de thème pour sa Mythic. Un Holder.
+  { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
+    mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
+      panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
