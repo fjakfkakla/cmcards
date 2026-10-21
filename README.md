@@ -8,7 +8,7 @@ on garde ses cartes ou on les revend aux autres joueurs, au prix qu'on fixe.
 - **Connexion** : le wallet (Phantom, Solflare, Backpack…) signe un message ; le serveur
   vérifie la signature et pose un cookie signé. Pas d'email, pas de mot de passe.
 - **Boosters** : le seul prix fixé par cm cards. Le joueur paie le wallet de cm cards
-  (`NEXT_PUBLIC_TREASURY`) avec un mémo `cmcards:pack:<booster>` ; le serveur relit la
+  (`TREASURY_WALLET`) avec un mémo `cmcards:pack:<booster>` ; le serveur relit la
   transaction sur la chaîne, puis tire les cartes. Chaque carte a un numéro, dans un stock
   fixe par rareté (une seule Mythic par trader).
 - **Marché** : vendre est gratuit, le vendeur fixe son prix. L'acheteur réserve la carte
@@ -17,11 +17,18 @@ on garde ses cartes ou on les revend aux autres joueurs, au prix qu'on fixe.
   arrive trop tard est noté dans `refunds` pour être remboursé.
 - Une carte ne contient pas de coins : elle vaut ce que les joueurs en donnent.
 
-## Configuration
+## Déploiement : Railway + Vercel (comme memescanner)
 
-Copier `.env.example` en `.env.local`. En local, sans Upstash, les données vont dans
-`.data/kv.json`. Sur Vercel, il faut Upstash Redis (intégration Vercel), `SESSION_SECRET`
-et `NEXT_PUBLIC_TREASURY`, sinon les paiements restent fermés.
+- **Railway** fait tourner l'app entière (`npm run build`, `npm start`) avec **toutes les
+  variables** (voir `.env.example`) et un **Redis** dans le même projet
+  (`REDIS_URL = ${{Redis.REDIS_URL}}`). Les cartes, les annonces et les paiements vivent
+  dans ce Redis.
+- **Vercel** sert les pages et renvoie `/api/*` au service Railway : **aucune variable** à
+  y mettre. L'adresse Railway est écrite en dur dans `next.config.ts` (`RAILWAY`).
+- Le navigateur lit le réseau, son RPC et le wallet de cm cards sur `/api/config` : rien
+  n'est figé dans le build.
+- Sans Redis sur Railway (ou Vercel), les paiements restent fermés : un fichier ne survit
+  pas à un déploiement. En local, sans `REDIS_URL`, les données vont dans `.data/kv.json`.
 
 ## Lancer en local
 

@@ -1,10 +1,10 @@
 /* Lire un paiement sur la chaîne : qui a signé, quels virements de SOL, quels mémos.
    Le serveur ne croit que ça, jamais ce que le navigateur annonce. */
 
-import { RPC_URL } from "../solana";
+import { SERVER_RPC } from "./config";
 import { Oops } from "./errors";
 
-const RPC = process.env.SOLANA_RPC || RPC_URL;
+const RPC = SERVER_RPC;
 const MAX_AGE = 60 * 60; // un paiement de plus d'une heure n'achète plus rien (s)
 
 export type Payment = {

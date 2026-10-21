@@ -8,7 +8,7 @@ import CollectCard from "./CollectCard";
 import Icon from "./Icon";
 import { api, useAccount } from "@/lib/account";
 import { type Pack, type RarityId, fmtSol, rarity, serialOf, trader } from "@/lib/data";
-import { MEMO, TREASURY, explorer, toLamports } from "@/lib/solana";
+import { MEMO, explorer, toLamports } from "@/lib/solana";
 import type { Owned } from "@/lib/types";
 
 /* La couleur de la lumière d'une rareté : celle qui sort du booster, celle du nom. */
@@ -26,7 +26,7 @@ type Step = "idle" | "sign" | "draw";
 const PENDING = "cmcards:pending"; // un paiement fait dont on n'a pas encore les cartes
 
 export default function Opening({ pack }: { pack: Pack }) {
-  const { wallet, balance, busy, signIn, pay, refresh } = useAccount();
+  const { cfg, ready, wallet, balance, busy, signIn, pay, refresh } = useAccount();
   const [cards, setCards] = useState<Owned[] | null>(null);
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +75,7 @@ export default function Opening({ pack }: { pack: Pack }) {
     setError(null); setStep("sign");
     let sig: string;
     try {
-      sig = await pay([{ to: TREASURY, lamports: price }], MEMO.pack(pack.id));
+      sig = await pay([{ to: cfg.treasury, lamports: price }], MEMO.pack(pack.id));
     } catch (e) {
       setStep("idle");
       setError(e instanceof Error ? e.message : "Paiement annulé.");
@@ -152,7 +152,9 @@ export default function Opening({ pack }: { pack: Pack }) {
           <p className="mt-2 text-[15px] text-muted">{pack.cards} cartes{pack.guarantee ? `, la dernière ${rarity(pack.guarantee).name} ou mieux` : ""}</p>
 
           <div className="mt-8 w-full">
-            {!TREASURY ? (
+            {!ready ? (
+              <span className="btn-ghost btn-lg w-full animate-pulse opacity-60">…</span>
+            ) : !cfg.treasury ? (
               <span className="btn-ghost btn-lg w-full cursor-not-allowed opacity-60">Les paiements ouvrent bientôt</span>
             ) : !wallet ? (
               <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
@@ -170,7 +172,7 @@ export default function Opening({ pack }: { pack: Pack }) {
             {short && !pending && <p className="mt-3 text-center text-[14px] font-semibold text-down">Solde insuffisant pour ce booster.</p>}
             {error && <p className="mt-3 text-center text-[14px] font-semibold text-down">{error}</p>}
             {pending && (
-              <a href={explorer(pending)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[13.5px] text-dim hover:text-muted">
+              <a href={explorer(pending, cfg.cluster)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[13.5px] text-dim hover:text-muted">
                 Voir le paiement <Icon name="out" size={14} />
               </a>
             )}
