@@ -228,6 +228,12 @@ export const TRADERS: Trader[] = [
   { id: "theo", name: "théo", handle: "", category: "trencher", art: "/art/theo.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/theo.webp", avatar: "/art/theo.webp",
       panels: { top: { src: "/art/theo.webp", pos: "50% 30%" }, left: { src: "/art/theo.webp", pos: "20% 60%" }, right: { src: "/art/theo.webp", pos: "80% 60%" } } } },
+  // blu6k : une seule image, la sienne partout : la grenouille peinte en mafieux,
+  // le borsalino et le costume bleus, le cigare au bec, la pochette rouge. Une peau
+  // verte : sa Shiny est en bleu électrique. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "blu6k", name: "blu6k", handle: "", category: "trencher", art: "/art/blu6k.webp", artPos: "50% 45%", tint: "blue",
+    mythic: { banner: "/art/blu6k.webp", avatar: "/art/blu6k.webp",
+      panels: { top: { src: "/art/blu6k.webp", pos: "50% 25%" }, left: { src: "/art/blu6k.webp", pos: "15% 55%" }, right: { src: "/art/blu6k.webp", pos: "80% 85%" } } } },
   // Zero : sa pdp (Kurapika, le regard en coin) en principale ; sa bannière (ZEROPNL,
   // Hunter x Hunter en bleu et or, les chaînes) sur son OG et dans la planche de sa
   // Mythic : le nom et Kurapika enchaîné en haut, Kurapika aux chaînes à gauche, Gon
