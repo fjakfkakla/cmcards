@@ -143,6 +143,11 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/ansem-bull.webp", pos: "50% 40%" } },
     mythic: { banner: "/art/ansem.webp", avatar: "/art/ansem-face.webp",
       panels: { top: { src: "/art/ansem-bull.webp", pos: "50% 18%" }, left: { src: "/art/ansem.webp", pos: "22% 50%" }, right: { src: "/art/ansem-bull.webp", pos: "50% 92%" } } } },
+  // Trunoest : sa pdp (la silhouette dans la lueur rouge) en principale ; sa
+  // bannière (les nuées rouges) dans les trois cases de la planche Mythic, la pdp en sticker.
+  { id: "trunoest", name: "Trunoest", handle: "", category: "trencher", art: "/art/trunoest-face.webp", artPos: "50% 40%",
+    mythic: { banner: "/art/trunoest.webp", avatar: "/art/trunoest-face.webp",
+      panels: { top: { src: "/art/trunoest.webp", pos: "50% 50%" }, left: { src: "/art/trunoest.webp", pos: "18% 50%" }, right: { src: "/art/trunoest.webp", pos: "82% 50%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
