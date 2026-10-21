@@ -44,16 +44,39 @@ export const COINS: Record<string, Coin> = {
   FWOG: { ticker: "FWOG", name: "Fwog", price: 0.087, color: "#7fd47f" },
 };
 
+/* Les images d'un set signature : chaque rareté a sa photo et sa mise en scène.
+   Fabriquées par tools/traders/kimchi.py (le détourage, le décor sans lui). */
+export type AuraArt = {
+  print: string;  // Common : le tirage
+  jet: string;    // Shiny : le rosé
+  table: string;  // Millionaire : la liasse
+  icon: string;   // Legendary : le buste détouré, sur la feuille d'or
+  film: string;   // OG : la pellicule
+  bg: string; cut: string; glow: string; // Mythic : le décor, lui, sa silhouette floutée
+};
+
 export type Trader = {
   id: string; name: string; handle: string; category: CategoryId;
   art?: string; artPos?: string;
   theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
+  aura?: AuraArt;        // son set signature : une carte différente par rareté
 };
 export const TRADERS: Trader[] = [
   { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
     mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
+  { id: "kimchi", name: "Kimchi", handle: "@kimchi", category: "top10", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
+    aura: {
+      print: "/traders/kimchi-desert.webp",
+      jet: "/traders/kimchi-jet.webp",
+      table: "/traders/kimchi-table.webp",
+      icon: "/traders/kimchi-icon.webp",
+      film: "/traders/kimchi-flash.webp",
+      bg: "/traders/kimchi-aura-bg.webp",
+      cut: "/traders/kimchi-aura-cut.webp",
+      glow: "/traders/kimchi-aura-glow.png",
+    } },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 
