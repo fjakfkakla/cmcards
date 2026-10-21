@@ -159,11 +159,11 @@ export const TRADERS: Trader[] = [
   { id: "trunoest", name: "Trunoest", handle: "", category: "trencher", art: "/art/trunoest-face.webp", artPos: "50% 40%",
     mythic: { banner: "/art/trunoest.webp", avatar: "/art/trunoest-face.webp",
       panels: { top: { src: "/art/trunoest.webp", pos: "50% 50%" }, left: { src: "/art/trunoest.webp", pos: "18% 50%" }, right: { src: "/art/trunoest.webp", pos: "82% 50%" } } } },
-  // Trencher : une seule image, la sienne partout : le gardien aux cheveux blancs,
+  // Dior : une seule image, la sienne partout : le gardien aux cheveux blancs,
   // en noir et blanc (manga). Sa Shiny est en bleu électrique. Pas de thème pour sa Mythic.
-  { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
-    mythic: { banner: "/art/trencher.webp", avatar: "/art/trencher.webp",
-      panels: { top: { src: "/art/trencher.webp", pos: "50% 20%" }, left: { src: "/art/trencher.webp", pos: "12% 55%" }, right: { src: "/art/trencher.webp", pos: "88% 55%" } } } },
+  { id: "dior", name: "Dior", handle: "", category: "trencher", art: "/art/dior.webp", artPos: "50% 40%", tint: "blue",
+    mythic: { banner: "/art/dior.webp", avatar: "/art/dior.webp",
+      panels: { top: { src: "/art/dior.webp", pos: "50% 20%" }, left: { src: "/art/dior.webp", pos: "12% 55%" }, right: { src: "/art/dior.webp", pos: "88% 55%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
