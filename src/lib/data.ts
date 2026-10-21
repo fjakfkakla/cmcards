@@ -279,6 +279,12 @@ export const TRADERS: Trader[] = [
   { id: "dv", name: "dv", handle: "", category: "famous", art: "/art/dv.webp", artPos: "62% 50%", tint: "blue",
     mythic: { banner: "/art/dv.webp", avatar: "/art/dv.webp",
       panels: { top: { src: "/art/dv.webp", pos: "50% 70%" }, left: { src: "/art/dv.webp", pos: "10% 30%" }, right: { src: "/art/dv.webp", pos: "80% 65%" } } } },
+  // Bean : une seule image, la sienne partout : Lelouch, les cheveux noirs, le haut
+  // col de sa cape et le jabot blanc. En noir et blanc (manga) : sa Shiny est en bleu
+  // électrique. Pas de thème pour sa Mythic. Un Holder.
+  { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
+    mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
+      panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
