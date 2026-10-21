@@ -159,6 +159,12 @@ export const TRADERS: Trader[] = [
   { id: "trunoest", name: "Trunoest", handle: "", category: "trencher", art: "/art/trunoest-face.webp", artPos: "50% 40%",
     mythic: { banner: "/art/trunoest.webp", avatar: "/art/trunoest-face.webp",
       panels: { top: { src: "/art/trunoest.webp", pos: "50% 50%" }, left: { src: "/art/trunoest.webp", pos: "18% 50%" }, right: { src: "/art/trunoest.webp", pos: "82% 50%" } } } },
+  // Cooker : sa pdp (la fille en blouse tachée de peinture, au téléphone dans le
+  // ciel) en principale ; sa bannière (les châteaux sur leurs îles flottantes)
+  // dans les trois cases de la planche Mythic, la pdp en sticker. Un Trencher, pas de thème.
+  { id: "cooker", name: "Cooker", handle: "", category: "trencher", art: "/art/cooker-face.webp", artPos: "50% 38%",
+    mythic: { banner: "/art/cooker.webp", avatar: "/art/cooker-face.webp",
+      panels: { top: { src: "/art/cooker.webp", pos: "62% 50%" }, left: { src: "/art/cooker.webp", pos: "10% 45%" }, right: { src: "/art/cooker.webp", pos: "96% 65%" } } } },
   // Trencher : une seule image, la sienne partout : le gardien aux cheveux blancs,
   // en noir et blanc (manga). Sa Shiny est en bleu électrique. Pas de thème pour sa Mythic.
   { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
