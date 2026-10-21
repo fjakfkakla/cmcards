@@ -43,12 +43,27 @@ const CONFETTI: [number, string, number, number, number][] = [
   [66, "#ff5fb4", 5.9, 4.6, 30], [80, "#fff6d6", 6.8, 2.9, -40], [92, "#ffd12e", 7.2, .5, 10], [44, "#3dcb6c", 6.5, 5.4, -25],
 ];
 
+/* Les braises d'une carte en couleur (fx) : x, la taille, la durée, le délai. */
+const EMBERS = [[12, 1.6, 5.2, 0], [30, 1.1, 6.4, 1.8], [52, 1.8, 4.8, 3.1], [70, 1.2, 6, .7], [88, 1.5, 5.6, 2.4], [42, 1, 7, 4.2]];
+/* Le thème violet : la courbe qui monte puis s'effondre (grille de 100 × 40), et les
+   bougies qui montent : x, la hauteur, la durée, le délai, la couleur. */
+const CHART = "M0 34 L8 31 L14 33 L22 25 L28 27 L36 19 L42 21 L50 12 L56 15 L64 6 L70 8 L74 3 L77 37 L86 38 L100 39";
+const CANDLES: [number, number, number, number, string][] = [
+  [6, 7, 6.8, 0, "#b04dff"], [22, 5, 8.2, 2.4, "#e9d5ff"], [80, 8, 7.4, 1.2, "#b04dff"], [92, 5.5, 8.8, 3.6, "#ff7ad9"], [64, 6, 7.8, 5, "#e9d5ff"],
+];
+
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const t = trader(card.trader);
   const cat = t.category ? category(t.category) : undefined;
   const r = rarity(card.rarity);
   const theme = r.id === "mythic" ? t.theme ?? "" : "";
+  /* sa couleur à toutes les raretés : les braises montent dès la Rare */
+  const embers = t.fx && r.id !== "common"
+    ? EMBERS.map(([x, s, dur, d], i) => (
+        <span key={`e${i}`} className="cc-ember" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${dur}s`, animationDelay: `${d}s` }} />
+      ))
+    : null;
   const mythic = r.id === "mythic" ? t.mythic : undefined;
   const serial = serialOf(card);
 
@@ -181,6 +196,22 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
               <div className="cc-eyes" />
             </>
           )}
+          {theme === "violet" && (
+            <>
+              <div className="cc-haze" />
+              <span className="cc-orbit a" /><span className="cc-orbit b" />
+              <svg className="cc-chart" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                <path d={CHART} pathLength={1} />
+              </svg>
+              {CANDLES.map(([x, h, dur, d, c], i) => (
+                <span key={`k${i}`} className="cc-candle" style={{ left: `${x}%`, height: `${h}cqw`, "--c": c, animationDuration: `${dur}s`, animationDelay: `${d}s` } as React.CSSProperties} />
+              ))}
+              {SPARKS.map(([x, y, d], i) => (
+                <span key={`v${i}`} className="cc-spark violet" style={{ left: `${(x + 37) % 100}%`, top: `${(y + 28) % 100}%`, animationDelay: `${d + .6}s` }} />
+              ))}
+              <span className="cc-ticker">$52,334.71</span>
+            </>
+          )}
           {theme === "volt" && (
             <>
               <div className="cc-static" />
@@ -221,7 +252,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   return (
     <div
       ref={ref}
-      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${t.tint ? `tint-${t.tint}` : ""} ${live ? "is-live" : ""} ${className}`}
+      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${t.tint ? `tint-${t.tint}` : ""} ${t.fx ? `fx-${t.fx}` : ""} ${live ? "is-live" : ""} ${className}`}
       style={{ "--cat": cat?.bg ?? "#8a8079" } as React.CSSProperties}
       onPointerMove={move}
       onPointerLeave={leave}
@@ -229,6 +260,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
       <div className="cc-frame">
         <div className="cc-scene">
           {scene}
+          {embers}
           {cat && (
             <span className={`cc-cat ${cat.id}`}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d={cat.glyph} /></svg>

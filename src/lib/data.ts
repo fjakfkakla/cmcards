@@ -72,10 +72,11 @@ export type Trader = {
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
   // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant,
-  // les billets qui tombent, les yeux laser, les trophées et les confettis
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash" | "laser" | "trophy";
-  tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
-                          // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
+  // les billets qui tombent, les yeux laser, les trophées et les confettis, le néon violet
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "cash" | "laser" | "trophy" | "violet";
+  tint?: "blue" | "gold" | "violet"; // sa Shiny le colore (bleu électrique, or, violet) au lieu de décaler ses teintes :
+                                     // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
+  fx?: "violet"; // sa couleur sur toutes ses cartes : le cadre, la lueur autour, les braises qui montent
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
   mythic?: Mythic;       // les images de sa Mythic
   aura?: AuraArt;        // son set signature : une carte différente par rareté
@@ -356,6 +357,16 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/kevszn.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/kevszn.webp", avatar: "/art/kevszn-face.webp",
       panels: { top: { src: "/art/kevszn.webp", pos: "50% 25%" }, left: { src: "/art/kevszn.webp", pos: "8% 70%" }, right: { src: "/art/kevszn.webp", pos: "92% 45%" } } } },
+  // quant : la capture (lui, le téléphone à 52 334,71 $) en principale ; une photo :
+  // sa Shiny est violette. La photo devant la Bugatti sur son OG. Tout en violet
+  // (fx) : à chaque rareté le cadre, la lueur autour de la carte, les braises. Sa
+  // Mythic, au néon violet : les deux doigts d'honneur en haut, lui devant la Bugatti
+  // à gauche, le téléphone à droite, sa pdp en sticker ; la courbe qui monte puis
+  // s'effondre, les bougies, le solde qui clignote. Une Legend.
+  { id: "quant", name: "quant", handle: "", category: "legend", art: "/art/quant.webp", artPos: "45% 50%", theme: "violet", tint: "violet", fx: "violet",
+    shots: { og: { src: "/art/quant-bugatti.webp", pos: "28% 40%" } },
+    mythic: { banner: "/art/quant-fu.webp", avatar: "/art/quant-face.webp",
+      panels: { top: { src: "/art/quant-fu.webp", pos: "50% 42%" }, left: { src: "/art/quant-bugatti.webp", pos: "16% 24%" }, right: { src: "/art/quant.webp", pos: "32% 72%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {

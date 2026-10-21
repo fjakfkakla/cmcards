@@ -154,6 +154,7 @@
    leur Shiny les colore, en bleu électrique ou en or */
 .cc.shiny.tint-blue .cc-art { filter: sepia(1) saturate(4.5) hue-rotate(168deg) brightness(.9) contrast(1.3); }
 .cc.shiny.tint-gold .cc-art { filter: sepia(1) saturate(2.6) hue-rotate(-8deg) brightness(1.02) contrast(1.18); }
+.cc.shiny.tint-violet .cc-art { filter: sepia(1) saturate(3.6) hue-rotate(222deg) brightness(.7) contrast(1.9); }
 @keyframes cc-pearl { to { --pearl: 360deg; } }
 .cc-sheen {
   position: absolute; inset: 0; z-index: 2; pointer-events: none;
@@ -544,6 +545,139 @@
   animation: cc-glow 1.6s ease-in-out infinite;
 }
 
+/* ---- fx violet : sa couleur à toutes les raretés (quant) ----
+   le cadre passe au violet, la carte luit (dès la Rare), des braises montent */
+.cc.common.fx-violet { --label: #d9c2ff; --mark: #a77bff; }
+.cc.rare.fx-violet {
+  --frame:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.22) 0 .25cqw, transparent .25cqw .7cqw),
+    linear-gradient(150deg, #f5edff 0%, #a487d6 25%, #efe6ff 45%, #6a46a6 70%, #e2d4ff 100%);
+  --label: #efe6ff; --mark: #d9c2ff;
+}
+.cc.shiny.fx-violet {
+  --frame: conic-gradient(from var(--pearl), #ffffff, #e2d4ff, #b48cff, #f5e9ff, #ff9be6, #c9a8ff, #ffffff);
+  --mark: #c3a4ff;
+}
+.cc.shiny.fx-violet .cc-rainbow { opacity: .18; }
+/* le tampon de l'OG, la seule couleur de la carte : violet */
+.cc.og.fx-violet .cc-stamp { color: #b968ff; border-color: #b968ff; box-shadow: inset 0 0 0 .4cqw rgba(185,104,255,.35), 0 0 3cqw rgba(185,104,255,.55); }
+.cc.og.fx-violet { --mark: #d9c2ff; }
+.cc.fx-violet:not(.common) { animation: cc-aura-violet 2.8s ease-in-out infinite; }
+@keyframes cc-aura-violet {
+  0%, 100% { box-shadow: 0 1.4cqw 0 -.3cqw rgba(0,0,0,.28), 0 0 5cqw .4cqw rgba(150,80,255,.45); }
+  50% { box-shadow: 0 1.4cqw 0 -.3cqw rgba(0,0,0,.28), 0 0 10cqw 2cqw rgba(176,77,255,.75); }
+}
+.cc-ember {
+  position: absolute; z-index: 3; bottom: -4%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, #fff 0 25%, #d9b3ff 45%, rgba(176,77,255,0) 70%);
+  box-shadow: 0 0 1.6cqw .4cqw rgba(176,77,255,.85);
+  animation: cc-up linear infinite;
+}
+
+/* ---- le thème violet : le néon, la courbe, le solde (quant) ---- */
+.cc.mythic.violet {
+  --frame:
+    radial-gradient(circle at 9% 14%, rgba(255,255,255,.8) 0 1.8cqw, transparent 2.1cqw),
+    radial-gradient(circle at 93% 9%, rgba(255,255,255,.8) 0 1.3cqw, transparent 1.6cqw),
+    radial-gradient(circle at 95% 47%, rgba(255,255,255,.8) 0 2.2cqw, transparent 2.5cqw),
+    radial-gradient(circle at 5% 60%, rgba(255,255,255,.8) 0 1.5cqw, transparent 1.8cqw),
+    radial-gradient(circle at 8% 93%, rgba(255,255,255,.8) 0 2cqw, transparent 2.3cqw),
+    radial-gradient(circle at 91% 91%, rgba(255,255,255,.8) 0 1.4cqw, transparent 1.7cqw),
+    conic-gradient(from var(--spin), #2a0a4a, #7b2cff, #e9d5ff, #b04dff, #ff7ad9, #4b1690, #c3a4ff, #2a0a4a);
+  --label: #d9c2ff; --name: #f3eaff; --mark: #c3a4ff;
+}
+.cc.mythic.violet .cc-frame { animation-duration: 5s; }
+.cc.mythic.violet .cc-scene { background: #1a0630; }
+.cc.mythic.violet .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #1a0630 0 9deg, #7b2cff 9deg 18deg, #e9d5ff 18deg 27deg, #b04dff 27deg 36deg);
+  animation-duration: 12s;
+}
+/* les cases dans la lumière violette */
+.cc.mythic.violet .cc-panel::after {
+  background: linear-gradient(160deg, rgba(176,77,255,.38), transparent 55%, rgba(255,122,217,.25));
+  mix-blend-mode: screen;
+}
+.cc.mythic.violet .cc-panel.right img { transform: scale(1.7); }
+/* le sticker au néon : il pulse, et il saute comme un écran qui grésille */
+.cc.mythic.violet .cc-sticker {
+  width: 30%;
+  border-color: #f3eaff;
+  animation: cc-neon 2.2s ease-in-out infinite, cc-glitch 3.4s steps(1) infinite;
+}
+@keyframes cc-neon {
+  0%, 100% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 4cqw .8cqw rgba(176,77,255,.6); border-color: #f3eaff; }
+  50% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 10cqw 3cqw rgba(176,77,255,1); border-color: #c38bff; }
+}
+@keyframes cc-glitch {
+  0%, 100% { translate: 0 0; filter: none; }
+  70% { translate: -1.2cqw .4cqw; filter: drop-shadow(1.2cqw 0 0 rgba(255,59,200,.85)) drop-shadow(-1.2cqw 0 0 rgba(108,240,255,.85)); }
+  72% { translate: 1cqw -.6cqw; filter: drop-shadow(-1cqw 0 0 rgba(255,59,200,.85)) drop-shadow(1cqw 0 0 rgba(108,240,255,.85)); }
+  74% { translate: 0 0; filter: none; }
+  90% { translate: .6cqw 0; filter: drop-shadow(.8cqw 0 0 rgba(176,77,255,.9)); }
+  91% { translate: 0 0; filter: none; }
+}
+/* deux anneaux tournent autour de lui : les pointillés, la comète */
+.cc-orbit {
+  position: absolute; z-index: 3; left: 50%; top: 55%; aspect-ratio: 1; pointer-events: none;
+  translate: -50% -50%; border-radius: 50%;
+}
+.cc-orbit.a { width: 40%; border: .6cqw dashed rgba(243,234,255,.85); animation: cc-rot 9s linear infinite; }
+.cc-orbit.b {
+  width: 47%;
+  background: conic-gradient(from 0deg, transparent 0 70%, rgba(176,77,255,.2) 80%, #f3eaff 99%, transparent 100%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.1cqw), #000 calc(100% - 1cqw));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 1.1cqw), #000 calc(100% - 1cqw));
+  filter: drop-shadow(0 0 1.4cqw #b04dff);
+  animation: cc-rot 2.6s linear infinite reverse;
+}
+.cc-haze {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse at 50% 55%, rgba(176,77,255,.55), transparent 50%),
+    radial-gradient(ellipse at 15% 95%, rgba(255,122,217,.4), transparent 40%),
+    radial-gradient(ellipse at 90% 10%, rgba(123,44,255,.45), transparent 40%);
+  animation: cc-glow 3s ease-in-out infinite;
+}
+/* la courbe : elle se trace, monte, monte, puis s'effondre */
+.cc-chart {
+  position: absolute; z-index: 4; left: 3%; top: 22%; width: 94%; height: 24%; pointer-events: none; overflow: visible;
+  fill: none; stroke: #f3eaff; stroke-width: .9cqw; stroke-linejoin: round; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 .8cqw #b04dff) drop-shadow(0 0 2.4cqw rgba(176,77,255,.9));
+  animation: cc-trace 5s ease-in-out infinite;
+}
+.cc-chart path { vector-effect: non-scaling-stroke; }
+@keyframes cc-trace {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  8% { opacity: 1; }
+  55% { stroke-dashoffset: .26; }
+  62% { stroke-dashoffset: 0; stroke: #f3eaff; }
+  66%, 85% { stroke-dashoffset: 0; stroke: #ff5fb4; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+/* une bougie : la mèche, le corps ; elle monte en flottant */
+.cc-candle {
+  position: absolute; z-index: 3; bottom: -14%; width: 2.6cqw; pointer-events: none;
+  background: linear-gradient(var(--ink), var(--ink)) 50% 0 / .5cqw 100% no-repeat;
+  filter: drop-shadow(0 0 1.4cqw rgba(176,77,255,.8));
+  animation: cc-up linear infinite;
+}
+.cc-candle::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 22%; bottom: 22%;
+  background: var(--c); border: .45cqw solid var(--ink); border-radius: .5cqw;
+}
+.cc-spark.violet { background: #e9d5ff; filter: drop-shadow(0 0 1.2cqw rgba(176,77,255,.95)); width: 7cqw; height: 7cqw; }
+/* le solde, comme sur son téléphone : il clignote en haut à droite */
+.cc-ticker {
+  position: absolute; z-index: 6; right: 3.6cqw; top: 5cqw; pointer-events: none;
+  padding: .9cqw 1.8cqw; border-radius: 1.4cqw;
+  background: rgba(26,6,48,.85); outline: .6cqw solid var(--ink);
+  font: 900 4.2cqw/1 var(--font-nunito); letter-spacing: .04em; color: #7dffb0;
+  text-shadow: 0 0 1.2cqw rgba(125,255,176,.8);
+  box-shadow: 0 0 3cqw rgba(176,77,255,.8);
+  animation: cc-glow 1.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .cc *, .cc .cc-frame { animation: none !important; }
+  .cc, .cc *, .cc .cc-frame { animation: none !important; }
 }
