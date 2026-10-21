@@ -172,6 +172,12 @@ export const TRADERS: Trader[] = [
   { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
     mythic: { banner: "/art/trencher.webp", avatar: "/art/trencher.webp",
       panels: { top: { src: "/art/trencher.webp", pos: "50% 20%" }, left: { src: "/art/trencher.webp", pos: "12% 55%" }, right: { src: "/art/trencher.webp", pos: "88% 55%" } } } },
+  // Superman : une seule image, la sienne partout : à genoux, enchaîné, bras en
+  // croix devant le mur blanc. Un rendu 3D, comme une photo : sa Shiny est en or.
+  // Pas de thème pour sa Mythic. Le premier Dev.
+  { id: "superman", name: "Superman", handle: "", category: "dev", art: "/art/superman.webp", artPos: "50% 45%", tint: "gold",
+    mythic: { banner: "/art/superman.webp", avatar: "/art/superman.webp",
+      panels: { top: { src: "/art/superman.webp", pos: "50% 30%" }, left: { src: "/art/superman.webp", pos: "22% 55%" }, right: { src: "/art/superman.webp", pos: "88% 20%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
