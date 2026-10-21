@@ -28,7 +28,7 @@ export type CategoryId = "trencher" | "holder" | "dev" | "bundler" | "famous" | 
 export type Category = {
   id: CategoryId; name: string; tagline: string;
   bg: string;    // le fond des cartes, le papier du booster
-  ink: string;   // le motif du booster
+  ink: string;   // sa couleur claire
   glyph: string; // dessiné sur une grille de 24
 };
 export const CATEGORIES: Category[] = [
