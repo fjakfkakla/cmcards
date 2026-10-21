@@ -172,6 +172,11 @@ export const TRADERS: Trader[] = [
   { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
     mythic: { banner: "/art/trencher.webp", avatar: "/art/trencher.webp",
       panels: { top: { src: "/art/trencher.webp", pos: "50% 20%" }, left: { src: "/art/trencher.webp", pos: "12% 55%" }, right: { src: "/art/trencher.webp", pos: "88% 55%" } } } },
+  // Daumen : une seule image, la sienne partout : le poussin jaune en peluche, tout
+  // sourire. Un rendu 3D, comme une photo : sa Shiny est en or. Pas de thème pour sa Mythic.
+  { id: "daumen", name: "Daumen", handle: "", category: "famous", art: "/art/daumen.webp", artPos: "50% 45%", tint: "gold",
+    mythic: { banner: "/art/daumen.webp", avatar: "/art/daumen.webp",
+      panels: { top: { src: "/art/daumen.webp", pos: "50% 25%" }, left: { src: "/art/daumen.webp", pos: "15% 55%" }, right: { src: "/art/daumen.webp", pos: "85% 55%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
