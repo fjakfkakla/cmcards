@@ -285,6 +285,13 @@ export const TRADERS: Trader[] = [
   { id: "dv", name: "dv", handle: "", category: "famous", art: "/art/dv.webp", artPos: "62% 50%", tint: "blue",
     mythic: { banner: "/art/dv.webp", avatar: "/art/dv.webp",
       panels: { top: { src: "/art/dv.webp", pos: "50% 70%" }, left: { src: "/art/dv.webp", pos: "10% 30%" }, right: { src: "/art/dv.webp", pos: "80% 65%" } } } },
+  // Schoen : une seule image, la sienne partout : le portrait sur fond gris clair, les
+  // lunettes noires, la chemise blanche ouverte, la chaîne au cou. Une photo sur fond
+  // clair : l'or la jaunit et verdit ses cheveux, sa Shiny est en bleu électrique. Pas
+  // de thème pour sa Mythic. Un Trencher.
+  { id: "schoen", name: "Schoen", handle: "", category: "trencher", art: "/art/schoen.webp", artPos: "52% 40%", tint: "blue",
+    mythic: { banner: "/art/schoen.webp", avatar: "/art/schoen.webp",
+      panels: { top: { src: "/art/schoen.webp", pos: "50% 38%" }, left: { src: "/art/schoen.webp", pos: "30% 90%" }, right: { src: "/art/schoen.webp", pos: "85% 40%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
