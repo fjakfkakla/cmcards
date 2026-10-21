@@ -113,8 +113,8 @@ export const TRADERS: Trader[] = [
   { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
     mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
       panels: { top: { src: "/art/frank-photo.webp", pos: "50% 28%" }, left: { src: "/art/frank-photo.webp", pos: "30% 30%" }, right: { src: "/art/frank-photo.webp", pos: "60% 70%" } } } },
-  // Alon : pump.fun. Sa pdp en principale, sa bannière (les gélules) dans la planche, le vert pump.fun
-  { id: "alon", name: "Alon", handle: "", category: "dev", art: "/art/alon-face.webp", artPos: "50% 38%", theme: "pump",
+  // Alon : pump.fun, une Legend. Sa pdp en principale, sa bannière (les gélules) dans la planche ; sa Mythic reste verte
+  { id: "alon", name: "Alon", handle: "", category: "legend", art: "/art/alon-face.webp", artPos: "50% 38%", theme: "pump",
     mythic: { banner: "/art/alon.webp", avatar: "/art/alon-face.webp",
       panels: { top: { src: "/art/alon.webp", pos: "50% 30%" }, left: { src: "/art/alon.webp", pos: "0% 55%" }, right: { src: "/art/alon.webp", pos: "100% 55%" } } } },
   // Jack Duval : sa pdp en principale ; « The Duve is calling… » dans la planche de
