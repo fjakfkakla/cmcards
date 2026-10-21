@@ -1,0 +1,124 @@
+/* Le booster : un sachet de papier métallisé, serti en haut et en bas, avec son
+   motif imprimé, une fenêtre sur un personnage, son nom et la ligne de découpe.
+   Il se coupe en deux le long de cette ligne : le haut (.bp-top) s'envole. */
+
+.bp {
+  --c: #ff4b3e;
+  --m: #ff7b70;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 8;
+  container-type: inline-size;
+  user-select: none;
+  touch-action: none;
+}
+.bp-part { position: absolute; inset: 0; filter: drop-shadow(1.6cqw 1.8cqw 0 rgba(30,26,22,.9)); }
+.bp-part.bp-top { clip-path: inset(0 0 89% 0); z-index: 2; transition: transform .7s cubic-bezier(.3,.7,.3,1), opacity .7s; }
+.bp-part.bp-body { clip-path: inset(11% 0 0 0); }
+.bp.is-torn .bp-top { transform: translate(18cqw, -60cqw) rotate(24deg); opacity: 0; }
+
+/* le sachet : les bords sertis en dents de scie */
+.bp-bag {
+  position: absolute; inset: 0;
+  --z: 3.2%;
+  clip-path: polygon(
+    0 var(--z), 4% 0, 8% var(--z), 12% 0, 16% var(--z), 20% 0, 24% var(--z), 28% 0, 32% var(--z), 36% 0, 40% var(--z), 44% 0, 48% var(--z), 52% 0, 56% var(--z), 60% 0, 64% var(--z), 68% 0, 72% var(--z), 76% 0, 80% var(--z), 84% 0, 88% var(--z), 92% 0, 96% var(--z), 100% 0,
+    100% 100%, 96% calc(100% - var(--z)), 92% 100%, 88% calc(100% - var(--z)), 84% 100%, 80% calc(100% - var(--z)), 76% 100%, 72% calc(100% - var(--z)), 68% 100%, 64% calc(100% - var(--z)), 60% 100%, 56% calc(100% - var(--z)), 52% 100%, 48% calc(100% - var(--z)), 44% 100%, 40% calc(100% - var(--z)), 36% 100%, 32% calc(100% - var(--z)), 28% 100%, 24% calc(100% - var(--z)), 20% 100%, 16% calc(100% - var(--z)), 12% 100%, 8% calc(100% - var(--z)), 4% 100%, 0 calc(100% - var(--z))
+  );
+  background: var(--c);
+  overflow: hidden;
+}
+/* les deux bandes serties, plus sombres, striées */
+.bp-bag::before, .bp-bag::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 7%; z-index: 3;
+  background: repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 .6cqw, rgba(255,255,255,.08) .6cqw 1.6cqw), var(--c);
+  filter: brightness(.85);
+}
+.bp-bag::before { top: 0; }
+.bp-bag::after { bottom: 0; }
+
+/* le motif imprimé */
+.bp-motif { position: absolute; inset: 0; }
+.bp-motif.dots { background: radial-gradient(circle, var(--m) 0 1.6cqw, transparent 1.8cqw) 0 0 / 7cqw 7cqw; }
+.bp-motif.stripes { background: repeating-linear-gradient(-35deg, var(--m) 0 3cqw, transparent 3cqw 9cqw); }
+.bp-motif.rays {
+  background: repeating-conic-gradient(from 0deg at 50% 42%, var(--m) 0 6deg, transparent 6deg 14deg);
+}
+
+/* le métal : un reflet fixe et un reflet qui passe au survol */
+.bp-foil {
+  position: absolute; inset: 0; z-index: 4; pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255,255,255,.5) 44%, transparent 56%) var(--sx, 140%) 0 / 300% 100% no-repeat,
+    linear-gradient(90deg, rgba(255,255,255,.18), transparent 20%, transparent 80%, rgba(0,0,0,.18));
+  transition: background-position 1s ease-out;
+}
+.bp:hover .bp-foil { --sx: -40%; }
+
+.bp-brand {
+  position: absolute; z-index: 5; top: 13%; left: 0; right: 0; text-align: center;
+  font: 400 7cqw/1 var(--font-chewy); color: #fff4dc;
+  -webkit-text-stroke: 1.2cqw #1e1a16; paint-order: stroke fill;
+}
+.bp-window {
+  position: absolute; z-index: 5; left: 17%; right: 17%; top: 22%; aspect-ratio: 1;
+  border-radius: 50%; overflow: hidden;
+  border: 2.4cqw solid #fff4dc; outline: 1cqw solid #1e1a16;
+  box-shadow: 2cqw 2cqw 0 #1e1a16;
+  transform: rotate(-4deg);
+  background: #fff4dc;
+}
+.bp-window img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bp-glyph { width: 100%; height: 100%; padding: 18%; display: block; stroke: #1e1a16; stroke-width: .8; paint-order: stroke; }
+.bp-name {
+  position: absolute; z-index: 5; left: 4%; right: 4%; top: 67%; text-align: center;
+  font: 400 15cqw/.9 var(--font-chewy); color: #fff4dc;
+  -webkit-text-stroke: 2.2cqw #1e1a16; paint-order: stroke fill;
+  transform: rotate(-3deg);
+}
+.bp-count {
+  position: absolute; z-index: 5; bottom: 10%; left: 50%; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 1.6cqw; white-space: nowrap;
+  background: #1e1a16; color: #fff4dc; border-radius: 99px; padding: 1.6cqw 3.6cqw;
+  font: 900 4.2cqw/1 var(--font-nunito); letter-spacing: .04em; text-transform: uppercase;
+}
+
+/* la ligne de découpe, et l'entaille à gauche */
+.bp-cut {
+  position: absolute; z-index: 6; left: 3%; right: 3%; top: 11%; height: 0;
+  border-top: .7cqw dashed rgba(255,244,220,.9);
+}
+.bp-cut::before {
+  content: ""; position: absolute; left: -3.4cqw; top: -2.4cqw; width: 4cqw; height: 4cqw;
+  background: #1e1a16; clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+/* la découpe qui avance sous le doigt */
+.bp-slit {
+  position: absolute; z-index: 7; left: 3%; top: calc(11% - .9cqw); height: 1.8cqw; width: 0;
+  max-width: 94%;
+  background: #fff; border-radius: 99px;
+  box-shadow: 0 0 3cqw 1.4cqw var(--glow, #fff);
+}
+
+/* la lumière qui sort quand on l'ouvre : la couleur de la meilleure carte */
+.bp-leak {
+  position: absolute; z-index: 1; left: -30%; right: -30%; top: -60%; height: 90%;
+  background: repeating-conic-gradient(from 180deg at 50% 100%, var(--glow, #fff) 0 6deg, transparent 6deg 14deg);
+  -webkit-mask: radial-gradient(ellipse at 50% 100%, #000 10%, transparent 70%);
+  opacity: 0; transform: scaleY(.3); transform-origin: 50% 100%;
+  transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.bp.is-torn .bp-leak { opacity: 1; transform: scaleY(1); }
+
+@keyframes bp-wobble {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  25% { transform: rotate(-2.5deg) translateY(-1cqw); }
+  75% { transform: rotate(2.5deg) translateY(-1cqw); }
+}
+.bp.is-shaking { animation: bp-wobble .35s ease-in-out 3; }
+@keyframes bp-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -2.2cqw; } }
+.bp.floating { animation: bp-float 4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bp.floating, .bp.is-shaking { animation: none; }
+}

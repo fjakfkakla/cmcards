@@ -9,7 +9,7 @@ export default function Page() {
       <div className="mx-auto w-full max-w-6xl px-4 py-12">
         <header className="mb-12 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[.4em] opacity-60" style={{ fontFamily: "var(--font-tight)" }}>
-            Top 10 · Final boss
+            Legend · Final boss
           </p>
           <h1 className="mt-3 text-6xl italic" style={{ fontFamily: "var(--font-serif)" }}>Kimchi</h1>
         </header>

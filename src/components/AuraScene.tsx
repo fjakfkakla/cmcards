@@ -1,5 +1,7 @@
 import "./aura.css";
-import type { AuraArt, RarityId } from "@/lib/data";
+import Pic from "./Pic";
+import type { RarityId, Trader } from "@/lib/data";
+import { portraitSources } from "@/lib/portrait";
 
 /* Le set Kimchi : le boss des memecoins, l'aura du boss final, mais rien qui crie.
    Une photo par rareté, une mise en scène par photo, et la même retenue partout :
@@ -8,11 +10,15 @@ import type { AuraArt, RarityId } from "@/lib/data";
 const BUBBLES = [[12, 1, 7, 0], [24, 1.6, 9, 2.4], [37, .8, 6.5, 1.1], [51, 1.3, 8, 3.6], [63, .9, 7.5, .5], [74, 1.8, 10, 2], [86, 1.1, 8.5, 4.2], [44, .7, 6, 5], [92, .8, 7, 1.7], [6, 1.4, 9.5, 3]];
 const MOTES = [[38, 70, 0], [52, 62, 1.4], [30, 82, 2.6], [60, 76, 3.3], [46, 88, 4.1], [34, 58, 5.2], [56, 50, 2], [42, 44, 4.6]];
 
-const img = (src: string, cls: string, pos?: string) => (
-  <img className={cls} src={src} alt="" style={pos ? { objectPosition: pos } : undefined} draggable={false} />
-);
+/* Sans la photo (absente sur Vercel tant qu'elle n'est pas versionnée), l'avatar
+   puis le portrait dessiné ; sans le détourage, rien plutôt qu'une image cassée. */
+const NOTHING = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAIBTAA7";
 
-export function auraScene(id: RarityId, a: AuraArt): { scene: React.ReactNode; over?: React.ReactNode } {
+export function auraScene(id: RarityId, t: Trader, fallback: string): { scene: React.ReactNode; over?: React.ReactNode } {
+  const a = t.aura!;
+  const img = (src: string, cls: string, pos?: string) => (
+    <Pic className={cls} srcs={portraitSources(t, src)} fallback={fallback} alt="" style={pos ? { objectPosition: pos } : undefined} draggable={false} />
+  );
   switch (id) {
     // Le tirage : la photo telle quelle, posée sur un carton mat. Rien ne bouge.
     case "common":
@@ -34,7 +40,7 @@ export function auraScene(id: RarityId, a: AuraArt): { scene: React.ReactNode; o
       };
 
     // La liasse : la table de billets, et la carte sanglée comme un paquet de 10 000 $.
-    case "millionaire":
+    case "rare":
       return {
         scene: (
           <>
@@ -49,20 +55,6 @@ export function auraScene(id: RarityId, a: AuraArt): { scene: React.ReactNode; o
             <b>$10,000</b>
             <span>Kimchi</span>
           </div>
-        ),
-      };
-
-    // L'icône : lui seul, détouré, sur la feuille d'or ; l'auréole, l'éclat de la montre.
-    case "legendary":
-      return {
-        scene: (
-          <>
-            <div className="ka-leaf" />
-            <div className="ka-halo"><i /></div>
-            {img(a.icon, "ka-icon")}
-            <span className="ka-glint" />
-            <div className="cc-holo" />
-          </>
         ),
       };
 
@@ -93,7 +85,7 @@ export function auraScene(id: RarityId, a: AuraArt): { scene: React.ReactNode; o
             <div className="ka-depth">
               <div className="ka-aura" style={{ "--glow": `url(${a.glow})` } as React.CSSProperties} />
               <div className="ka-aura ka-wave" style={{ "--glow": `url(${a.glow})` } as React.CSSProperties} />
-              {img(a.cut, "ka-full ka-cut", "45% 50%")}
+              <Pic className="ka-full ka-cut" srcs={[a.cut]} fallback={NOTHING} alt={t.name} style={{ objectPosition: "45% 50%" }} draggable={false} />
             </div>
             {MOTES.map(([x, y, d], i) => (
               <span key={i} className="ka-mote" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${d}s` }} />

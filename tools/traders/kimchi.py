@@ -11,7 +11,6 @@ Sorties :
   kimchi-aura-bg.webp    le désert sans lui (le décor de la Mythic, en parallaxe)
   kimchi-aura-cut.webp   lui seul, sans les coussins ni les mules
   kimchi-aura-glow.png   sa silhouette floutée : le masque de l'aura
-  kimchi-icon.webp       lui au flash, en buste, qui s'efface vers le bas
 """
 import sys
 from pathlib import Path
@@ -60,14 +59,3 @@ glow = glow.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(14)
 g = np.array(glow).astype(np.float32)
 g = np.clip(g / g.max() * 1.6, 0, 1) * 255
 Image.merge("RGBA", [Image.new("L", glow.size, 255)] * 3 + [Image.fromarray(g.astype(np.uint8))]).save(out / "kimchi-aura-glow.png")
-
-# --- La Legendary : le buste au flash ---
-flash = Image.open(src / "flash.webp").convert("RGB")
-w, h = flash.size
-a = cut(flash)
-ys, xs = np.mgrid[0:h, 0:w]
-fade = np.clip((0.66 * h - ys) / (0.12 * h), 0, 1)               # sous la chemise, il s'efface
-a = a * fade
-a[xs > 0.72 * w] = 0                                              # les sacs
-rgba = np.dstack([np.array(flash), (a * 255).astype(np.uint8)])
-Image.fromarray(rgba, "RGBA").crop((0, 0, w, int(0.7 * h))).save(out / "kimchi-icon.webp", quality=92)

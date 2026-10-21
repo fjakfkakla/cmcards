@@ -105,3 +105,10 @@ body {
   .floaty, .is-shaking, .pack:hover .pack-foil { animation: none !important; }
   .flip { transition: none; }
 }
+
+/* La couleur de chaque rareté, pour les petites pastilles et la barre des chances. */
+.rar-common { background: #e7dfd0; }
+.rar-rare { background: linear-gradient(135deg, #f4f7fa, #b9c3cf 50%, #8f9bab); }
+.rar-shiny { background: conic-gradient(#fff, #bfe6ff, #eaffe0, #f7e3ff, #fff); }
+.rar-og { background: #0b0b0b; }
+.rar-mythic { background: conic-gradient(#ff4b3e, #ffd12e, #3dcb6c, #4da8ff, #a77bff, #ff5fb4, #ff4b3e); }
