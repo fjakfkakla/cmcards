@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
-/* cm cards : la nuit, des objets imprimés posés dessus. Une seule couleur d'action,
-   l'or du logo ; le reste est du verre sombre et des lignes fines. Bricolage pour
-   les grands titres, Inter pour tout le reste. Pas d'emoji, pas de halo, pas de mono :
-   sauf sur la page d'accueil, qui suit la DA Kol Market (le vert acide qui luit, les
-   chiffres en JetBrains Mono).
-   Les cartes gardent leur propre dessin (card.css) : --ink reste leur encre. */
+/* cm cards : du papier crème, des objets imprimés posés dessus. La palette vient du
+   logo : l'encre, le jaune éponge de la tuile, la tomate de « cards ». Une couleur
+   d'action par écran, et elle vient du contenu (un booster prend la sienne) ; le vert
+   et le rouge ne disent qu'un état. Bricolage pour ce qui est gros, Inter pour le
+   reste. Pas de mono, pas de halo, pas de néon, pas de petite ligne sous un titre.
+   Les cartes et les boosters gardent leur propre dessin (card.css, booster.css). */
 
 @font-face {
   font-family: "Bricolage"; src: url("/fonts/bricolage-grotesque-var-latin.woff2") format("woff2");
@@ -16,146 +16,164 @@
   font-weight: 100 900; font-display: swap;
 }
 
-@font-face {
-  font-family: "JetBrains Mono"; src: url("/fonts/jetbrains-mono-var-latin.woff2") format("woff2");
-  font-weight: 400 700; font-display: swap;
-}
-
 @theme inline {
   --font-display: "Bricolage", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* la nuit */
-  --color-bg: #08090f;
-  --color-surface: #10121b;
-  --color-raised: #171a26;
-  --color-line: rgba(255, 255, 255, .08);
-  --color-line-2: rgba(255, 255, 255, .14);
-  --color-fg: #f3f4f9;
-  --color-muted: #a3a9bd;
-  --color-dim: #6b7189;
-  /* l'action : l'or du logo */
-  --color-gold: #f7c948;
-  --color-gold-2: #ffdd7a;
-  --color-gold-3: #e6a91e;
-  --color-gold-ink: #1a1200;
-  /* l'information */
-  --color-blue: #4c7dff;
-  --color-up: #2ee27a;
-  --color-down: #ff6b6b;
-  /* la page d'accueil : le noir teinté de vert, le vert acide qui luit (la DA Kol Market) */
-  --color-night: #080a08;
-  --color-night-card: #0e100e;
-  --color-night-2: #181c19;
-  --color-night-line: rgba(38, 42, 39, .9);
-  --color-night-muted: #8b918c;
-  --color-lime: #acf93f;
-  --color-lime-ink: #060e07;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* le papier et l'encre */
+  --color-bg: #fffaf0;        /* la page */
+  --color-surface: #ffffff;   /* l'objet posé dessus */
+  --color-raised: #fff3d6;    /* le relief : pilules au repos, chips */
+  --color-cream: #fff4dc;
+  --color-line: rgba(30, 26, 22, .1);
+  --color-line-2: rgba(30, 26, 22, .18);
+  --color-fg: #1e1a16;
+  --color-muted: #6b6258;
+  --color-dim: #9a9087;
+  /* le jaune éponge : la planche, la plaque */
+  --color-gold: #ffd12e;
+  --color-gold-2: #ffe45c;
+  --color-gold-3: #ffbf1a;
+  --color-gold-deep: #d99a00;  /* son assise */
+  --color-gold-text: #b07800;  /* le jaune ne s'écrit pas en petit : l'or */
+  --color-gold-ink: #1e1a16;
+  /* la tomate : ce qui s'écrit en couleur (un mot du titre, « cards ») */
+  --color-tomato: #ff4b3e;
+  --color-tomato-text: #e2352a;
+  --color-tomato-deep: #b8241b;
+  /* les états */
+  --color-up: #0e9e64;
+  --color-down: #d4322a;
 }
 
 :root {
   --ink: #1e1a16;
   --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --spring: cubic-bezier(.34, 1.56, .64, 1);
 }
 
-html { color-scheme: dark; background: #08090f; }
+html { color-scheme: light; background: #fffaf0; }
 body {
-  background:
-    radial-gradient(1100px 520px at 50% -180px, rgba(76, 125, 255, .13), transparent 70%),
-    radial-gradient(700px 400px at 100% 0, rgba(247, 201, 72, .05), transparent 70%),
-    #08090f;
+  background: #fffaf0;
   color: var(--color-fg);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: "cv11", "ss01";
 }
 [hidden] { display: none !important; }
-::selection { background: rgba(247, 201, 72, .35); }
-:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+::selection { background: rgba(255, 209, 46, .55); }
+:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 3px; }
 
 /* ---------- les boutons ---------- */
+/* La grammaire des autocollants (les NFT cartoon, les cartes Pokémon) : un contour
+   d'encre épais, une ombre dure décalée sous l'objet. Au survol l'objet monte et
+   son ombre s'allonge ; au clic il s'enfonce dessus. */
 @utility btn {
-  @apply relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 font-sans font-bold
+  @apply relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 font-display font-extrabold
          select-none cursor-pointer overflow-hidden;
-  height: 48px; font-size: 15px; letter-spacing: -.005em;
-  transition: transform .22s cubic-bezier(.34, 1.56, .64, 1), background-color .15s, box-shadow .22s, opacity .15s;
-  &:hover { transform: translateY(-1px); }
-  &:active { transform: translateY(1px); }
-  &:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  isolation: isolate;
+  height: 52px; font-size: 16.5px; letter-spacing: -.01em;
+  border: 2.5px solid #1e1a16;
+  box-shadow: 0 4px 0 #1e1a16;
+  transition: transform .2s var(--spring), box-shadow .2s var(--spring), background-color .15s, opacity .15s;
+  &:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #1e1a16; }
+  &:active { transform: translateY(3px); box-shadow: 0 1px 0 #1e1a16; transition-duration: .06s; }
+  &:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #1e1a16; }
 }
-/* la plaque d'or : l'action de l'écran, une seule */
+/* la plaque éponge : l'action de l'écran, une seule ; un reflet la traverse au survol */
 @utility btn-gold {
   @apply btn;
-  background: linear-gradient(135deg, #ffdd7a 0%, #f7c948 46%, #e6a91e 100%);
-  color: #1a1200;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), inset 0 -3px 0 rgba(0, 0, 0, .18), 0 16px 34px -16px rgba(247, 201, 72, .7);
+  background: linear-gradient(180deg, #ffe45c 0%, #ffd12e 55%, #ffbf1a 100%);
+  color: #1e1a16;
   &::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .45) 50%, transparent 70%);
+    content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .7) 50%, transparent 70%);
     transform: translateX(-130%); transition: transform .75s ease;
+  }
+  &::before {
+    content: ""; position: absolute; z-index: -1; left: 14px; right: 14px; top: 4px; height: 26%; border-radius: 99px; pointer-events: none;
+    background: rgba(255, 255, 255, .5);
   }
   &:hover::after { transform: translateX(130%); }
 }
-/* le vert acide de la page d'accueil, et sa lueur */
-@utility btn-lime {
+/* la plaque d'encre : l'action posée sur la planche éponge */
+@utility btn-ink {
   @apply btn;
-  background: var(--color-lime); color: var(--color-lime-ink);
-  box-shadow: 0 0 0 1px rgba(172, 249, 63, .4), 0 0 40px rgba(172, 249, 63, .35), 0 0 80px rgba(172, 249, 63, .15);
-  &:hover { filter: brightness(1.1); }
+  background: #1e1a16; color: #fff4dc;
+  box-shadow: 0 4px 0 #000;
+  &:hover { box-shadow: 0 6px 0 #000; }
 }
-@utility text-glow { text-shadow: 0 0 24px rgba(172, 249, 63, .45); }
-@keyframes marquee { to { transform: translateX(-50%); } }
-.marquee { animation: marquee 40s linear infinite; }
+/* la plaque d'une couleur donnée (--pc : la face ; --pt : le texte) */
+@utility btn-tone {
+  @apply btn;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--pc) 70%, #fff) 0%, var(--pc) 60%);
+  color: var(--pt, #fff);
+}
+/* le fantôme : blanc, le même contour */
 @utility btn-ghost {
   @apply btn;
-  background: rgba(255, 255, 255, .05);
+  background: #fff;
   color: var(--color-fg);
-  box-shadow: inset 0 0 0 1px var(--color-line-2);
-  &:hover { background: rgba(255, 255, 255, .09); }
+  &:hover { background: #fff8e6; }
 }
 @utility btn-sm {
-  height: 38px; padding: 0 16px; font-size: 14px;
+  height: 42px; padding: 0 18px; font-size: 15px;
 }
 @utility btn-lg {
-  height: 58px; padding: 0 30px; font-size: 17px;
+  height: 62px; padding: 0 34px; font-size: 19px;
 }
 
 /* ---------- les surfaces ---------- */
+/* l'objet blanc posé sur le papier : contour d'encre, ombre dure */
 @utility surface {
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .015)), var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-line), 0 24px 48px -32px rgba(0, 0, 0, .8);
+  border-radius: 22px;
+  background: #fff;
+  border: 2.5px solid #1e1a16;
+  box-shadow: 0 5px 0 #1e1a16;
 }
 @utility chip {
-  @apply inline-flex items-center gap-2 whitespace-nowrap rounded-full font-semibold;
-  height: 36px; padding: 0 14px; font-size: 13.5px;
-  background: rgba(255, 255, 255, .05); color: var(--color-muted);
-  box-shadow: inset 0 0 0 1px var(--color-line);
+  @apply inline-flex items-center gap-2 whitespace-nowrap rounded-full font-bold;
+  height: 38px; padding: 0 14px; font-size: 14.5px;
+  background: #fff; color: var(--color-fg);
+  border: 2px solid #1e1a16;
 }
 @utility field {
-  @apply w-full rounded-xl font-semibold outline-none;
-  height: 48px; padding: 0 14px; font-size: 16px;
-  background: rgba(255, 255, 255, .04); color: var(--color-fg);
-  box-shadow: inset 0 0 0 1px var(--color-line-2);
+  @apply w-full rounded-2xl font-semibold outline-none;
+  height: 52px; padding: 0 16px; font-size: 16px;
+  background: #fff; color: var(--color-fg);
+  border: 2.5px solid #1e1a16;
   transition: box-shadow .15s;
-  &:focus { box-shadow: inset 0 0 0 1.5px var(--color-gold), 0 0 0 4px rgba(247, 201, 72, .14); }
+  &:focus { box-shadow: 0 0 0 4px rgba(255, 209, 46, .7); }
   &::placeholder { color: var(--color-dim); font-weight: 500; }
 }
 @utility label {
-  font-size: 12.5px; font-weight: 600; color: var(--color-dim); letter-spacing: .01em;
+  font-size: 13.5px; font-weight: 700; color: var(--color-muted);
 }
 @utility num { font-variant-numeric: tabular-nums; }
 
-/* La couleur de chaque rareté : des pastilles sobres, des métaux plutôt que des néons. */
-.rar-common { background: linear-gradient(135deg, #c9ced9, #8b93a6); }
-.rar-rare { background: linear-gradient(135deg, #8fb0ff, #3e6cf0); }
-.rar-shiny { background: linear-gradient(135deg, #e6fbff, #9ad8ef 45%, #c8c2ff); }
-.rar-og { background: linear-gradient(135deg, #ffe7a3, #e6a91e); }
-.rar-mythic { background: linear-gradient(135deg, #ffd2e6, #f39ac0 40%, #b9a6ff 75%, #9fe3ff); }
+/* Les raretés : l'échelle du butin, une marche de plus de matière à chaque rang.
+   Commun l'ardoise, Rare la menthe, Shiny le bleu roi, OG l'or poli, Mythic l'opale.
+   `.rar-x` est l'aplat (la plaque, la barre) ; `.rar-x-t` la couleur écrite. */
+.rar-common { background: linear-gradient(135deg, #c3ccda, #8d99ad); }
+.rar-rare { background: linear-gradient(135deg, #5fecc4, #0fae80); }
+.rar-shiny { background: linear-gradient(135deg, #8aadff, #3d70f6 55%, #2453d9); }
+.rar-og { background: linear-gradient(135deg, #fff4c4, #ffd864 30%, #f6b21e 64%, #dc8806); }
+.rar-mythic { background: radial-gradient(60% 60% at 20% 80%, rgba(69, 227, 182, .55), transparent 70%), radial-gradient(60% 60% at 85% 15%, rgba(90, 174, 255, .55), transparent 70%), radial-gradient(50% 50% at 85% 85%, rgba(255, 151, 204, .5), transparent 70%), linear-gradient(135deg, #f1f6ff, #c6d7ff 45%, #8ea9f4); }
+
+/* la plaque d'un fait : un chiffre et son nom, sur le relief crème */
+@utility plate {
+  display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px;
+  border: 2px solid #1e1a16; border-radius: 999px; background: #fff4dc;
+  font: 700 14.5px/1 var(--font-sans); color: #1e1a16;
+  & b { font: 800 17px/1 var(--font-display); }
+}
+
+/* un badge pas encore gagné : le même, éteint, et son cadenas */
+.medal { display: block; overflow: visible; }
+.medal.is-locked .medal-art { filter: saturate(.3); opacity: .42; }
 
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 .rise { animation: rise .7s var(--ease-out) both; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise, .marquee { animation: none; }
+  .rise { animation: none; }
 }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import "./collection.css";
 import CollectCard from "./CollectCard";
 import Icon from "./Icon";
-import { Ago, CategoryTag, Empty, Filter, Modal, PageHead, RarityTag, Stats } from "./ui";
+import { Ago, CategoryTag, Empty, FamilyCoin, Filter, Modal, PageHead, RarityTag, Stats } from "./ui";
 import { api, useAccount } from "@/lib/account";
 import { CATEGORIES, RARITIES, TRADERS, type CategoryId, type RarityId, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
 import { FEE_BPS, MEMO, explorer, feeOf, short, toSol } from "@/lib/solana";
@@ -56,7 +56,7 @@ export default function Market() {
 
   return (
     <>
-      <PageHead title="Marché" sub={`Des cartes vendues par les joueurs, au prix qu'ils fixent. Tu paies le vendeur directement, plus ${FEE_BPS / 100} % de frais.`}>
+      <PageHead title="Marché">
         <div className="w-full sm:w-auto sm:min-w-[440px]">
           <Stats items={[
             ["En vente", data ? String(offers.length) : "…"],
@@ -69,11 +69,11 @@ export default function Market() {
       <div className="mt-8 flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <label className="relative w-full sm:w-64">
-            <Icon name="search" size={16} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-dim" />
-            <input className="field h-10 pl-10 text-[14.5px]" placeholder="Chercher un trader" value={q} onChange={(e) => setQ(e.target.value)} />
+            <Icon name="search" size={18} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted" />
+            <input className="field h-12 pl-11" placeholder="Chercher un trader" value={q} onChange={(e) => setQ(e.target.value)} />
           </label>
           <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Trier"
-            className="chip ml-auto h-10 cursor-pointer appearance-none pr-4 text-fg outline-none">
+            className="chip ml-auto h-12 cursor-pointer appearance-none pr-4 font-display font-extrabold outline-none">
             <option value="cheap">Prix croissant</option>
             <option value="dear">Prix décroissant</option>
             <option value="recent">Plus récentes</option>
@@ -85,15 +85,15 @@ export default function Market() {
           {CATS.map((c) => (
             <Filter key={c.id} on={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}
               count={offers.filter((o) => trader(o.card.trader).category === c.id).length}>
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 fill-current" style={{ color: c.bg }} aria-hidden="true"><path d={c.glyph} /></svg>
+              <FamilyCoin id={c.id} size={24} className="-ml-2" />
               {c.name}
             </Filter>
           ))}
-          <span className="mx-1 hidden h-5 w-px bg-white/10 sm:block" />
+          <span className="mx-1 hidden h-6 w-[2px] rounded bg-fg/20 sm:block" />
           {RARITIES.map((r) => (
             <Filter key={r.id} on={rar === r.id} onClick={() => setRar(rar === r.id ? null : r.id)}
               count={offers.filter((o) => o.card.rarity === r.id).length}>
-              <i className={`rar-${r.id} h-2.5 w-2.5 rounded-full`} />
+              <i className={`rar-${r.id} -ml-1 h-4 w-4 rounded-full border-2 border-fg`} />
               {r.name}
             </Filter>
           ))}
@@ -101,16 +101,16 @@ export default function Market() {
       </div>
 
       {failed && !data ? (
-        <p className="mt-12 text-center text-[15px] text-muted">Le marché ne répond pas. <button className="text-fg underline" onClick={load}>Réessayer</button></p>
+        <div className="mt-12 flex flex-col items-center gap-4"><p className="font-display text-[22px] font-extrabold">Le marché ne répond pas</p><button className="btn-ghost btn-sm" onClick={load}>Réessayer</button></div>
       ) : !data ? (
         <div className="col-grid mt-8">
-          {Array.from({ length: 8 }, (_, k) => <div key={k} className="aspect-[63/88] animate-pulse rounded-[14px] bg-white/[.04]" />)}
+          {Array.from({ length: 8 }, (_, k) => <div key={k} className="aspect-[63/88] animate-pulse rounded-[14px] bg-raised" />)}
         </div>
       ) : offers.length === 0 ? (
-        <Empty icon="market" title="Rien en vente pour l'instant" text="Ouvre un booster et mets tes cartes en vente : tu fixes le prix, tu reçois tout." href="/boosters" cta="Ouvrir un booster" />
+        <Empty title="Aucune carte en vente" href="/boosters" cta="Ouvrir un booster" />
       ) : list.length === 0 ? (
         <div className="mt-12 text-center">
-          <p className="text-[17px] font-semibold">Aucune carte avec ces filtres.</p>
+          <p className="font-display text-[22px] font-extrabold">Rien avec ces filtres</p>
           <button className="btn-ghost btn-sm mt-4" onClick={() => { setCat(null); setRar(null); setQ(""); }}>Tout afficher</button>
         </div>
       ) : (
@@ -123,15 +123,15 @@ export default function Market() {
                   <CollectCard card={o.card} />
                 </button>
                 <div className="mt-3 flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate font-display text-[19px] leading-tight font-bold tracking-[-.02em]">{trader(o.card.trader).name}</span>
-                  <RarityTag id={o.card.rarity} />
+                  <span className="min-w-0 truncate font-display text-[20px] leading-tight font-extrabold tracking-[-.02em]">{trader(o.card.trader).name}</span>
+                  <RarityTag id={o.card.rarity} size="sm" />
                 </div>
-                <div className="num mt-0.5 text-[13px] text-dim">n° {serialOf(o.card)} · {short(o.seller)}</div>
+                <div className="num mt-0.5 text-[13.5px] font-semibold text-muted">n° {serialOf(o.card)} · {short(o.seller)}</div>
                 <div className="mt-3 flex items-center justify-between gap-2">
-                  <span className="num font-display text-[20px] font-bold tracking-[-.02em]">{fmtSol(toSol(o.lamports))}</span>
+                  <span className="num font-display text-[21px] font-extrabold tracking-[-.02em]">{fmtSol(toSol(o.lamports))}</span>
                   {mine
-                    ? <Link href="/collection" className="btn-ghost btn-sm h-9 px-3.5">Ta carte</Link>
-                    : <button className="btn-gold btn-sm h-9 px-4" onClick={() => setBuying(o)}>Acheter</button>}
+                    ? <Link href="/collection" className="btn-ghost btn-sm h-10 px-4">Ta carte</Link>
+                    : <button className="btn-gold btn-sm h-10 px-4" onClick={() => setBuying(o)}>Acheter</button>}
                 </div>
               </div>
             );
@@ -151,15 +151,15 @@ function Sales({ sales }: { sales: Sale[] }) {
   const { cfg } = useAccount();
   return (
     <section className="mt-16">
-      <h2 className="font-display text-[28px] font-extrabold tracking-[-.03em]">Dernières ventes</h2>
-      <div className="surface mt-4 divide-y divide-white/[.06]">
+      <h2 className="font-display text-[32px] font-extrabold tracking-[-.035em]">Dernières ventes</h2>
+      <div className="surface mt-5 divide-y-2 divide-fg/10">
         {sales.slice(0, 12).map((s) => (
           <div key={s.sig} className="flex items-center gap-3 px-4 py-3 text-[14.5px]">
-            <i className={`rar-${s.rarity} h-2.5 w-2.5 shrink-0 rounded-full`} />
-            <span className="min-w-0 truncate font-semibold">{trader(s.trader).name} <span className="text-muted">{rarity(s.rarity).name}</span></span>
-            <span className="num hidden text-dim sm:inline">n° {serialOf({ id: "", trader: s.trader, rarity: s.rarity, serial: s.serial })}</span>
-            <span className="num ml-auto font-semibold">{fmtSol(toSol(s.lamports))}</span>
-            <a href={explorer(s.sig, cfg.cluster)} target="_blank" rel="noreferrer" className="w-24 text-right text-[13px] text-dim hover:text-muted"><Ago at={s.at} /></a>
+            <RarityTag id={s.rarity} size="sm" />
+            <span className="min-w-0 truncate font-display text-[16px] font-extrabold">{trader(s.trader).name}</span>
+            <span className="num hidden font-semibold text-muted sm:inline">n° {serialOf({ id: "", trader: s.trader, rarity: s.rarity, serial: s.serial })}</span>
+            <span className="num ml-auto font-display text-[16px] font-extrabold">{fmtSol(toSol(s.lamports))}</span>
+            <a href={explorer(s.sig, cfg.cluster)} target="_blank" rel="noreferrer" className="w-24 text-right text-[13.5px] font-semibold text-muted hover:text-fg"><Ago at={s.at} /></a>
           </div>
         ))}
       </div>
@@ -215,18 +215,15 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
         <div className="flex flex-wrap items-center gap-2">
           {t.category && <CategoryTag id={t.category} />}
           <RarityTag id={c.rarity} />
+          <span className="num plate h-7 px-3 text-[13.5px]">n° {serialOf(c)}</span>
         </div>
-        <h2 className="mt-3 font-display text-[44px] leading-none font-extrabold tracking-[-.035em]">{t.name}</h2>
-        <p className="num mt-1 text-[15px] text-dim">n° {serialOf(c)} · vendue par {short(offer.seller)}</p>
+        <h2 className="mt-3 font-display text-[48px] leading-none font-extrabold tracking-[-.04em]">{t.name}</h2>
 
         {step === "done" ? (
           <div className="surface mt-6 p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-up/15 text-up"><Icon name="check" size={20} /></span>
-              <div>
-                <div className="font-display text-[22px] font-bold tracking-[-.02em]">Elle est à toi</div>
-                <div className="text-[14px] text-muted">La carte est dans ta collection.</div>
-              </div>
+              <span className="grid h-11 w-11 place-items-center rounded-full border-2 border-fg bg-up text-white"><Icon name="check" size={22} /></span>
+              <div className="font-display text-[24px] font-extrabold tracking-[-.02em]">Elle est à toi</div>
             </div>
             <div className="mt-5 flex flex-wrap gap-2">
               <Link href="/collection" className="btn-gold btn-sm">Voir ma collection</Link>
@@ -236,18 +233,18 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
         ) : (
           <>
             <dl className="surface mt-6 p-5 text-[15px]">
-              <div className="flex justify-between py-1"><dt className="text-muted">Prix du vendeur</dt><dd className="num font-semibold">{fmtSol(toSol(offer.lamports))}</dd></div>
-              <div className="flex justify-between py-1"><dt className="text-muted">Frais cm cards ({FEE_BPS / 100} %)</dt><dd className="num font-semibold">{fmtSol(toSol(fee))}</dd></div>
-              <div className="mt-2 flex items-baseline justify-between border-t border-line pt-3"><dt className="font-semibold">Total</dt><dd className="num font-display text-[28px] font-bold tracking-[-.02em]">{fmtSol(toSol(total))}</dd></div>
+              <div className="flex justify-between py-1"><dt className="font-semibold text-muted">Prix du vendeur</dt><dd className="num font-bold">{fmtSol(toSol(offer.lamports))}</dd></div>
+              <div className="flex justify-between py-1"><dt className="font-semibold text-muted">Frais cm cards ({FEE_BPS / 100} %)</dt><dd className="num font-bold">{fmtSol(toSol(fee))}</dd></div>
+              <div className="mt-2 flex items-baseline justify-between border-t-2 border-fg/10 pt-3"><dt className="font-display text-[18px] font-extrabold">Total</dt><dd className="num font-display text-[30px] font-extrabold tracking-[-.02em]">{fmtSol(toSol(total))}</dd></div>
             </dl>
 
             <div className="mt-5">
               {!cfg.treasury ? (
-                <span className="btn-ghost w-full cursor-not-allowed opacity-60">Les paiements ouvrent bientôt</span>
+                <span className="btn-ghost w-full cursor-not-allowed">Les paiements ouvrent bientôt</span>
               ) : !wallet ? (
                 <button className="btn-gold w-full" onClick={signIn} disabled={busy}><Icon name="wallet" size={17} /> {busy ? "Signature…" : "Connecter mon wallet"}</button>
               ) : mine ? (
-                <Link href="/collection" className="btn-ghost w-full">C&apos;est ta carte : gère-la dans ta collection</Link>
+                <Link href="/collection" className="btn-ghost w-full">C&apos;est ta carte</Link>
               ) : sig ? (
                 <button className="btn-gold w-full" onClick={() => { setError(null); setStep("transfer"); claim(sig).catch((e) => { setStep("idle"); setError(e.message); }); }} disabled={step !== "idle"}>
                   {step === "transfer" ? "Transfert de la carte…" : "Récupérer la carte"}
@@ -257,9 +254,8 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
                   {step === "reserve" ? "Réservation…" : step === "sign" ? "Valide dans ton wallet…" : step === "transfer" ? "Transfert de la carte…" : `Payer ${fmtSol(toSol(total))}`}
                 </button>
               )}
-              {short_ && !mine && !sig && <p className="mt-3 text-[14px] font-semibold text-down">Solde insuffisant.</p>}
-              {error && <p className="mt-3 text-[14px] font-semibold text-down">{error}</p>}
-              <p className="mt-3 text-[13px] text-dim">Une seule transaction : le prix part au vendeur, les frais à cm cards. La carte t&apos;est réservée deux minutes le temps de payer.</p>
+              {short_ && !mine && !sig && <p className="mt-3 text-[14.5px] font-bold text-down">Solde insuffisant</p>}
+              {error && <p className="mt-3 text-[14.5px] font-bold text-down">{error}</p>}
             </div>
           </>
         )}

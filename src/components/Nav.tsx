@@ -17,21 +17,22 @@ const TABS: { id: Tab; href: string; label: string; icon: IconName }[] = [
   { id: "profil", href: "/profil", label: "Profil", icon: "user" },
 ];
 
-/* La barre de l'app : la marque, les écrans au centre, le wallet à droite. Sur
-   téléphone, les écrans passent dans la barre du bas, sous le pouce. */
+/* La barre : la marque, les écrans au centre, le wallet à droite. Sur téléphone,
+   les écrans passent dans la barre du bas, sous le pouce. L'écran ouvert prend la
+   plaque éponge. */
 export default function Nav({ at }: { at?: Tab }) {
   const { me } = useAccount();
   const count = me?.cards.length ?? 0;
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
-          <Link href="/" aria-label="cm cards, accueil"><Logo size={30} /></Link>
-          <nav className="mx-auto hidden items-center gap-1 md:flex">
+      <header className="sticky top-0 z-40 border-b-[2.5px] border-fg bg-bg/95 backdrop-blur-md">
+        <div className="mx-auto flex h-[72px] max-w-6xl items-center gap-4 px-4">
+          <Link href="/" aria-label="cm cards, accueil"><Logo size={34} /></Link>
+          <nav className="mx-auto hidden items-center gap-1.5 md:flex">
             {TABS.slice(1).map((t) => (
               <Link key={t.id} href={t.href} aria-current={t.id === at ? "page" : undefined}
-                className={`flex h-10 items-center gap-2 rounded-xl px-3.5 text-[14px] font-semibold transition-colors ${t.id === at ? "bg-white/[.07] text-fg" : "text-muted hover:text-fg"}`}>
-                <Icon name={t.icon} size={16} className={t.id === at ? "text-gold" : ""} />
+                className={`flex h-11 items-center gap-2 rounded-full px-4 font-display text-[15.5px] font-extrabold transition-[transform,background-color] hover:-translate-y-0.5 ${t.id === at ? "border-2 border-fg bg-gold shadow-[0_3px_0_#1e1a16]" : "text-muted hover:text-fg"}`}>
+                <Icon name={t.icon} size={17} />
                 {t.label}
                 {t.id === "collection" && count > 0 && <Count n={count} />}
               </Link>
@@ -41,14 +42,16 @@ export default function Nav({ at }: { at?: Tab }) {
         </div>
       </header>
 
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t-[2.5px] border-fg bg-bg pb-[env(safe-area-inset-bottom)] md:hidden">
         <div className="grid grid-cols-5">
           {TABS.map((t) => (
             <Link key={t.id} href={t.href} aria-current={t.id === at ? "page" : undefined}
-              className={`relative flex flex-col items-center gap-1 pt-2.5 pb-2 text-[11.5px] font-semibold ${t.id === at ? "text-fg" : "text-dim"}`}>
-              <Icon name={t.icon} size={22} className={t.id === at ? "text-gold" : ""} />
+              className={`relative flex flex-col items-center gap-1 pt-2 pb-2 font-display text-[12.5px] font-extrabold ${t.id === at ? "text-fg" : "text-muted"}`}>
+              <span className={`grid h-8 w-12 place-items-center rounded-full ${t.id === at ? "border-2 border-fg bg-gold" : ""}`}>
+                <Icon name={t.icon} size={20} />
+              </span>
               {t.label}
-              {t.id === "collection" && count > 0 && <span className="absolute top-1.5 left-[calc(50%+6px)]"><Count n={count} /></span>}
+              {t.id === "collection" && count > 0 && <span className="absolute top-1 left-[calc(50%+10px)]"><Count n={count} /></span>}
             </Link>
           ))}
         </div>
@@ -60,7 +63,7 @@ export default function Nav({ at }: { at?: Tab }) {
 
 function Count({ n }: { n: number }) {
   return (
-    <span className="num min-w-[20px] rounded-full bg-gold px-1.5 text-center text-[11px] leading-[18px] font-bold text-gold-ink">
+    <span className="num min-w-[22px] rounded-full border-2 border-fg bg-tomato px-1.5 text-center text-[11.5px] leading-[16px] font-extrabold text-white">
       {n > 999 ? "999+" : n}
     </span>
   );
@@ -69,19 +72,19 @@ function Count({ n }: { n: number }) {
 /* Le wallet : « Connecter », ou le solde et l'adresse (vers le profil). */
 export function WalletButton() {
   const { me, wallet, balance, busy, signIn } = useAccount();
-  if (!me) return <span className="block h-[38px] w-[132px] animate-pulse rounded-full bg-white/5" />;
+  if (!me) return <span className="block h-[42px] w-[140px] animate-pulse rounded-full bg-raised" />;
   if (!wallet)
     return (
       <button className="btn-gold btn-sm" onClick={signIn} disabled={busy}>
-        <Icon name="wallet" size={16} />
+        <Icon name="wallet" size={17} />
         {busy ? "Signature…" : "Connecter"}
       </button>
     );
   return (
-    <Link href="/profil" className="btn-ghost btn-sm gap-2.5 pl-2">
-      <span className="grid h-7 w-7 place-items-center rounded-full bg-gold/15 text-gold"><Icon name="wallet" size={14} /></span>
+    <Link href="/profil" className="btn-ghost btn-sm gap-2.5 pl-1.5">
+      <span className="grid h-7 w-7 place-items-center rounded-full border-2 border-fg bg-gold"><Icon name="wallet" size={14} /></span>
       {balance !== null && <span className="num hidden sm:inline">{toSol(balance).toLocaleString("fr-FR", { maximumFractionDigits: 3 })} SOL</span>}
-      <span className="num text-muted">{short(wallet)}</span>
+      <span className="num font-sans text-[13.5px] font-bold text-muted">{short(wallet)}</span>
     </Link>
   );
 }
@@ -101,35 +104,30 @@ export function WalletPicker() {
 
   if (!picker) return null;
   return (
-    <div className="fixed inset-0 z-[60] grid place-items-end bg-[rgba(4,5,10,.66)] backdrop-blur-md sm:place-items-center" onClick={() => setPicker(false)}>
+    <div className="fixed inset-0 z-[60] grid place-items-end bg-[rgba(30,26,22,.55)] backdrop-blur-sm sm:place-items-center" onClick={() => setPicker(false)}>
       <div role="dialog" aria-modal="true" aria-label="Connecter un wallet" onClick={(e) => e.stopPropagation()}
-        className="surface rise w-full max-w-[420px] rounded-b-none p-6 sm:rounded-[24px]">
+        className="surface rise w-full max-w-[420px] rounded-b-none p-6 sm:rounded-[26px]">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Connecter un wallet</h2>
-            <p className="mt-1 text-[14.5px] text-muted">Tu signes un message, rien ne part de ton wallet.</p>
-          </div>
-          <button className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/5 text-muted hover:text-fg" onClick={() => setPicker(false)} aria-label="Fermer">
+          <h2 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Connecter un wallet</h2>
+          <button className="grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 border-fg bg-white hover:bg-cream" onClick={() => setPicker(false)} aria-label="Fermer">
             <Icon name="close" size={18} />
           </button>
         </div>
         <div className="mt-5 flex flex-col gap-2">
           {found.length ? found.map((x) => (
             <button key={x.adapter.name} onClick={() => choose(x.adapter.name)}
-              className="flex h-14 items-center gap-3 rounded-2xl bg-white/[.04] px-3 text-left font-semibold shadow-[inset_0_0_0_1px_var(--color-line)] transition-colors hover:bg-white/[.08]">
+              className="flex h-14 items-center gap-3 rounded-2xl border-2 border-fg bg-white px-3 text-left font-display text-[16px] font-extrabold shadow-[0_3px_0_#1e1a16] transition-transform hover:-translate-y-0.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={x.adapter.icon} alt="" width={32} height={32} className="rounded-lg" />
               {x.adapter.name}
-              <span className="ml-auto text-[12.5px] font-semibold text-up">Détecté</span>
+              <Icon name="chevron" size={18} className="ml-auto text-muted" />
             </button>
           )) : (
             <>
-              <p className="rounded-2xl bg-white/[.04] p-4 text-[14.5px] text-muted shadow-[inset_0_0_0_1px_var(--color-line)]">
-                Aucun wallet Solana dans ce navigateur. Installe-en un, puis recharge la page.
-              </p>
+              <p className="py-2 font-display text-[17px] font-extrabold">Aucun wallet dans ce navigateur</p>
               {[["Phantom", "https://phantom.com/download"], ["Solflare", "https://solflare.com/download"], ["Backpack", "https://backpack.app/download"]].map(([n, href]) => (
                 <a key={n} href={href} target="_blank" rel="noreferrer"
-                  className="flex h-12 items-center justify-between rounded-2xl px-4 font-semibold text-muted shadow-[inset_0_0_0_1px_var(--color-line)] hover:text-fg">
+                  className="flex h-12 items-center justify-between rounded-2xl border-2 border-fg bg-white px-4 font-display font-extrabold shadow-[0_3px_0_#1e1a16] transition-transform hover:-translate-y-0.5">
                   {n} <Icon name="out" size={16} />
                 </a>
               ))}
