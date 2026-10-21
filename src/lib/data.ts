@@ -387,6 +387,12 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/clukz.webp", pos: "20% 50%" } },
     mythic: { banner: "/art/clukz.webp", avatar: "/art/clukz-face.webp",
       panels: { top: { src: "/art/clukz.webp", pos: "70% 45%" }, left: { src: "/art/clukz.webp", pos: "20% 75%" }, right: { src: "/art/clukz.webp", pos: "85% 35%" } } } },
+  // Jason : une seule image, la sienne partout : le portrait serré, les cheveux bruns
+  // courts, le regard droit sur un fond gris-bleu. Une photo : sa Shiny est en or. Pas
+  // de thème pour sa Mythic. Un Holder.
+  { id: "jason", name: "Jason", handle: "", category: "holder", art: "/art/jason.webp", artPos: "50% 45%", tint: "gold",
+    mythic: { banner: "/art/jason.webp", avatar: "/art/jason.webp",
+      panels: { top: { src: "/art/jason.webp", pos: "50% 15%" }, left: { src: "/art/jason.webp", pos: "30% 45%" }, right: { src: "/art/jason.webp", pos: "70% 70%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
