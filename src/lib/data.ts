@@ -267,6 +267,19 @@ export const TRADERS: Trader[] = [
   { id: "matt", name: "Matt", handle: "", category: "trencher", art: "/art/matt.webp", artPos: "56% 40%", tint: "gold",
     mythic: { banner: "/art/matt.webp", avatar: "/art/matt.webp",
       panels: { top: { src: "/art/matt.webp", pos: "56% 30%" }, left: { src: "/art/matt.webp", pos: "10% 55%" }, right: { src: "/art/matt.webp", pos: "90% 30%" } } } },
+  // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
+  // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
+  // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
+  { id: "whashywash", name: "whashywash", handle: "", category: "famous", art: "/art/whashywash.webp", artPos: "48% 45%", tint: "gold",
+    mythic: { banner: "/art/whashywash.webp", avatar: "/art/whashywash.webp",
+      panels: { top: { src: "/art/whashywash.webp", pos: "50% 12%" }, left: { src: "/art/whashywash.webp", pos: "25% 75%" }, right: { src: "/art/whashywash.webp", pos: "75% 85%" } } } },
+  // dv : une seule image, la sienne partout : la Porsche orange, la roue aux étriers
+  // jaunes, et lui debout à côté, les sneakers noires à la croix rouge. Une photo de
+  // nuit, presque noire : l'or la verdit, sa Shiny est en bleu électrique. Pas de
+  // thème pour sa Mythic. Un Famous.
+  { id: "dv", name: "dv", handle: "", category: "famous", art: "/art/dv.webp", artPos: "62% 50%", tint: "blue",
+    mythic: { banner: "/art/dv.webp", avatar: "/art/dv.webp",
+      panels: { top: { src: "/art/dv.webp", pos: "50% 70%" }, left: { src: "/art/dv.webp", pos: "10% 30%" }, right: { src: "/art/dv.webp", pos: "80% 65%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
