@@ -138,8 +138,8 @@ export const TRADERS: Trader[] = [
     mythic: { banner: "/art/yenni.webp", avatar: "/art/yenni-face.webp",
       panels: { top: { src: "/art/yenni.webp", pos: "11% 50%" }, left: { src: "/art/yenni.webp", pos: "61% 60%" }, right: { src: "/art/yenni.webp", pos: "100% 50%" } } } },
   // Profit : le chat noir aux yeux bleus en principale ; le fantôme pixel (sa
-  // seconde image) sur son OG et dans la planche de sa Mythic, aux yeux laser.
-  { id: "profit", name: "Profit", handle: "", category: "sniper", art: "/art/profit-face.webp", artPos: "50% 45%", theme: "laser", tint: "blue",
+  // seconde image) sur son OG et dans la planche de sa Mythic, aux yeux laser. Un Famous.
+  { id: "profit", name: "Profit", handle: "", category: "famous", art: "/art/profit-face.webp", artPos: "50% 45%", theme: "laser", tint: "blue",
     shots: { og: { src: "/art/profit-ghost.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/profit-ghost.webp", avatar: "/art/profit-face.webp",
       panels: { top: { src: "/art/profit-ghost.webp", pos: "50% 45%" }, left: { src: "/art/profit-ghost.webp", pos: "0% 50%" }, right: { src: "/art/profit-ghost.webp", pos: "66% 46%" } } } },
