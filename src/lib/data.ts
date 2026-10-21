@@ -51,11 +51,17 @@ export type Trader = {
   theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
 };
+/* Les illustrations : la bannière X publique du trader, servie par X (rien dans
+   le dépôt). Si elle change sur X, l'URL ici est à mettre à jour. */
+const BANNER = {
+  cupsey: "https://pbs.twimg.com/profile_banners/1168903946989010944/1766688794/1500x500",
+  cented: "https://pbs.twimg.com/profile_banners/1048768598494199809/1745814342/1500x500",
+};
 export const TRADERS: Trader[] = [
   { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
-  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
-    mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
-  { id: "cented", name: "Cented", handle: "@Cented7" },
+  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "top10", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
+    mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
+  { id: "cented", name: "Cented", handle: "@Cented7", art: BANNER.cented, artPos: "65% 45%" },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 

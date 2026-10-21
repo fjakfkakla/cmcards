@@ -1,7 +1,6 @@
-/* Une carte n'a jamais de trou à la place du personnage : l'illustration de
-   public/traders/ (absente sur Vercel tant qu'elle n'est pas versionnée), sinon
-   le portrait dessiné ici, sans réseau, qui ne peut pas échouer. Jamais la pdp
-   X : la carte montre l'illustration du personnage, pas son avatar. */
+/* Une carte n'a jamais de trou à la place du personnage : son illustration (la
+   bannière X, ou une image de public/traders/, absente sur Vercel), sinon le
+   portrait dessiné ici, sans réseau, qui ne peut pas échouer. */
 
 import type { Trader } from "./data";
 
