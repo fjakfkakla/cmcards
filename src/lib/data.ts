@@ -76,11 +76,19 @@ export type Trader = {
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
   aura?: AuraArt;        // son set signature : une carte différente par rareté
 };
+/* Les illustrations : la bannière X publique du trader, servie par X (rien dans
+   le dépôt). Si elle change sur X, l'URL ici est à mettre à jour. */
+const BANNER = {
+  cupsey: "https://pbs.twimg.com/profile_banners/1168903946989010944/1766688794/1500x500",
+  cented: "https://pbs.twimg.com/profile_banners/1048768598494199809/1745814342/1500x500",
+};
 export const TRADERS: Trader[] = [
-  { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
-  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
-    mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
-  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous" },
+  // ses images sont versionnées (public/art/) : elles s'affichent aussi sur Vercel
+  { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/art/mitch.webp", artPos: "50% 42%",
+    mythic: { banner: "/art/mitch.webp", avatar: "/art/mitch-face.webp" } },
+  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
+    mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
+  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: BANNER.cented, artPos: "65% 45%" },
   // le handle X reste vide tant qu'on n'a pas le bon : le secours est le portrait dessiné
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
