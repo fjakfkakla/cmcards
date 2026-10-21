@@ -150,6 +150,8 @@
 }
 .cc.shiny .cc-frame { animation: cc-pearl 6s linear infinite; }
 .cc.shiny .cc-art { filter: hue-rotate(165deg) saturate(1.25) contrast(1.05); }
+/* un personnage en noir et blanc ne change pas de teinte : sa Shiny le colore, en bleu électrique */
+.cc.shiny.mono .cc-art { filter: sepia(1) saturate(4.5) hue-rotate(168deg) brightness(.9) contrast(1.3); }
 @keyframes cc-pearl { to { --pearl: 360deg; } }
 .cc-sheen {
   position: absolute; inset: 0; z-index: 2; pointer-events: none;
@@ -266,6 +268,40 @@
   10% { opacity: 1; }
   50% { transform: translate(2cqw, -70cqw); }
   100% { transform: translate(-1cqw, -140cqw); opacity: 0; }
+}
+
+/* ---- le thème volt : la foudre (DECU, Killua) ---- */
+.cc.mythic.volt .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #6cf0ff 0 9deg, #ffffff 9deg 18deg, #a77bff 18deg 27deg, #ffd12e 27deg 36deg);
+}
+.cc.mythic.volt .cc-panel::after { background: none; }
+.cc.mythic.volt .cc-panel img { filter: contrast(1.15) brightness(1.04); }
+.cc.mythic.volt .cc-sticker {
+  width: 30%;
+  border-color: #e9fbff;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 5cqw 1.2cqw rgba(108,240,255,.75);
+  animation: cc-charge 2.2s ease-in-out infinite;
+}
+@keyframes cc-charge {
+  0%, 100% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 4cqw .8cqw rgba(108,240,255,.55); }
+  50% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 8cqw 2.4cqw rgba(108,240,255,.95); }
+}
+.cc.mythic.volt { --label: #6cf0ff; --name: #e9fbff; --mark: #6cf0ff; }
+.cc-static {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: screen; opacity: .35;
+  background: radial-gradient(ellipse at 50% 55%, rgba(108,240,255,.55), transparent 55%);
+  animation: cc-flicker 3s steps(1) infinite;
+}
+.cc-bolt {
+  position: absolute; z-index: 4; pointer-events: none; aspect-ratio: 1;
+  fill: #fff; stroke: #6cf0ff; stroke-width: 1.2; paint-order: stroke;
+  filter: drop-shadow(0 0 1cqw #6cf0ff) drop-shadow(0 0 3cqw rgba(108,240,255,.8));
+  animation: cc-zap 2.8s steps(1) infinite;
+}
+@keyframes cc-zap {
+  0%, 100% { opacity: 0; }
+  6% { opacity: 1; } 9% { opacity: 0; } 12% { opacity: 1; } 18% { opacity: 0; }
+  52% { opacity: .8; } 55% { opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

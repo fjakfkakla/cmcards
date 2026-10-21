@@ -18,6 +18,9 @@ const MARK: Record<RarityId, string> = {
 
 const SPARKS = [[18, 22, 0], [74, 16, 0.9], [62, 48, 1.7], [26, 58, 0.4], [82, 64, 2.1]];
 const BUBBLES = [[10, 3.4, 7], [30, 2.4, 9], [58, 4.2, 6.5], [76, 2.8, 8.5], [90, 3.6, 10], [44, 3, 11]];
+/* La foudre du thème volt : x, y, le délai, la taille (grille de 24 : un éclair). */
+const BOLTS = [[9, 16, 0, 11], [79, 9, 1.4, 8], [72, 66, 2.3, 10], [14, 70, .8, 7], [46, 10, 3.1, 6]];
+const BOLT = "M13 2 3 14h7l-1 8 10-12h-7z";
 
 export default function CollectCard({ card, live = false, className = "" }: { card: Card; live?: boolean; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -95,6 +98,16 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             BUBBLES.map(([x, s, d], i) => (
               <span key={i} className="cc-bubble" style={{ left: `${x}%`, width: `${s}cqw`, height: `${s}cqw`, animationDuration: `${d}s`, animationDelay: `${i * 1.2}s` }} />
             ))}
+          {theme === "volt" && (
+            <>
+              <div className="cc-static" />
+              {BOLTS.map(([x, y, d, s], i) => (
+                <svg key={i} className="cc-bolt" viewBox="0 0 24 24" aria-hidden="true" style={{ left: `${x}%`, top: `${y}%`, width: `${s}cqw`, animationDelay: `${d}s` }}>
+                  <path d={BOLT} />
+                </svg>
+              ))}
+            </>
+          )}
         </>
       ) : (
         <>
@@ -125,7 +138,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   return (
     <div
       ref={ref}
-      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${live ? "is-live" : ""} ${className}`}
+      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${t.mono ? "mono" : ""} ${live ? "is-live" : ""} ${className}`}
       style={{ "--cat": cat?.bg ?? "#8a8079" } as React.CSSProperties}
       onPointerMove={move}
       onPointerLeave={leave}

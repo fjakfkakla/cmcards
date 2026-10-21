@@ -72,7 +72,8 @@ export type Trader = {
   id: string; name: string; handle: string;
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
-  theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
+  theme?: "sponge" | "volt"; // le thème de sa Mythic (1 sur 1) : les bulles, la foudre
+  mono?: boolean;        // ses images sont en noir et blanc : sa Shiny les colore au lieu de les décaler
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
   aura?: AuraArt;        // son set signature : une carte différente par rareté
 };
@@ -89,6 +90,10 @@ export const TRADERS: Trader[] = [
   { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
     mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
   { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: BANNER.cented, artPos: "65% 45%" },
+  // ses images (sa bannière, sa pdp) sont celles qu'on nous a données, versionnées
+  // dans public/art/. Noir et blanc, Killua : sa Mythic est électrique.
+  { id: "decu", name: "DECU", handle: "", category: "famous", art: "/art/decu.webp", artPos: "66% 50%", theme: "volt", mono: true,
+    mythic: { banner: "/art/decu.webp", avatar: "/art/decu-face.webp" } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
