@@ -1,5 +1,5 @@
-/* Le catalogue de la saison 1. Les montants et les prix sont ceux de la démo
-   (devnet) : ils seront lus sur la chaîne et chez Jupiter au branchement. */
+/* Le catalogue de la saison 1. Une carte ne contient rien : elle vaut ce que les
+   joueurs en donnent sur le marché. Le seul prix fixé par cm cards : les boosters. */
 
 /* Le système de cm cards : une carte = un personnage, une catégorie, une rareté.
    La catégorie donne le fond (et le booster), la rareté donne la bordure et l'effet. */
@@ -9,17 +9,16 @@ export type RarityId = "common" | "rare" | "shiny" | "og" | "mythic";
 export type Rarity = {
   id: RarityId;
   name: string;
-  odds: number;          // probabilité dans un booster, en %
-  usd: [number, number]; // fourchette de la valeur en coins à l'intérieur
-  supply: number;        // exemplaires numérotés par personnage
+  odds: number;   // probabilité dans un booster, en %
+  supply: number; // exemplaires numérotés par personnage : il n'y en aura jamais plus
 };
 
 export const RARITIES: Rarity[] = [
-  { id: "common", name: "Commun", odds: 65, usd: [0.5, 3], supply: 5000 },
-  { id: "rare", name: "Rare", odds: 24, usd: [3, 12], supply: 2000 },
-  { id: "shiny", name: "Shiny", odds: 9, usd: [12, 60], supply: 500 },
-  { id: "og", name: "OG", odds: 1.8, usd: [60, 600], supply: 50 },
-  { id: "mythic", name: "Mythic", odds: 0.2, usd: [600, 5000], supply: 1 },
+  { id: "common", name: "Commun", odds: 65, supply: 5000 },
+  { id: "rare", name: "Rare", odds: 24, supply: 2000 },
+  { id: "shiny", name: "Shiny", odds: 9, supply: 500 },
+  { id: "og", name: "OG", odds: 1.8, supply: 50 },
+  { id: "mythic", name: "Mythic", odds: 0.2, supply: 1 },
 ];
 export const rarity = (id: RarityId) => RARITIES.find((r) => r.id === id)!;
 
@@ -47,15 +46,6 @@ export const CATEGORIES: Category[] = [
     glyph: "M2 7l5 4 5-7 5 7 5-4-2 12H4zm2.4 13h15.2v2H4.4z" },
 ];
 export const category = (id: CategoryId) => CATEGORIES.find((c) => c.id === id)!;
-
-export type Coin = { ticker: string; name: string; price: number; color: string };
-export const COINS: Record<string, Coin> = {
-  BONK: { ticker: "BONK", name: "Bonk", price: 0.0000214, color: "#ff9a1f" },
-  WIF: { ticker: "WIF", name: "dogwifhat", price: 1.42, color: "#c99a6b" },
-  POPCAT: { ticker: "POPCAT", name: "Popcat", price: 0.31, color: "#f2efe8" },
-  MEW: { ticker: "MEW", name: "cat in a dogs world", price: 0.0029, color: "#9ad1ff" },
-  FWOG: { ticker: "FWOG", name: "Fwog", price: 0.087, color: "#7fd47f" },
-};
 
 /* Les images d'un set signature : chaque rareté a sa photo et sa mise en scène.
    Fabriquées par tools/traders/kimchi.py (le détourage, le décor sans lui). */
@@ -307,12 +297,9 @@ export type Card = {
   id: string;
   trader: string;
   rarity: RarityId;
-  coin: string;
-  amount: number;   // nombre de coins dans la carte
-  serial: number;
+  serial: number; // son numéro, tiré dans le stock de sa rareté
 };
 
-export const usdOf = (c: Card) => c.amount * COINS[c.coin].price;
 /* Le numéro imprimé : 0042/2000, ou 1/1 pour une Mythic. */
 export function serialOf(c: Card) {
   const { supply } = rarity(c.rarity);
@@ -352,7 +339,7 @@ export const packTraders = (p: Pack) => TRADERS.filter((t) => t.category === p.p
 export const pack = (id: string) => PACKS.find((p) => p.id === id);
 export const rank = (id: RarityId) => RARITIES.findIndex((r) => r.id === id);
 
-/* Le tirage de la démo (au branchement : le serveur, avec la preuve publiée). */
+/* La rareté d'une carte, d'un nombre au hasard entre 0 et 1 (tiré par le serveur). */
 export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"): RarityId {
   const min = rank(floor);
   const pool = RARITIES.filter((_, i) => i >= min);
@@ -365,55 +352,5 @@ export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"):
   return pool[0].id;
 }
 
-export function drawCard(seed: number, p?: Pack, floor: RarityId = "common"): Card {
-  const rnd = mulberry(seed);
-  const r = drawRarity(rnd(), p?.boost ?? 1, floor);
-  const pool = p ? packTraders(p) : [];
-  const who = pool.length ? pool : TRADERS;
-  const t = who[Math.floor(rnd() * who.length)];
-  const coins = Object.keys(COINS);
-  const coin = coins[Math.floor(rnd() * coins.length)];
-  const [lo, hi] = rarity(r).usd;
-  const usd = lo + (hi - lo) * rnd() ** 2;
-  return {
-    id: `${t.id}-${r}-${seed}`,
-    trader: t.id,
-    rarity: r,
-    coin,
-    amount: Math.max(1, Math.round(usd / COINS[coin].price)),
-    serial: 1 + Math.floor(rnd() * rarity(r).supply),
-  };
-}
-
-/* Ouvre un booster : ses cartes, la garantie sur la dernière, du moins rare au plus
-   rare (la meilleure se retourne en dernier). */
-export function openPack(p: Pack, seed: number): Card[] {
-  const cards = Array.from({ length: p.cards }, (_, i) =>
-    drawCard(seed * 31 + i * 7919, p, i === p.cards - 1 ? p.guarantee : undefined),
-  );
-  return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
-}
-
-function mulberry(a: number) {
-  return () => {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-export const fmtAmount = (n: number) =>
-  n >= 1e6 ? `${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)} M` : n >= 1e3 ? `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1)} k` : `${n}`;
-export const fmtUsd = (n: number) =>
-  n >= 10_000
-    ? `${(n / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 0 })} k$`
-    : `${n.toLocaleString("fr-FR", { maximumFractionDigits: n < 10 ? 2 : 0 })} $`;
-
-/* Ce qu'un booster peut contenir, en dollars : au pire et au mieux. */
-export function packRange(p: Pack): [number, number] {
-  const floor = p.guarantee ? rarity(p.guarantee).usd[0] : RARITIES[0].usd[0];
-  const min = (p.cards - 1) * RARITIES[0].usd[0] + floor;
-  const max = p.cards * RARITIES[RARITIES.length - 1].usd[1];
-  return [min, max];
-}
+export const fmtSol = (sol: number) =>
+  `${sol.toLocaleString("fr-FR", { maximumFractionDigits: sol < 1 ? 3 : 2 })} SOL`;

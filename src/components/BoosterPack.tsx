@@ -1,6 +1,6 @@
 import "./booster.css";
 import Pic from "./Pic";
-import { type Category, type Pack, category, packTraders } from "@/lib/data";
+import { type Category, type Pack, category, packTraders, rarity } from "@/lib/data";
 import { portraitSources, portraitUri } from "@/lib/portrait";
 
 /* Le booster fermé. `torn` le coupe le long de la ligne : le haut s'envole et la
@@ -25,11 +25,11 @@ export default function BoosterPack({
   className?: string;
 } & React.HTMLAttributes<HTMLDivElement>) {
   const cat = category(pack.pool);
-  const bag = pack.skin === "multiverse" ? <MultiverseBag pack={pack} cat={cat} /> : <PaperBag pack={pack} cat={cat} />;
+  const bag = <Bag pack={pack} cat={cat} />;
   return (
     <div
       className={`bp ${pack.skin ?? ""} ${torn ? "is-torn" : ""} ${shaking ? "is-shaking" : ""} ${floating ? "floating" : ""} ${className}`}
-      style={{ "--c": pack.color, "--m": pack.ink, "--glow": glow } as React.CSSProperties}
+      style={{ "--c": pack.skin ? undefined : pack.color, "--m": pack.skin ? undefined : pack.ink, "--glow": glow } as React.CSSProperties}
       {...rest}
     >
       <div className="bp-leak" />
@@ -41,23 +41,40 @@ export default function BoosterPack({
   );
 }
 
-/* Le sachet de papier métallisé : le motif de la catégorie, une fenêtre sur son
-   premier personnage, la marque. */
-function PaperBag({ pack, cat }: { pack: Pack; cat: Category }) {
-  const face = packTraders(pack)[0]; // la vitrine : le premier personnage de la catégorie
+/* Le sachet : le film de la catégorie, la plaque du nom, l'éventail des cartes (ses
+   trois premiers personnages), le nombre de cartes et la garantie. */
+function Bag({ pack, cat }: { pack: Pack; cat: Category }) {
+  const who = packTraders(pack).slice(0, 3);
+  // le premier au centre, devant ; les deux suivants derrière, de chaque côté
+  const fan = [who[1] && { t: who[1], at: "side left" }, who[2] && { t: who[2], at: "side right" }, who[0] && { t: who[0], at: "mid" }]
+    .filter((x): x is { t: (typeof who)[number]; at: string } => !!x);
   return (
-    <div className="bp-bag">
-      <div className={`bp-motif ${pack.motif}`} />
-      <span className="bp-brand">cm cards</span>
-      <div className="bp-window">
-        {face ? (
-          <Pic srcs={portraitSources(face)} fallback={portraitUri(face.name, cat.bg)} alt="" style={{ objectPosition: face.artPos }} draggable={false} />
-        ) : (
-          <svg className="bp-glyph" viewBox="0 0 24 24" aria-hidden="true" style={{ fill: cat.bg }}><path d={cat.glyph} /></svg>
-        )}
+    <div className={`bp-bag ${pack.skin === "multiverse" ? "mv-bag" : ""}`}>
+      {pack.skin === "multiverse" ? <Multiverse cat={cat} /> : (
+        <>
+          <div className={`bp-motif ${pack.motif}`} />
+          <div className="bp-glow" />
+          <div className="bp-fan">
+            {fan.map(({ t, at }) => (
+              <div key={t.id} className={`bp-mini ${at}`}>
+                <Pic srcs={portraitSources(t)} fallback={portraitUri(t.name, cat.bg)} alt="" style={{ objectPosition: t.artPos }} draggable={false} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      <div className="bp-crimp top" />
+      <div className="bp-crimp bottom" />
+      <div className="bp-plate">
+        <span className="bp-brand">cm cards</span>
+        <span className="bp-name">{pack.name}</span>
+        <span className="bp-kind">Booster</span>
       </div>
-      <span className="bp-name">{pack.name}</span>
-      <span className="bp-count">{pack.cards} cartes</span>
+      <div className="bp-meta">
+        <span>{pack.cards} cartes</span>
+        {pack.guarantee && <span className="gold">{rarity(pack.guarantee).name}+</span>}
+      </div>
+      <div className="bp-holo" />
       <div className="bp-foil" />
     </div>
   );
@@ -65,18 +82,15 @@ function PaperBag({ pack, cat }: { pack: Pack; cat: Category }) {
 
 /* Les éclats du sachet Legend : leur place (en % du sachet), leur taille, leur retard. */
 const SPARKS: [number, number, number, number][] = [
-  [14, 20, 5, 0], [84, 17, 3.6, .9], [90, 44, 4.4, 1.7], [9, 52, 3.2, 2.4],
-  [80, 60, 5.2, .4], [18, 78, 3.4, 1.3], [88, 82, 4, 2.1], [12, 92, 2.8, 2.9],
+  [14, 30, 5, 0], [84, 34, 3.6, .9], [90, 54, 4.4, 1.7], [9, 58, 3.2, 2.4],
+  [80, 66, 5.2, .4], [18, 78, 3.4, 1.3], [88, 82, 4, 2.1], [12, 44, 2.8, 2.9],
 ];
 
-/* Le sachet des Legend : pas de papier de catégorie, pas de marque, pas de
-   personnage. Le multivers : le ciel profond, les nébuleuses, les étoiles qui
-   dérivent à deux profondeurs, le portail aux anneaux (ceux des Mythic, qui
-   tournent) autour de la couronne Legend, le film holographique par-dessus.
-   Tout est centré, droit, posé sur l'axe. */
-function MultiverseBag({ pack, cat }: { pack: Pack; cat: Category }) {
+/* Le Legend : pas de personnage, le multivers. Le ciel profond, les nébuleuses, les
+   étoiles qui dérivent, le portail aux anneaux autour de la couronne. */
+function Multiverse({ cat }: { cat: Category }) {
   return (
-    <div className="bp-bag mv-bag">
+    <>
       <div className="mv-space" />
       <div className="mv-stars far" />
       <div className="mv-stars near" />
@@ -94,9 +108,6 @@ function MultiverseBag({ pack, cat }: { pack: Pack; cat: Category }) {
         <span key={k} className="mv-spark" style={{ left: `${x}%`, top: `${y}%`, width: `${w}cqw`, animationDelay: `${d}s` }} />
       ))}
       <div className="mv-holo" />
-      <span className="mv-name">{pack.name}</span>
-      <span className="mv-count">{pack.cards} cartes</span>
-      <div className="bp-foil" />
-    </div>
+    </>
   );
 }

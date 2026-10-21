@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <>
       <Nav at="collection" />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-16">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 pt-8 pb-28 md:pb-16">
         <Collection />
       </main>
     </>

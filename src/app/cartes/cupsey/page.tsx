@@ -1,7 +1,7 @@
 import CollectCard from "@/components/CollectCard";
 import type { Card } from "@/lib/data";
 
-const CUPSEY: Card = { id: "cupsey-mythic", trader: "cupsey", rarity: "mythic", coin: "BONK", amount: 120_000_000, serial: 1 };
+const CUPSEY: Card = { id: "cupsey-mythic", trader: "cupsey", rarity: "mythic", serial: 1 };
 
 export default function Page() {
   return (

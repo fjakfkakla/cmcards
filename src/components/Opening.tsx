@@ -1,32 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./opening.css";
 import BoosterPack from "./BoosterPack";
 import CollectCard from "./CollectCard";
-import { keep } from "@/lib/collection";
-import { COINS, type Card, type Pack, type RarityId, fmtAmount, fmtUsd, openPack, rarity, usdOf } from "@/lib/data";
+import Icon from "./Icon";
+import { api, useAccount } from "@/lib/account";
+import { type Pack, type RarityId, fmtSol, rarity, serialOf, trader } from "@/lib/data";
+import { MEMO, TREASURY, explorer, toLamports } from "@/lib/solana";
+import type { Owned } from "@/lib/types";
 
 /* La couleur de la lumière d'une rareté : celle qui sort du booster, celle du nom. */
 const GLOW: Record<RarityId, string> = {
-  common: "#efe5d0",
-  rare: "#dfe6ee",
-  shiny: "#bfe6ff",
-  og: "#ffffff",
-  mythic: "#ff5fb4",
+  common: "#dfe3ec",
+  rare: "#8fb0ff",
+  shiny: "#bff0ff",
+  og: "#ffdd7a",
+  mythic: "#f6a6cb",
 };
-const CONFETTI = ["#ff4b3e", "#ffd12e", "#3dcb6c", "#4da8ff", "#a77bff", "#ff5fb4"];
+const CONFETTI = ["#ffdd7a", "#f7c948", "#8fb0ff", "#bff0ff", "#f6a6cb", "#ffffff"];
 
-type Phase = "sealed" | "torn" | "reveal" | "done";
+type Phase = "pay" | "sealed" | "torn" | "reveal" | "done";
+type Step = "idle" | "sign" | "draw";
+const PENDING = "cmcards:pending"; // un paiement fait dont on n'a pas encore les cartes
 
 export default function Opening({ pack }: { pack: Pack }) {
-  // le tirage se fait au moment d'ouvrir (le serveur s'en chargera au branchement)
-  const [seed, setSeed] = useState(1);
-  const cards = useMemo(() => openPack(pack, seed), [pack, seed]);
-  const best = cards[cards.length - 1].rarity;
+  const { wallet, balance, busy, signIn, pay, refresh } = useAccount();
+  const [cards, setCards] = useState<Owned[] | null>(null);
+  const [step, setStep] = useState<Step>("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState<string | null>(null);
+  const best = cards?.[cards.length - 1]?.rarity ?? "common";
 
-  const [phase, setPhase] = useState<Phase>("sealed");
+  const [phase, setPhase] = useState<Phase>("pay");
   const [slit, setSlit] = useState(0);
   const [shaking, setShaking] = useState(false);
   const [i, setI] = useState(0);
@@ -35,11 +42,52 @@ export default function Opening({ pack }: { pack: Pack }) {
   const [fx, setFx] = useState(0); // relance les effets à chaque carte
   const drag = useRef<{ x: number; w: number; moved: boolean } | null>(null);
 
+  const price = toLamports(pack.price);
+  const short = balance !== null && balance < price + 10_000;
+
+  /* Le paiement est sur la chaîne : le serveur le lit et tire les cartes. */
+  const claim = useCallback(async (sig: string) => {
+    setStep("draw"); setError(null);
+    try {
+      const r = await api<{ cards: Owned[] }>("/api/packs/open", { pack: pack.id, signature: sig });
+      try { localStorage.removeItem(PENDING); } catch {}
+      setPending(null);
+      setCards(r.cards);
+      setPhase("sealed");
+      refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Le tirage a échoué.");
+    } finally { setStep("idle"); }
+  }, [pack.id, refresh]);
+
+  /* Un paiement resté sans cartes (onglet fermé, réseau coupé) : on le reprend. */
+  useEffect(() => {
+    if (!wallet) return;
+    let p: { sig: string; pack: string; wallet: string } | null = null;
+    try { p = JSON.parse(localStorage.getItem(PENDING) ?? "null"); } catch {}
+    if (!p || p.pack !== pack.id || p.wallet !== wallet) return;
+    const sig = p.sig;
+    const t = setTimeout(() => { setPending(sig); claim(sig); }, 0);
+    return () => clearTimeout(t);
+  }, [wallet, pack.id, claim]);
+
+  async function buy() {
+    setError(null); setStep("sign");
+    let sig: string;
+    try {
+      sig = await pay([{ to: TREASURY, lamports: price }], MEMO.pack(pack.id));
+    } catch (e) {
+      setStep("idle");
+      setError(e instanceof Error ? e.message : "Paiement annulé.");
+      return;
+    }
+    try { localStorage.setItem(PENDING, JSON.stringify({ sig, pack: pack.id, wallet })); } catch {}
+    setPending(sig);
+    await claim(sig);
+  }
+
   function tear() {
     if (phase !== "sealed") return;
-    const s = Math.floor(Math.random() * 1e9);
-    setSeed(s);
-    keep(openPack(pack, s), pack.id); // dans la collection dès l'ouverture
     setSlit(1);
     setShaking(true);
     setTimeout(() => { setShaking(false); setPhase("torn"); }, 1050);
@@ -69,7 +117,7 @@ export default function Opening({ pack }: { pack: Pack }) {
   }
 
   function next() {
-    if (out) return;
+    if (out || !cards) return;
     if (!up) {
       setUp(true);
       setFx((n) => n + 1);
@@ -85,17 +133,51 @@ export default function Opening({ pack }: { pack: Pack }) {
   }
 
   function again() {
-    setPhase("sealed"); setSlit(0); setI(0); setUp(false); setOut(false);
+    setCards(null); setPhase("pay"); setSlit(0); setI(0); setUp(false); setOut(false);
   }
 
-  const card = cards[i];
-  const r = card.rarity;
+  const card = cards?.[i];
+  const r = card?.rarity ?? "common";
   const showFx = phase === "reveal" && up && !out;
   const stageFx = showFx && r === "og" ? "og-flash" : showFx && r === "mythic" ? "quake" : "";
 
   return (
     <div className={`op-stage ${stageFx}`} key={`stage-${fx}`} style={{ "--glow": GLOW[showFx ? r : best] } as React.CSSProperties}>
       {showFx && <RevealFx rarity={r} key={`fx-${fx}`} />}
+
+      {phase === "pay" && (
+        <div className="relative z-[2] flex w-full max-w-md flex-col items-center">
+          <div className="w-[min(58vw,260px)]"><BoosterPack pack={pack} floating /></div>
+          <h1 className="mt-8 font-display text-[36px] leading-none font-extrabold tracking-[-.035em]">Booster {pack.name}</h1>
+          <p className="mt-2 text-[15px] text-muted">{pack.cards} cartes{pack.guarantee ? `, la dernière ${rarity(pack.guarantee).name} ou mieux` : ""}</p>
+
+          <div className="mt-8 w-full">
+            {!TREASURY ? (
+              <span className="btn-ghost btn-lg w-full cursor-not-allowed opacity-60">Les paiements ouvrent bientôt</span>
+            ) : !wallet ? (
+              <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
+                <Icon name="wallet" size={18} /> {busy ? "Signature…" : "Connecter mon wallet"}
+              </button>
+            ) : pending ? (
+              <button className="btn-gold btn-lg w-full" onClick={() => claim(pending)} disabled={step !== "idle"}>
+                {step === "draw" ? "Tirage en cours…" : "Récupérer mes cartes"}
+              </button>
+            ) : (
+              <button className="btn-gold btn-lg w-full" onClick={buy} disabled={step !== "idle" || short}>
+                {step === "sign" ? "Valide dans ton wallet…" : step === "draw" ? "Tirage en cours…" : `Payer ${fmtSol(pack.price)}`}
+              </button>
+            )}
+            {short && !pending && <p className="mt-3 text-center text-[14px] font-semibold text-down">Solde insuffisant pour ce booster.</p>}
+            {error && <p className="mt-3 text-center text-[14px] font-semibold text-down">{error}</p>}
+            {pending && (
+              <a href={explorer(pending)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[13.5px] text-dim hover:text-muted">
+                Voir le paiement <Icon name="out" size={14} />
+              </a>
+            )}
+            <p className="mt-4 text-center text-[13.5px] text-dim">Le tirage est fait par le serveur une fois le paiement lu sur la chaîne.</p>
+          </div>
+        </div>
+      )}
 
       {(phase === "sealed" || phase === "torn") && (
         <div className="relative z-[2] flex flex-col items-center">
@@ -114,16 +196,16 @@ export default function Opening({ pack }: { pack: Pack }) {
         </div>
       )}
 
-      {phase === "reveal" && (
+      {phase === "reveal" && cards && card && (
         <div className="relative z-[2] flex flex-col items-center">
           <div className={`op-deck ${i === 0 && !up ? "rising" : ""}`}>
             {/* les cartes encore cachées, en pile */}
             {cards.slice(i + 1).map((c, k) => (
-              <div key={c.id + k} className="op-under" style={{ transform: `translate(${(k + 1) * 6}px, ${(k + 1) * 6}px) rotate(${(k + 1) * 1.5}deg)`, zIndex: 1 - k }}>
+              <div key={c.uid} className="op-under" style={{ transform: `translate(${(k + 1) * 6}px, ${(k + 1) * 6}px) rotate(${(k + 1) * 1.5}deg)`, zIndex: 1 - k }}>
                 <div className="cb"><div className="cb-mark" /></div>
               </div>
             )).reverse()}
-            <div className={`op-card ${up ? "is-up" : ""} ${out ? "is-out" : ""}`} onClick={next} key={card.id + i}>
+            <div className={`op-card ${up ? "is-up" : ""} ${out ? "is-out" : ""}`} onClick={next} key={card.uid}>
               {up && !out && <span className="op-tag" style={{ "--glow": GLOW[r] } as React.CSSProperties}>{rarity(r).name}</span>}
               <div className="op-flip">
                 <div className="op-face"><div className="cb"><div className="cb-mark" /></div></div>
@@ -137,37 +219,26 @@ export default function Opening({ pack }: { pack: Pack }) {
         </div>
       )}
 
-      {phase === "done" && (
+      {phase === "done" && cards && (
         <div className="op-done relative z-[2]">
-          <h1 className="font-display text-5xl">Ton tirage</h1>
+          <h1 className="font-display text-[44px] leading-none font-extrabold tracking-[-.035em]">Ton tirage</h1>
+          <p className="mt-2 text-[15px] text-muted">Les cartes sont dans ta collection. Garde-les, ou fixe ton prix sur le marché.</p>
           <div className="op-row">
             {cards.map((c, k) => (
-              <div key={c.id + k} style={{ animationDelay: `${k * 90}ms` }}>
+              <div key={c.uid} style={{ animationDelay: `${k * 90}ms` }}>
                 <CollectCard card={c} />
-                <Contents card={c} />
+                <p className="op-in"><b>{trader(c.trader).name}</b>{rarity(c.rarity).name} · n° {serialOf(c)}</p>
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xl font-extrabold">
-            Valeur dans les cartes : <span className="font-display text-3xl">{fmtUsd(cards.reduce((a, c) => a + usdOf(c), 0))}</span>
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            <button className="btn bg-tomato text-cream" onClick={again}>Rouvrir un {pack.name}</button>
-            <Link className="btn bg-sponge" href="/collection">Voir ma collection</Link>
-            <Link className="btn bg-paper" href="/">Autres boosters</Link>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <button className="btn-gold" onClick={again}>Rouvrir un {pack.name}</button>
+            <Link className="btn-ghost" href="/collection">Ma collection</Link>
+            <Link className="btn-ghost" href="/marche">Le marché</Link>
           </div>
         </div>
       )}
     </div>
-  );
-}
-
-function Contents({ card }: { card: Card }) {
-  return (
-    <p className="op-in">
-      <b>{fmtAmount(card.amount)} {COINS[card.coin].ticker}</b>
-      {fmtUsd(usdOf(card))}
-    </p>
   );
 }
 

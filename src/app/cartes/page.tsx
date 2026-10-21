@@ -8,18 +8,20 @@ export default function Page() {
   return (
     <>
     <Nav at="cartes" />
-    <main className="mx-auto w-full max-w-6xl px-4 py-10">
+    <main className="mx-auto w-full max-w-6xl px-4 pt-10 pb-28 md:pb-16">
+      <h1 className="mb-10 font-display text-[52px] leading-none font-extrabold tracking-[-.035em]">Toutes les cartes</h1>
       {TRADERS.map((t) => (
       <section key={t.id} className="mb-16">
-      <h2 className="mb-6 font-display text-4xl">{t.name}</h2>
+      <h2 className="mb-6 font-display text-[32px] font-extrabold tracking-[-.03em]"><a href={`/cartes/${t.id}`} className="hover:text-gold">{t.name}</a></h2>
       <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
         {RARITIES.map((r) => {
-          const card: Card = { id: `${t.id}-${r.id}`, trader: t.id, rarity: r.id, coin: "BONK", amount: 1_000_000, serial: 7 };
+          const card: Card = { id: `${t.id}-${r.id}`, trader: t.id, rarity: r.id, serial: 7 };
           return (
             <div key={r.id}>
               <CollectCard card={card} />
-              <p className="mt-4 text-center text-lg font-extrabold">
-                {r.name} <span className="text-ink-2">· {r.odds.toLocaleString("fr-FR")} %</span>
+              <p className="mt-4 flex items-center justify-center gap-2 text-center text-[15px] font-semibold">
+                <i className={`rar-${r.id} h-2.5 w-2.5 rounded-full`} />
+                {r.name} <span className="num text-dim">{r.odds.toLocaleString("fr-FR")} %</span>
               </p>
             </div>
           );

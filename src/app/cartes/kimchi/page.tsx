@@ -15,7 +15,7 @@ export default function Page() {
         </header>
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3">
           {RARITIES.map((r) => {
-            const card: Card = { id: r.id, trader: "kimchi", rarity: r.id, coin: "BONK", amount: 1_000_000, serial: 7 };
+            const card: Card = { id: r.id, trader: "kimchi", rarity: r.id, serial: 7 };
             return (
               <div key={r.id}>
                 <CollectCard card={card} />

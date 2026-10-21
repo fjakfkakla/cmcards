@@ -12,7 +12,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
       <Nav at="boosters" />
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col pb-20 md:pb-0">
         <Suspense>
           <Booster params={params} />
         </Suspense>
