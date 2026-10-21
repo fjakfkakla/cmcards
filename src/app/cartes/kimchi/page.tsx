@@ -1,7 +1,7 @@
 import CollectCard from "@/components/CollectCard";
 import { RARITIES, type Card } from "@/lib/data";
 
-/* Le set Kimchi : six raretés, six cartes qui ne se ressemblent pas. Sur fond de
+/* Le set Kimchi : cinq raretés, cinq cartes qui ne se ressemblent pas. Sur fond de
    nuit, pour que l'aura de la Mythic se voie. */
 export default function Page() {
   return (
