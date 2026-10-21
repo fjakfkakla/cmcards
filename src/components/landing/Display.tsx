@@ -24,7 +24,7 @@ export default function Display() {
 
       <div className="dx-back">
         <div className="dx-back-rays" />
-        <span className="dx-back-word">Saison 1</span>
+        <span className="dx-back-word">Season 1</span>
       </div>
 
       <div className="dx-packs">
@@ -50,7 +50,7 @@ export default function Display() {
             <text x="150" y="54" fill="url(#dx-word)">cm cards</text>
           </g>
         </svg>
-        <span className="dx-ribbon">Cartes à collectionner</span>
+        <span className="dx-ribbon">Collectible cards</span>
       </div>
     </div>
   );

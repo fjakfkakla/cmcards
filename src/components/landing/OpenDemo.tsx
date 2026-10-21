@@ -75,7 +75,7 @@ export default function OpenDemo() {
       <div className="od-plank">
         <div className="od-rays" />
         {phase !== "reveal" ? (
-          <button type="button" className="od-pack" onClick={open} aria-label={`Ouvrir le booster ${PACK.name}`}>
+          <button type="button" className="od-pack" onClick={open} aria-label={`Open the ${PACK.name} booster`}>
             <BoosterPack pack={PACK} torn={phase === "torn"} shaking={phase === "shaking"} floating={phase === "sealed"} slit={phase === "shaking" ? 1 : 0} glow={GLOW[best]} />
           </button>
         ) : cards && (
@@ -86,7 +86,7 @@ export default function OpenDemo() {
               return (
                 <div key={c.id} className={`od-card ${up ? "is-up" : ""} ${isBest ? "is-best" : ""}`}
                   style={{ "--glow": GLOW[c.rarity], animationDelay: `${k * 70}ms` } as React.CSSProperties}
-                  aria-label={up ? `${trader(c.trader).name}, ${rarity(c.rarity).name}` : "Carte cachée"}>
+                  aria-label={up ? `${trader(c.trader).name}, ${rarity(c.rarity).name}` : "Hidden card"}>
                   <span className="od-flip">
                     <span className="od-face"><Back /></span>
                     <span className="od-face od-front"><CollectCard card={c} /></span>
@@ -98,7 +98,7 @@ export default function OpenDemo() {
           </div>
         )}
         <p className="od-hint">
-          {phase === "sealed" ? "Clique, ou regarde" : phase === "reveal" && !done ? `${shown} / ${cards?.length}` : done ? summary(cards!) : " "}
+          {phase === "sealed" ? "Click, or just watch" : phase === "reveal" && !done ? `${shown} / ${cards?.length}` : done ? summary(cards!) : " "}
         </p>
       </div>
 
@@ -106,17 +106,17 @@ export default function OpenDemo() {
         <div className="min-w-0">
           <h3 className="font-display text-[30px] leading-none font-extrabold tracking-[-.035em]">Booster {PACK.name}</h3>
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="plate"><b className="num">{PACK.cards}</b> cartes</span>
-            {PACK.guarantee && <span className="plate"><RarityTag id={PACK.guarantee} size="sm" /> garantie</span>}
-            {PACK.boost && <span className="plate">OG et Mythic <b>×{PACK.boost}</b></span>}
+            <span className="plate"><b className="num">{PACK.cards}</b> cards</span>
+            {PACK.guarantee && <span className="plate"><RarityTag id={PACK.guarantee} size="sm" /> guaranteed</span>}
+            {PACK.boost && <span className="plate">OG and Mythic <b>×{PACK.boost}</b></span>}
           </div>
           <p className="mt-4 max-w-[620px] text-[16px] leading-snug font-semibold text-muted">
-            Chaque booster se coupe le long de sa ligne. Les cartes sont tirées par le serveur, numérotées dans un stock fixe : une Mythic, c&apos;est une seule carte au monde.
+            Every booster tears open along its line. The cards are drawn by the server and numbered within a fixed supply: a Mythic is a single card in the world.
           </p>
         </div>
         <div className="od-actions">
-          <Link href={`/booster/${PACK.id}`} className="btn-gold btn-lg">Ouvrir pour {fmtSol(PACK.price)} <Icon name="arrow" size={18} /></Link>
-          <button type="button" className="btn-ghost btn-lg" onClick={again} disabled={phase !== "reveal" && phase !== "sealed"}>Rejouer</button>
+          <Link href={`/booster/${PACK.id}`} className="btn-gold btn-lg">Open for {fmtSol(PACK.price)} <Icon name="arrow" size={18} /></Link>
+          <button type="button" className="btn-ghost btn-lg" onClick={again} disabled={phase !== "reveal" && phase !== "sealed"}>Play again</button>
         </div>
       </div>
     </div>
@@ -128,6 +128,6 @@ function summary(cards: Card[]) {
   const parts = [...RARITIES].reverse()
     .map((r) => [r, cards.filter((c) => c.rarity === r.id).length] as const)
     .filter(([, n]) => n)
-    .map(([r, n]) => `${n} ${r.name}${n > 1 && r.id !== "og" ? "s" : ""}`);
-  return [`${cards.length} cartes`, ...parts].join(" · ");
+    .map(([r, n]) => `${n} ${r.name}`);
+  return [`${cards.length} cards`, ...parts].join(" · ");
 }

@@ -19,7 +19,7 @@ export default function Quest() {
     <div className="grid gap-5 lg:grid-cols-[1fr_1.15fr]">
       <div className="surface p-5 sm:p-6">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="font-display text-[26px] font-extrabold tracking-[-.03em]">L&apos;album</h3>
+          <h3 className="font-display text-[26px] font-extrabold tracking-[-.03em]">The album</h3>
           <span className="num font-display text-[20px] font-extrabold">{p.families.reduce((a, f) => a + f.have.size, 0)}<span className="text-dim">/{p.families.reduce((a, f) => a + f.total, 0)}</span></span>
         </div>
         <ul className="mt-4 grid gap-3">
@@ -41,7 +41,7 @@ export default function Quest() {
 
       <div className="surface p-5 sm:p-6">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Les succès</h3>
+          <h3 className="font-display text-[26px] font-extrabold tracking-[-.03em]">Achievements</h3>
           <span className="num font-display text-[20px] font-extrabold">{got}<span className="text-dim">/{BADGES.length}</span></span>
         </div>
         <ul className="mt-4 grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-4">
@@ -58,9 +58,9 @@ export default function Quest() {
         </ul>
         <div className="mt-6">
           {wallet ? (
-            <Link href="/collection" className="btn-ghost w-full">Ma collection</Link>
+            <Link href="/collection" className="btn-ghost w-full">My collection</Link>
           ) : (
-            <button className="btn-ghost w-full" onClick={signIn} disabled={busy}>{busy ? "Signature…" : "Connecter mon wallet"}</button>
+            <button className="btn-ghost w-full" onClick={signIn} disabled={busy}>{busy ? "Signing…" : "Connect my wallet"}</button>
           )}
         </div>
       </div>

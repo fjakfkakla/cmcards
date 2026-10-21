@@ -59,8 +59,8 @@ export default function Collection() {
         {wallet && (
           <div className="w-full sm:w-auto sm:min-w-[420px]">
             <Stats items={[
-              ["Cartes", String(owned.length)],
-              ["En vente", String(listed.size)],
+              ["Cards", String(owned.length)],
+              ["For sale", String(listed.size)],
               ["Album", `${filled}/${SLOTS}`],
             ]} />
           </div>
@@ -68,7 +68,7 @@ export default function Collection() {
       </PageHead>
 
       <div className="mt-8">
-        <Seg value={view} onChange={setView} options={[["cards", "Mes cartes"], ["album", "L'album"], ["quest", "Les succès"]]} />
+        <Seg value={view} onChange={setView} options={[["cards", "My cards"], ["album", "The album"], ["quest", "Achievements"]]} />
       </div>
 
       {loading ? <Skeleton /> : view === "quest" ? (
@@ -77,12 +77,12 @@ export default function Collection() {
         !wallet ? (
           <ConnectCard />
         ) : owned.length === 0 ? (
-          <Empty title="Aucune carte" href="/boosters" cta="Ouvrir un booster" />
+          <Empty title="No cards yet" href="/boosters" cta="Open a booster" />
         ) : (
           <>
             <div className="mt-6 flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <Filter on={!cat} onClick={() => setCat(null)}>Toutes</Filter>
+                <Filter on={!cat} onClick={() => setCat(null)}>All</Filter>
                 {CATS.map((c) => (
                   <Filter key={c.id} on={cat === c.id} onClick={() => setCat(cat === c.id ? null : c.id)}
                     count={owned.filter((o) => trader(o.trader).category === c.id).length}>
@@ -92,7 +92,7 @@ export default function Collection() {
                 ))}
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Filter on={!rar} onClick={() => setRar(null)}>Toutes raretés</Filter>
+                <Filter on={!rar} onClick={() => setRar(null)}>All rarities</Filter>
                 {RARITIES.map((r) => (
                   <Filter key={r.id} on={rar === r.id} onClick={() => setRar(rar === r.id ? null : r.id)}
                     count={owned.filter((o) => o.rarity === r.id).length}>
@@ -100,11 +100,11 @@ export default function Collection() {
                     {r.name}
                   </Filter>
                 ))}
-                <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Trier"
+                <select value={sort} onChange={(e) => setSort(e.target.value as Sort)} aria-label="Sort"
                   className="chip ml-auto h-10 cursor-pointer appearance-none pr-4 font-display font-extrabold outline-none">
-                  <option value="rarity">Plus rares</option>
-                  <option value="recent">Dernières</option>
-                  <option value="serial">Plus petits numéros</option>
+                  <option value="rarity">Rarest</option>
+                  <option value="recent">Newest</option>
+                  <option value="serial">Lowest numbers</option>
                 </select>
               </div>
             </div>
@@ -121,8 +121,8 @@ export default function Collection() {
               </div>
             ) : (
               <div className="mt-12 text-center">
-                <p className="font-display text-[22px] font-extrabold">Rien avec ces filtres</p>
-                <button className="btn-ghost btn-sm mt-4" onClick={() => { setCat(null); setRar(null); }}>Tout afficher</button>
+                <p className="font-display text-[22px] font-extrabold">Nothing matches these filters</p>
+                <button className="btn-ghost btn-sm mt-4" onClick={() => { setCat(null); setRar(null); }}>Show all</button>
               </div>
             )}
           </>
@@ -156,7 +156,7 @@ function Caption({ card, listing }: { card: Owned; listing?: Listing }) {
         <RarityTag id={card.rarity} size="sm" />
       </span>
       <span className="mt-1 flex items-center justify-between gap-2 text-[13.5px]">
-        <span className="num font-semibold text-muted">n° {serialOf(card)}</span>
+        <span className="num font-semibold text-muted">#{serialOf(card)}</span>
         {listing && <span className="num rounded-full border-2 border-fg bg-gold px-2 font-display text-[14px] font-extrabold">{fmtSol(toSol(listing.lamports))}</span>}
       </span>
     </span>
@@ -185,14 +185,14 @@ function Album({ owned, onOpen }: { owned: Owned[]; onOpen: (items: Owned[]) => 
                   <div key={r.id}>
                     {got.length ? (
                       <button type="button" className="col-tile relative" onClick={() => onOpen(got)}
-                        aria-label={`${t.name}, ${r.name}, ${got.length} exemplaire${got.length > 1 ? "s" : ""}`}>
+                        aria-label={`${t.name}, ${r.name}, ${got.length} ${got.length > 1 ? "copies" : "copy"}`}>
                         <CollectCard card={got[0]} />
                         {got.length > 1 && <span className="col-count">×{got.length}</span>}
                       </button>
                     ) : (
-                      <div className="col-slot" aria-label={`${t.name}, ${r.name} : pas encore`}>
+                      <div className="col-slot" aria-label={`${t.name}, ${r.name}: not yet`}>
                         <span className="col-slot-q">?</span>
-                        <span className="col-slot-odds">{r.odds.toLocaleString("fr-FR")} %</span>
+                        <span className="col-slot-odds">{r.odds.toLocaleString("en-US")}%</span>
                       </div>
                     )}
                     <p className="mt-2.5 flex justify-center"><RarityTag id={r.id} size="sm" /></p>
@@ -231,11 +231,11 @@ function Sheet({ items, at, listed, onMove, onClose }: {
   });
 
   const rows: [string, React.ReactNode][] = [
-    ["Numéro", `${serialOf(c)}${r.supply === 1 ? " · exemplaire unique" : ""}`],
-    ["Stock", r.supply === 1 ? "1 au monde" : `${r.supply.toLocaleString("fr-FR")} exemplaires au plus`],
-    ["Chance de tirage", `${r.odds.toLocaleString("fr-FR")} % par carte`],
+    ["Number", `${serialOf(c)}${r.supply === 1 ? " · one of a kind" : ""}`],
+    ["Supply", r.supply === 1 ? "1 in the world" : `${r.supply.toLocaleString("en-US")} copies at most`],
+    ["Pull odds", `${r.odds.toLocaleString("en-US")}% per card`],
     ["Booster", category(c.pack).name],
-    ["Obtenue le", new Date(c.at).toLocaleDateString("fr-FR", { dateStyle: "long" })],
+    ["Obtained on", new Date(c.at).toLocaleDateString("en-US", { dateStyle: "long" })],
   ];
 
   return (
@@ -244,9 +244,9 @@ function Sheet({ items, at, listed, onMove, onClose }: {
         <CollectCard card={c} live key={c.uid} />
         {many && (
           <div className="mt-5 flex items-center justify-center gap-3">
-            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={prev} aria-label="Carte précédente"><Icon name="back" size={18} /></button>
+            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={prev} aria-label="Previous card"><Icon name="back" size={18} /></button>
             <span className="num min-w-[64px] text-center font-display text-[17px] font-extrabold">{at + 1} / {items.length}</span>
-            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={next} aria-label="Carte suivante"><Icon name="arrow" size={18} /></button>
+            <button type="button" className="btn-ghost btn-sm w-12 px-0" onClick={next} aria-label="Next card"><Icon name="arrow" size={18} /></button>
           </div>
         )}
       </div>

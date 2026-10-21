@@ -12,7 +12,7 @@ const NONCE_TTL = 10 * 60 * 1000;
 
 function secret() {
   const s = process.env.SESSION_SECRET || (process.env.VERCEL ? "" : "cmcards-dev-secret");
-  if (!s) throw new Oops(503, "Connexion pas encore configurée (SESSION_SECRET).");
+  if (!s) throw new Oops(503, "Sign-in not configured yet (SESSION_SECRET).");
   return s;
 }
 const mac = (data: string) => createHmac("sha256", secret()).update(data).digest("base64url");
@@ -29,28 +29,28 @@ export function isWallet(w: unknown): w is string {
 export function challenge(wallet: string) {
   const n = `${randomBytes(12).toString("base64url")}.${Date.now()}`;
   return [
-    "cm cards : connexion",
+    "cm cards: sign in",
     "",
-    `Wallet : ${wallet}`,
-    `Nonce : ${n}.${mac(`${wallet}.${n}`)}`,
+    `Wallet: ${wallet}`,
+    `Nonce: ${n}.${mac(`${wallet}.${n}`)}`,
     "",
-    "Signer ce message ne coûte rien et n'autorise aucune transaction.",
+    "Signing this message is free and does not authorize any transaction.",
   ].join("\n");
 }
 
 export function checkSignIn(wallet: string, message: string, signature: string) {
-  const w = /^Wallet : (\S+)$/m.exec(message)?.[1];
-  const n = /^Nonce : ([\w-]+)\.(\d+)\.([\w-]+)$/m.exec(message);
-  if (w !== wallet || !n) throw new Oops(400, "Message de connexion invalide.");
+  const w = /^Wallet: (\S+)$/m.exec(message)?.[1];
+  const n = /^Nonce: ([\w-]+)\.(\d+)\.([\w-]+)$/m.exec(message);
+  if (w !== wallet || !n) throw new Oops(400, "Invalid sign-in message.");
   const [, rand, ts, tag] = n;
-  if (!same(tag, mac(`${wallet}.${rand}.${ts}`))) throw new Oops(400, "Message de connexion invalide.");
-  if (Date.now() - Number(ts) > NONCE_TTL) throw new Oops(400, "Message expiré, recommence.");
+  if (!same(tag, mac(`${wallet}.${rand}.${ts}`))) throw new Oops(400, "Invalid sign-in message.");
+  if (Date.now() - Number(ts) > NONCE_TTL) throw new Oops(400, "Message expired, try again.");
   const key = createPublicKey({
     key: { kty: "OKP", crv: "Ed25519", x: Buffer.from(new PublicKey(wallet).toBytes()).toString("base64url") },
     format: "jwk",
   });
   if (!verify(null, Buffer.from(message, "utf8"), key, Buffer.from(signature, "base64")))
-    throw new Oops(401, "Signature refusée.");
+    throw new Oops(401, "Signature rejected.");
 }
 
 export async function openSession(wallet: string) {
@@ -74,6 +74,6 @@ export async function sessionWallet(): Promise<string | null> {
 
 export async function needWallet() {
   const w = await sessionWallet();
-  if (!w) throw new Oops(401, "Connecte ton wallet.");
+  if (!w) throw new Oops(401, "Connect your wallet.");
   return w;
 }

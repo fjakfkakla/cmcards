@@ -50,17 +50,17 @@ export type Badge = {
 };
 
 export const BADGES: Badge[] = [
-  { id: "first", name: "Première carte", glyph: "cards", rar: "common", need: 1, of: (p) => p.cards },
-  { id: "buy", name: "Premier achat", glyph: "swap", rar: "common", need: 1, of: (p) => p.bought },
-  { id: "ten", name: "Dix cartes", glyph: "cards", rar: "rare", need: 10, of: (p) => p.cards },
-  { id: "rare", name: "Une Rare", glyph: "card", rar: "rare", need: 1, of: (p) => p.atLeast("rare") },
-  { id: "sell", name: "Première vente", glyph: "tag", rar: "rare", need: 1, of: (p) => p.sold },
-  { id: "shiny", name: "Une Shiny", glyph: "card", rar: "shiny", need: 1, of: (p) => p.atLeast("shiny") },
-  { id: "families", name: "Toutes les familles", glyph: "nova", rar: "shiny", need: FAMILIES.length, of: (p) => p.touched },
-  { id: "fifty", name: "Cinquante cartes", glyph: "cards", rar: "shiny", need: 50, of: (p) => p.cards },
-  { id: "og", name: "Un OG", glyph: "card", rar: "og", need: 1, of: (p) => p.atLeast("og") },
-  { id: "family", name: "Une famille complète", glyph: "crown", rar: "og", need: 1, of: (p) => p.complete },
-  { id: "mythic", name: "La Mythic", glyph: "card", rar: "mythic", need: 1, of: (p) => p.atLeast("mythic") },
+  { id: "first", name: "First card", glyph: "cards", rar: "common", need: 1, of: (p) => p.cards },
+  { id: "buy", name: "First purchase", glyph: "swap", rar: "common", need: 1, of: (p) => p.bought },
+  { id: "ten", name: "Ten cards", glyph: "cards", rar: "rare", need: 10, of: (p) => p.cards },
+  { id: "rare", name: "A Rare", glyph: "card", rar: "rare", need: 1, of: (p) => p.atLeast("rare") },
+  { id: "sell", name: "First sale", glyph: "tag", rar: "rare", need: 1, of: (p) => p.sold },
+  { id: "shiny", name: "A Shiny", glyph: "card", rar: "shiny", need: 1, of: (p) => p.atLeast("shiny") },
+  { id: "families", name: "Every family", glyph: "nova", rar: "shiny", need: FAMILIES.length, of: (p) => p.touched },
+  { id: "fifty", name: "Fifty cards", glyph: "cards", rar: "shiny", need: 50, of: (p) => p.cards },
+  { id: "og", name: "An OG", glyph: "card", rar: "og", need: 1, of: (p) => p.atLeast("og") },
+  { id: "family", name: "A full family", glyph: "crown", rar: "og", need: 1, of: (p) => p.complete },
+  { id: "mythic", name: "The Mythic", glyph: "card", rar: "mythic", need: 1, of: (p) => p.atLeast("mythic") },
 ];
 
 export const earned = (b: Badge, p: Progress) => b.of(p) >= b.need;

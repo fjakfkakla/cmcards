@@ -62,7 +62,7 @@ export default function Opening({ pack }: { pack: Pack }) {
       setPhase("sealed");
       refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Le tirage a échoué.");
+      setError(e instanceof Error ? e.message : "The draw failed.");
     } finally { setStep("idle"); }
   }, [pack.id, refresh]);
 
@@ -84,7 +84,7 @@ export default function Opening({ pack }: { pack: Pack }) {
       sig = await pay([{ to: cfg.treasury, lamports: price }], MEMO.pack(pack.id));
     } catch (e) {
       setStep("idle");
-      setError(e instanceof Error ? e.message : "Paiement annulé.");
+      setError(e instanceof Error ? e.message : "Payment cancelled.");
       return;
     }
     try { localStorage.setItem(PENDING, JSON.stringify({ sig, pack: pack.id, wallet })); } catch {}
@@ -147,15 +147,15 @@ export default function Opening({ pack }: { pack: Pack }) {
           <div className="surface p-6 sm:p-7">
             <h1 className="font-display text-[40px] leading-none font-extrabold tracking-[-.04em]">Booster {pack.name}</h1>
             <div className="mt-4 flex flex-wrap gap-2">
-              <span className="plate"><b className="num">{pack.cards}</b> cartes</span>
-              {pack.guarantee && <span className="plate"><RarityTag id={pack.guarantee} size="sm" /> garantie</span>}
+              <span className="plate"><b className="num">{pack.cards}</b> cards</span>
+              {pack.guarantee && <span className="plate"><RarityTag id={pack.guarantee} size="sm" /> guaranteed</span>}
             </div>
             <ul className="mt-5 grid gap-1.5">
               {oddsOf(pack).map(({ r, pct }) => (
                 <li key={r.id} className="flex items-center gap-3">
                   <Medal rar={r.id} size={40} />
                   <span className="flex-1 font-display text-[16px] font-extrabold">{r.name}</span>
-                  <span className="num text-[15px] font-bold">{pct.toLocaleString("fr-FR", { maximumFractionDigits: pct < 1 ? 2 : 1 })} %</span>
+                  <span className="num text-[15px] font-bold">{pct.toLocaleString("en-US", { maximumFractionDigits: pct < 1 ? 2 : 1 })}%</span>
                 </li>
               ))}
             </ul>
@@ -164,25 +164,25 @@ export default function Opening({ pack }: { pack: Pack }) {
               {!ready ? (
                 <span className="btn-ghost btn-lg w-full animate-pulse">…</span>
               ) : !cfg.treasury ? (
-                <span className="btn-ghost btn-lg w-full cursor-not-allowed">Les paiements ouvrent bientôt</span>
+                <span className="btn-ghost btn-lg w-full cursor-not-allowed">Payments open soon</span>
               ) : !wallet ? (
                 <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
-                  <Icon name="wallet" size={19} /> {busy ? "Signature…" : "Connecter mon wallet"}
+                  <Icon name="wallet" size={19} /> {busy ? "Signing…" : "Connect my wallet"}
                 </button>
               ) : pending ? (
                 <button className="btn-gold btn-lg w-full" onClick={() => claim(pending)} disabled={step !== "idle"}>
-                  {step === "draw" ? "Tirage en cours…" : "Récupérer mes cartes"}
+                  {step === "draw" ? "Drawing…" : "Claim my cards"}
                 </button>
               ) : (
                 <button className="btn-gold btn-lg w-full" onClick={buy} disabled={step !== "idle" || short}>
-                  {step === "sign" ? "Valide dans ton wallet…" : step === "draw" ? "Tirage en cours…" : `Payer ${fmtSol(pack.price)}`}
+                  {step === "sign" ? "Confirm in your wallet…" : step === "draw" ? "Drawing…" : `Pay ${fmtSol(pack.price)}`}
                 </button>
               )}
-              {short && !pending && <p className="mt-3 text-center text-[14.5px] font-bold text-down">Solde insuffisant</p>}
+              {short && !pending && <p className="mt-3 text-center text-[14.5px] font-bold text-down">Insufficient balance</p>}
               {error && <p className="mt-3 text-center text-[14.5px] font-bold text-down">{error}</p>}
               {pending && (
                 <a href={explorer(pending, cfg.cluster)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-semibold text-muted hover:text-fg">
-                  Voir le paiement <Icon name="out" size={14} />
+                  View payment <Icon name="out" size={14} />
                 </a>
               )}
             </div>
@@ -197,7 +197,7 @@ export default function Opening({ pack }: { pack: Pack }) {
             onPointerCancel={() => { drag.current = null; setSlit(0); }}>
             <BoosterPack pack={pack} torn={phase === "torn"} shaking={shaking} floating={phase === "sealed" && !shaking} slit={slit} glow={GLOW[best]} />
           </div>
-          <p className="op-hint" style={{ visibility: phase === "sealed" ? "visible" : "hidden" }}>Glisse le long de la ligne</p>
+          <p className="op-hint" style={{ visibility: phase === "sealed" ? "visible" : "hidden" }}>Swipe along the line</p>
         </div>
       )}
 
@@ -212,7 +212,7 @@ export default function Opening({ pack }: { pack: Pack }) {
               return (
                 <button key={c.uid} type="button" className={`op-card ${up_ ? "is-up" : ""} ${isBest ? "is-best" : ""}`}
                   style={{ "--glow": GLOW[c.rarity], animationDelay: `${k * 70}ms` } as React.CSSProperties}
-                  onClick={() => up_ && setZoom(c)} disabled={!up_} aria-label={up_ ? `${trader(c.trader).name}, ${rarity(c.rarity).name}` : "Carte cachée"}>
+                  onClick={() => up_ && setZoom(c)} disabled={!up_} aria-label={up_ ? `${trader(c.trader).name}, ${rarity(c.rarity).name}` : "Hidden card"}>
                   <span className="op-flip">
                     <span className="op-face"><Back /></span>
                     <span className="op-face op-front"><CollectCard card={c} /></span>
@@ -226,14 +226,14 @@ export default function Opening({ pack }: { pack: Pack }) {
           {!done ? (
             <div className="mt-10 flex items-center gap-4">
               <span className="num font-display text-[22px] font-extrabold">{shown} / {cards.length}</span>
-              <button className="btn-ghost btn-sm" onClick={() => setShown(cards.length)}>Passer</button>
+              <button className="btn-ghost btn-sm" onClick={() => setShown(cards.length)}>Skip</button>
             </div>
           ) : (
             <div className="op-done">
               <p className="font-display text-[clamp(1.4rem,3vw,1.9rem)] leading-tight font-extrabold tracking-[-.03em]">{summary(cards)}</p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <button className="btn-gold btn-lg" onClick={again}>Encore un {pack.name}</button>
-                <Link className="btn-ghost btn-lg" href="/collection">Ma collection</Link>
+                <button className="btn-gold btn-lg" onClick={again}>Another {pack.name}</button>
+                <Link className="btn-ghost btn-lg" href="/collection">My collection</Link>
               </div>
             </div>
           )}
@@ -247,8 +247,8 @@ export default function Opening({ pack }: { pack: Pack }) {
           </div>
           <div className="mt-6 flex flex-col items-center gap-2 text-center">
             <span className="font-display text-[32px] leading-none font-extrabold tracking-[-.03em] text-white [paint-order:stroke_fill] [-webkit-text-stroke:6px_#1e1a16]">{trader(zoom.trader).name}</span>
-            <span className="flex items-center gap-2"><RarityTag id={zoom.rarity} /><span className="num rounded-full border-2 border-fg bg-white px-3 py-0.5 text-[14px] font-bold">n° {serialOf(zoom)}</span></span>
-            <button className="btn-ghost btn-sm mt-3" onClick={() => setZoom(null)}>Retour au tirage</button>
+            <span className="flex items-center gap-2"><RarityTag id={zoom.rarity} /><span className="num rounded-full border-2 border-fg bg-white px-3 py-0.5 text-[14px] font-bold">#{serialOf(zoom)}</span></span>
+            <button className="btn-ghost btn-sm mt-3" onClick={() => setZoom(null)}>Back to the draw</button>
           </div>
         </div>
       )}
@@ -261,8 +261,8 @@ function summary(cards: Owned[]) {
   const parts = [...RARITIES].reverse()
     .map((r) => [r, cards.filter((c) => c.rarity === r.id).length] as const)
     .filter(([, n]) => n)
-    .map(([r, n]) => `${n} ${r.name}${n > 1 && r.id !== "og" ? "s" : ""}`);
-  return [`${cards.length} cartes`, ...parts].join(" · ");
+    .map(([r, n]) => `${n} ${r.name}`);
+  return [`${cards.length} cards`, ...parts].join(" · ");
 }
 
 /* Le dos d'une carte : le jaune éponge, ses rayons, la tuile du logo au centre. */

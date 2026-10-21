@@ -14,7 +14,7 @@ export type Rarity = {
 };
 
 export const RARITIES: Rarity[] = [
-  { id: "common", name: "Commun", odds: 65, supply: 5000 },
+  { id: "common", name: "Common", odds: 65, supply: 5000 },
   { id: "rare", name: "Rare", odds: 24, supply: 2000 },
   { id: "shiny", name: "Shiny", odds: 9, supply: 500 },
   { id: "og", name: "OG", odds: 1.8, supply: 50 },
@@ -32,17 +32,17 @@ export type Category = {
   glyph: string; // dessiné sur une grille de 24
 };
 export const CATEGORIES: Category[] = [
-  { id: "trencher", name: "Trencher", tagline: "La base", bg: "#ff9a1f", ink: "#ffbb63",
+  { id: "trencher", name: "Trencher", tagline: "The base", bg: "#ff9a1f", ink: "#ffbb63",
     glyph: "M15.5 2 22 8.5l-1.4 1.4-1.6-1.6-4.3 4.3 1.1 1.1-3 3a3 3 0 0 1-4.2 0l-.3-.3-4.9 4.9L2 19.9 6.9 15l-.3-.3a3 3 0 0 1 0-4.2l3-3 1.1 1.1 4.3-4.3-1.6-1.6z" },
-  { id: "holder", name: "Holder", tagline: "Mains de diamant", bg: "#2fa8ff", ink: "#74c6ff",
+  { id: "holder", name: "Holder", tagline: "Diamond hands", bg: "#2fa8ff", ink: "#74c6ff",
     glyph: "M6 3h12l4 6-10 12L2 9z" },
-  { id: "dev", name: "Dev", tagline: "Les bons", bg: "#3dcb6c", ink: "#6fdd92",
+  { id: "dev", name: "Dev", tagline: "The good ones", bg: "#3dcb6c", ink: "#6fdd92",
     glyph: "M8.6 6.4 3 12l5.6 5.6 1.4-1.4L5.8 12 10 7.8zm6.8 0L14 7.8l4.2 4.2-4.2 4.2 1.4 1.4L21 12z" },
-  { id: "bundler", name: "Bundler", tagline: "Toxique", bg: "#a77bff", ink: "#c3a4ff",
+  { id: "bundler", name: "Bundler", tagline: "Toxic", bg: "#a77bff", ink: "#c3a4ff",
     glyph: "M12 2a8 8 0 0 0-8 8c0 2.8 1.4 4.6 3 5.6V19a1 1 0 0 0 1 1h1v2h2v-2h2v2h2v-2h1a1 1 0 0 0 1-1v-3.4c1.6-1 3-2.8 3-5.6a8 8 0 0 0-8-8zM8.5 9a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm7 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM12 13.5l1.3 2.5h-2.6z" },
-  { id: "famous", name: "Famous", tagline: "Tout le monde les connaît", bg: "#ff5fb4", ink: "#ff8fcb",
+  { id: "famous", name: "Famous", tagline: "Everyone knows them", bg: "#ff5fb4", ink: "#ff8fcb",
     glyph: "M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.5L12 16.8 6.1 20l1.3-6.5L2.5 8.9l6.6-.8z" },
-  { id: "legend", name: "Legend", tagline: "Les plus recherchés", bg: "#ffc21a", ink: "#ffdc6b",
+  { id: "legend", name: "Legend", tagline: "The most wanted", bg: "#ffc21a", ink: "#ffdc6b",
     glyph: "M2 7l5 4 5-7 5 7 5-4-2 12H4zm2.4 13h15.2v2H4.4z" },
 ];
 export const category = (id: CategoryId) => CATEGORIES.find((c) => c.id === id)!;
@@ -498,4 +498,4 @@ export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"):
 }
 
 export const fmtSol = (sol: number) =>
-  `${sol.toLocaleString("fr-FR", { maximumFractionDigits: sol < 1 ? 3 : 2 })} SOL`;
+  `${sol.toLocaleString("en-US", { maximumFractionDigits: sol < 1 ? 3 : 2 })} SOL`;

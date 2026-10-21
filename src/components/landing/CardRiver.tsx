@@ -17,7 +17,7 @@ export default function CardRiver() {
         <div key={i} className={`rv-row ${i % 2 ? "rtl" : ""}`} style={{ "--n": row.length } as React.CSSProperties}>
           {[0, 1].map((copy) =>
             row.map(([t, r], k) => (
-              <Link key={`${copy}-${t}-${r}`} href={`/cartes/${t}`} className="rv-card" aria-hidden={copy === 1 || undefined} tabIndex={copy === 1 ? -1 : undefined}
+              <Link key={`${copy}-${t}-${r}`} href={`/cards/${t}`} className="rv-card" aria-hidden={copy === 1 || undefined} tabIndex={copy === 1 ? -1 : undefined}
                 aria-label={copy === 0 ? trader(t).name : undefined}>
                 <CollectCard card={{ id: `rv-${i}-${copy}-${k}`, trader: t, rarity: r, serial: r === "mythic" ? 1 : 3 + k * 7 }} />
               </Link>

@@ -23,8 +23,8 @@ const uid = () => randomBytes(9).toString("base64url");
 type Paid = { wallet: string; kind: "pack" | "buy"; uids?: string[]; done?: boolean };
 
 function ready() {
-  if (!TREASURY) throw new Oops(503, "Les paiements ne sont pas encore ouverts (wallet de cm cards non configuré).");
-  if (!kvReady()) throw new Oops(503, "Les paiements ne sont pas encore ouverts (stockage non configuré).");
+  if (!TREASURY) throw new Oops(503, "Payments are not open yet (cm cards wallet not configured).");
+  if (!kvReady()) throw new Oops(503, "Payments are not open yet (storage not configured).");
 }
 
 /* ——— lire ——— */
@@ -67,27 +67,27 @@ async function mint(pool: string[], r0: RarityId, floor: RarityId): Promise<{ tr
       if (serial <= r.supply) return { trader: t, rarity: r.id, serial };
     }
   }
-  throw new Oops(410, "Ce booster est épuisé.");
+  throw new Oops(410, "This booster is sold out.");
 }
 
 export async function openPack(wallet: string, packId: string, sig: string): Promise<Owned[]> {
   ready();
   const p = PACKS.find((x) => x.id === packId);
   const pool = p ? packTraders(p).map((t) => t.id) : [];
-  if (!p || !pool.length) throw new Oops(404, "Ce booster n'existe pas.");
+  if (!p || !pool.length) throw new Oops(404, "This booster does not exist.");
 
   const again = await already(sig, wallet, "pack");
   if (again) return again;
 
   const pay = await readPayment(sig);
-  if (pay.signer !== wallet) throw new Oops(403, "Ce paiement n'est pas signé par ton wallet.");
-  if (!pay.memos.includes(MEMO.pack(p.id))) throw new Oops(400, "Ce paiement n'est pas celui de ce booster.");
-  if (paid(pay, wallet, TREASURY) < toLamports(p.price)) throw new Oops(402, "Le montant payé ne couvre pas le booster.");
+  if (pay.signer !== wallet) throw new Oops(403, "This payment is not signed by your wallet.");
+  if (!pay.memos.includes(MEMO.pack(p.id))) throw new Oops(400, "This payment is not for this booster.");
+  if (paid(pay, wallet, TREASURY) < toLamports(p.price)) throw new Oops(402, "The amount paid does not cover the booster.");
 
   if (!(await claim(sig, { wallet, kind: "pack" }))) {
     const done = await already(sig, wallet, "pack");
     if (done) return done;
-    throw new Oops(409, "Ce paiement est déjà en cours de traitement.");
+    throw new Oops(409, "This payment is already being processed.");
   }
 
   const at = Date.now();
@@ -111,8 +111,8 @@ export async function openPack(wallet: string, packId: string, sig: string): Pro
 async function already(sig: string, wallet: string, kind: Paid["kind"]): Promise<Owned[] | null> {
   const p = await getJson<Paid>(`pay:${sig}`);
   if (!p) return null;
-  if (p.wallet !== wallet || p.kind !== kind) throw new Oops(409, "Ce paiement a déjà servi.");
-  if (!p.done) throw new Oops(409, "Ce paiement est déjà en cours de traitement.");
+  if (p.wallet !== wallet || p.kind !== kind) throw new Oops(409, "This payment has already been used.");
+  if (!p.done) throw new Oops(409, "This payment is already being processed.");
   const cards = await getMany<Owned>((p.uids ?? []).map((u) => `card:${u}`));
   return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
 }
@@ -123,7 +123,7 @@ const claim = async (sig: string, p: Paid) => (await run(["SET", `pay:${sig}`, J
 
 async function ownCard(wallet: string, u: string) {
   const c = typeof u === "string" ? await getJson<Owned>(`card:${u}`) : null;
-  if (!c || c.owner !== wallet) throw new Oops(404, "Cette carte n'est pas à toi.");
+  if (!c || c.owner !== wallet) throw new Oops(404, "This card is not yours.");
   return c;
 }
 
@@ -131,9 +131,9 @@ export async function list(wallet: string, u: string, sol: number): Promise<List
   if (!kvReady()) ready();
   const c = await ownCard(wallet, u);
   if (!Number.isFinite(sol) || sol < MIN_PRICE || sol > MAX_PRICE)
-    throw new Oops(400, `Prix entre ${MIN_PRICE} et ${MAX_PRICE.toLocaleString("fr-FR")} SOL.`);
+    throw new Oops(400, `Price must be between ${MIN_PRICE} and ${MAX_PRICE.toLocaleString("en-US")} SOL.`);
   const lock = await run<string | null>(["GET", `lock:${c.uid}`]);
-  if (lock) throw new Oops(409, "Un acheteur est en train de payer cette carte.");
+  if (lock) throw new Oops(409, "A buyer is paying for this card right now.");
   const l: Listing = { id: uid(), uid: c.uid, seller: wallet, lamports: toLamports(sol), at: Date.now() };
   await multi([["SET", `listing:${c.uid}`, JSON.stringify(l)], ["SADD", "market", c.uid]]);
   return l;
@@ -142,7 +142,7 @@ export async function list(wallet: string, u: string, sol: number): Promise<List
 export async function unlist(wallet: string, u: string) {
   const c = await ownCard(wallet, u);
   const lock = await run<string | null>(["GET", `lock:${c.uid}`]);
-  if (lock && lock !== wallet) throw new Oops(409, "Un acheteur est en train de payer : réessaie dans deux minutes.");
+  if (lock && lock !== wallet) throw new Oops(409, "A buyer is paying right now: try again in two minutes.");
   await multi([["DEL", `listing:${c.uid}`], ["SREM", "market", c.uid]]);
 }
 
@@ -153,11 +153,11 @@ export async function unlist(wallet: string, u: string) {
 export async function reserve(wallet: string, u: string): Promise<Listing> {
   ready();
   const l = typeof u === "string" ? await getJson<Listing>(`listing:${u}`) : null;
-  if (!l) throw new Oops(404, "Cette carte n'est plus en vente.");
-  if (l.seller === wallet) throw new Oops(400, "C'est ta carte.");
+  if (!l) throw new Oops(404, "This card is no longer for sale.");
+  if (l.seller === wallet) throw new Oops(400, "This is your card.");
   const ok = await run(["SET", `lock:${u}`, wallet, "NX", "EX", LOCK_S]);
   if (ok !== "OK" && (await run<string | null>(["GET", `lock:${u}`])) !== wallet)
-    throw new Oops(409, "Quelqu'un est en train de l'acheter. Réessaie dans deux minutes.");
+    throw new Oops(409, "Someone is buying it right now. Try again in two minutes.");
   return l;
 }
 
@@ -168,24 +168,24 @@ export async function buy(wallet: string, u: string, listingId: string, sig: str
 
   const l = await getJson<Listing>(`listing:${u}`);
   const pay = await readPayment(sig);
-  if (pay.signer !== wallet) throw new Oops(403, "Ce paiement n'est pas signé par ton wallet.");
-  if (!pay.memos.includes(MEMO.buy(listingId))) throw new Oops(400, "Ce paiement n'est pas celui de cette annonce.");
+  if (pay.signer !== wallet) throw new Oops(403, "This payment is not signed by your wallet.");
+  if (!pay.memos.includes(MEMO.buy(listingId))) throw new Oops(400, "This payment is not for this listing.");
 
   if (!(await claim(sig, { wallet, kind: "buy" }))) {
     const done = await already(sig, wallet, "buy");
     if (done?.[0]) return done[0];
-    throw new Oops(409, "Ce paiement est déjà en cours de traitement.");
+    throw new Oops(409, "This payment is already being processed.");
   }
 
   // payé, mais l'annonce a changé ou une autre vente l'a prise : à rembourser
   const refund = async (why: string) => {
     await run(["LPUSH", "refunds", JSON.stringify({ sig, wallet, listing: listingId, uid: u, why, at: Date.now() })]);
-    throw new Oops(409, `${why} Ton paiement sera remboursé.`);
+    throw new Oops(409, `${why} Your payment will be refunded.`);
   };
   if (!l || l.id !== listingId) return refund("Cette annonce n'existe plus.");
-  if (paid(pay, wallet, l.seller) < l.lamports) return refund("Le montant payé au vendeur ne couvre pas le prix.");
-  if (FEE_BPS && paid(pay, wallet, TREASURY) < feeOf(l.lamports)) return refund("Les frais ne sont pas payés.");
-  if ((await run(["SET", `sold:${l.id}`, wallet, "NX"])) !== "OK") return refund("Cette carte vient d'être vendue.");
+  if (paid(pay, wallet, l.seller) < l.lamports) return refund("The amount paid to the seller does not cover the price.");
+  if (FEE_BPS && paid(pay, wallet, TREASURY) < feeOf(l.lamports)) return refund("The fee was not paid.");
+  if ((await run(["SET", `sold:${l.id}`, wallet, "NX"])) !== "OK") return refund("This card was just sold.");
 
   const card = await getJson<Owned>(`card:${u}`);
   if (!card || card.owner !== l.seller) return refund("Cette carte n'est plus au vendeur.");

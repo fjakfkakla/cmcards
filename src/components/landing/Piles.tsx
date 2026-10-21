@@ -33,7 +33,7 @@ export default function Piles() {
         const on = open === c.id;
         return (
           <div key={c.id} className={`pl ${on ? "is-open" : ""}`} style={{ "--c": c.bg, "--n": cards.length } as React.CSSProperties}>
-            <div className="pl-stack" role="button" tabIndex={0} aria-pressed={on} aria-label={`La pile ${c.name}`}
+            <div className="pl-stack" role="button" tabIndex={0} aria-pressed={on} aria-label={`The ${c.name} pile`}
               onClick={() => setOpen(on ? null : c.id)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(on ? null : c.id); } }}>
               <div className="pl-mat" />
@@ -49,7 +49,7 @@ export default function Piles() {
                 <div className="font-display text-[20px] leading-none font-extrabold tracking-[-.02em]">{c.name}</div>
                 <div className="mt-1 text-[14px] font-semibold text-muted">{category(c.id).tagline} · <span className="num">{total}</span> {total > 1 ? "traders" : "trader"}</div>
               </div>
-              <Link href={`/boosters#b-${c.id}`} className="btn-ghost btn-sm ml-auto shrink-0">Le booster</Link>
+              <Link href={`/boosters#b-${c.id}`} className="btn-ghost btn-sm ml-auto shrink-0">The booster</Link>
             </div>
           </div>
         );

@@ -109,7 +109,7 @@ function Bag({ pack }: { pack: Pack }) {
           </g>
         </svg>
       </div>
-      <div className="bp-ribbon"><span>Cartes à collectionner</span></div>
+      <div className="bp-ribbon"><span>Collectible cards</span></div>
 
       {pack.guarantee && (
         <div className="bp-seal">
@@ -118,7 +118,7 @@ function Bag({ pack }: { pack: Pack }) {
             <path d={SEAL} fill="#ffd12e" stroke="#1e1a16" strokeWidth="5" strokeLinejoin="round" />
           </svg>
           <span>{rarity(pack.guarantee).name}</span>
-          <b>garantie</b>
+          <b>guaranteed</b>
         </div>
       )}
 
@@ -144,7 +144,7 @@ function Bag({ pack }: { pack: Pack }) {
           </g>
         </svg>
       </div>
-      <div className="bp-count">{pack.cards} cartes</div>
+      <div className="bp-count">{pack.cards} cards</div>
 
       <div className="bp-pillow" />
       <div className="bp-holo" />

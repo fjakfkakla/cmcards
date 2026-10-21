@@ -10,7 +10,7 @@ export default function TraderSheet({ t, link = false }: { t: Trader; link?: boo
     <section>
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <h2 className="font-display text-[clamp(2.2rem,5vw,3.4rem)] leading-none font-extrabold tracking-[-.045em]">
-          {link ? <Link href={`/cartes/${t.id}`} className="hover:text-tomato-text">{t.name}</Link> : t.name}
+          {link ? <Link href={`/cards/${t.id}`} className="hover:text-tomato-text">{t.name}</Link> : t.name}
         </h2>
         {t.category && <CategoryTag id={t.category} />}
       </div>
@@ -22,8 +22,8 @@ export default function TraderSheet({ t, link = false }: { t: Trader; link?: boo
               <CollectCard card={card} />
               <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
                 <RarityTag id={r.id} size="sm" />
-                <span className="num plate h-6 px-2.5 text-[12.5px]">{r.odds.toLocaleString("fr-FR")} %</span>
-                <span className="num plate h-6 px-2.5 text-[12.5px]">{r.supply === 1 ? "1 ex." : `${r.supply.toLocaleString("fr-FR")} ex.`}</span>
+                <span className="num plate h-6 px-2.5 text-[12.5px]">{r.odds.toLocaleString("en-US")}%</span>
+                <span className="num plate h-6 px-2.5 text-[12.5px]">{r.supply === 1 ? "1 copy" : `${r.supply.toLocaleString("en-US")} copies`}</span>
               </div>
             </div>
           );

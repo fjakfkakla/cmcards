@@ -29,18 +29,18 @@ export default function Home() {
           <div className="hero-rays" />
           <div className="relative z-10 flex flex-col items-center px-4 pt-10 text-center sm:pt-12">
             <h1 className="hero-title">
-              Les traders de memecoins,<br />
-              <span>en cartes.</span>
+              Memecoin traders,<br />
+              <span>as cards.</span>
             </h1>
             <p className="mt-5 max-w-[560px] font-display text-[clamp(1.05rem,2vw,1.3rem)] leading-snug font-extrabold text-white [paint-order:stroke_fill] [-webkit-text-stroke:4px_#1e1a16]">
-              Ouvre des boosters, collectionne {TRADERS.length} traders en cinq raretés, revends tes cartes en SOL.
+              Open booster packs, collect {TRADERS.length} traders across five rarities, sell your cards for SOL.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <Link href="/boosters" className="btn-gold btn-lg">
-                Lancer l&apos;app
+                Launch the app
                 <Icon name="arrow" size={20} />
               </Link>
-              <a href="#cartes" className="btn-ghost sm:btn-lg">Voir les cartes</a>
+              <a href="#cards" className="btn-ghost sm:btn-lg">See the cards</a>
             </div>
           </div>
           <div className="relative z-10 mt-6 px-2 sm:mt-2">
@@ -49,37 +49,37 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="cartes" className="mt-24 scroll-mt-24">
+      <section id="cards" className="mt-24 scroll-mt-24">
         <div className="mx-auto max-w-6xl px-4">
-          <h2 className={H2}>Les <span className="text-tomato-text">cartes.</span></h2>
+          <h2 className={H2}>The <span className="text-tomato-text">cards.</span></h2>
         </div>
         <div className="mt-4"><CardRiver /></div>
       </section>
 
-      <section id="familles" className="mx-auto mt-20 max-w-6xl scroll-mt-24 px-4">
-        <h2 className={H2}>{families === 6 ? "Six" : families} familles, <span className="text-tomato-text">un booster chacune.</span></h2>
+      <section id="families" className="mx-auto mt-20 max-w-6xl scroll-mt-24 px-4">
+        <h2 className={H2}>{families === 6 ? "Six" : families} families, <span className="text-tomato-text">one booster each.</span></h2>
         <div className="mt-10"><Piles /></div>
       </section>
 
-      <section id="ouverture" className="mx-auto mt-24 max-w-6xl scroll-mt-24 px-4">
-        <h2 className={H2}>Ouvrir <span className="text-tomato-text">un booster.</span></h2>
+      <section id="opening" className="mx-auto mt-24 max-w-6xl scroll-mt-24 px-4">
+        <h2 className={H2}>Open <span className="text-tomato-text">a booster.</span></h2>
         <div className="mt-8"><OpenDemo /></div>
       </section>
 
-      <section id="raretes" className="mx-auto mt-24 max-w-6xl scroll-mt-24 px-4">
-        <h2 className={H2}>Cinq raretés, <span className="text-tomato-text">un stock fixe.</span></h2>
+      <section id="rarities" className="mx-auto mt-24 max-w-6xl scroll-mt-24 px-4">
+        <h2 className={H2}>Five rarities, <span className="text-tomato-text">a fixed supply.</span></h2>
         <div className="mt-8"><RarityLadder /></div>
       </section>
 
       <section className="mx-auto mt-24 max-w-6xl px-4">
         <div className="cta">
-          <h2 className={H2}>Prêt à ouvrir <span className="text-tomato-text">le tien ?</span></h2>
+          <h2 className={H2}>Ready to open <span className="text-tomato-text">yours?</span></h2>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link href="/boosters" className="btn-ink btn-lg">
-              Lancer l&apos;app
+              Launch the app
               <Icon name="arrow" size={20} />
             </Link>
-            <Link href="/marche" className="btn-ghost btn-lg">Le marché</Link>
+            <Link href="/market" className="btn-ghost btn-lg">The market</Link>
           </div>
         </div>
       </section>

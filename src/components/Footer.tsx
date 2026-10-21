@@ -3,9 +3,9 @@ import { Logo } from "./Icon";
 
 /* Le pied de page : la marque et sa phrase, en grand ; les écrans ; c'est tout. */
 const COLS: [string, [string, string][]][] = [
-  ["Jouer", [["/boosters", "Boosters"], ["/marche", "Marché"]]],
-  ["Cartes", [["/cartes", "Toutes les cartes"], ["/collection", "Collection"]]],
-  ["Compte", [["/profil", "Profil"]]],
+  ["Play", [["/boosters", "Boosters"], ["/market", "Market"]]],
+  ["Cards", [["/cards", "All cards"], ["/collection", "Collection"]]],
+  ["Account", [["/profile", "Profile"]]],
 ];
 
 export default function Footer() {
@@ -15,7 +15,7 @@ export default function Footer() {
         <div>
           <Logo size={36} />
           <p className="mt-6 font-display text-[clamp(2.2rem,4.6vw,3.6rem)] leading-[1] font-extrabold tracking-[-.045em]">
-            Ouvre. Collectionne.<br /><span className="text-tomato-text">Revends.</span>
+            Open. Collect.<br /><span className="text-tomato-text">Sell.</span>
           </p>
         </div>
         <div className="grid grid-cols-3 gap-6">
