@@ -1,12 +1,11 @@
-/* Une carte n'a jamais de trou à la place du personnage. Les images s'essaient
-   dans l'ordre : la photo du dépôt (public/traders/, absente sur Vercel tant
-   qu'elle n'est pas versionnée), puis son avatar X servi par /api/portrait, et
-   en dernier le portrait dessiné ici, sans réseau, qui ne peut pas échouer. */
+/* Une carte n'a jamais de trou à la place du personnage : son illustration (la
+   bannière X, ou une image de public/traders/, absente sur Vercel), sinon le
+   portrait dessiné ici, sans réseau, qui ne peut pas échouer. */
 
 import type { Trader } from "./data";
 
 export function portraitSources(t: Trader, own?: string): string[] {
-  return [own ?? t.art, `/api/portrait/${t.id}`].filter((s): s is string => !!s);
+  return [own ?? t.art].filter((s): s is string => !!s);
 }
 
 /* Le portrait de secours : l'initiale sur le fond de la catégorie, une trame. */

@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import "./card.css";
+import { auraScene } from "./AuraScene";
 import Pic from "./Pic";
 import { type Card, type RarityId, category, rarity, trader } from "@/lib/data";
 import { portraitSources, portraitUri } from "@/lib/portrait";
@@ -37,10 +38,16 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     el.style.setProperty("--my", `${y * 100}%`);
     el.style.setProperty("--hx", `${20 + x * 60}%`);
     el.style.setProperty("--hy", `${20 + y * 60}%`);
+    el.style.setProperty("--px", `${x - 0.5}`);
+    el.style.setProperty("--py", `${y - 0.5}`);
     el.style.transform = `perspective(900px) rotateY(${(x - 0.5) * 18}deg) rotateX(${(0.5 - y) * 18}deg)`;
   }
   function leave() {
-    if (ref.current) ref.current.style.transform = "";
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = "";
+    el.style.setProperty("--px", "0");
+    el.style.setProperty("--py", "0");
   }
 
   const fallback = portraitUri(t.name, cat?.bg);
@@ -48,9 +55,12 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
     <Pic className="cc-art" srcs={portraitSources(t)} fallback={fallback} alt={t.name} style={{ objectPosition: t.artPos }} draggable={false} />
   );
 
-  /* Chaque rareté a sa mise en scène : le décor, la place du personnage, l'effet. */
+  /* Chaque rareté a sa mise en scène : le décor, la place du personnage, l'effet.
+     Un personnage qui a son set signature a les siennes, une par rareté. */
   let scene: React.ReactNode;
-  switch (r.id) {
+  let over: React.ReactNode;
+  if (t.aura) ({ scene, over } = auraScene(r.id, t, fallback));
+  else switch (r.id) {
     case "rare":
       scene = (
         <>
@@ -115,7 +125,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
   return (
     <div
       ref={ref}
-      className={`cc ${r.id} ${theme} ${live ? "is-live" : ""} ${className}`}
+      className={`cc ${t.aura ? `aura ka-${r.id}` : `${r.id} ${theme}`} ${live ? "is-live" : ""} ${className}`}
       style={{ "--cat": cat?.bg ?? "#8a8079" } as React.CSSProperties}
       onPointerMove={move}
       onPointerLeave={leave}
@@ -137,6 +147,7 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
             </span>
           </div>
         </div>
+        {over}
       </div>
       <div className="cc-glare" />
     </div>
