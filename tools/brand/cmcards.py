@@ -3,8 +3,8 @@
 
 Même recette que le logo web33 (DA-CLAUDE.md §11.6 dans le dépôt memescanner) :
 les lettres sont les contours de Bricolage Grotesque lus dans le fichier du site,
-le symbole est un trait rond d'une seule épaisseur converti en surface, posé blanc
-sur la tuile bleu roi. Changer une graisse, une approche ou une couleur = changer
+le symbole est un trait rond d'une seule épaisseur converti en surface, posé à l'encre
+sur la tuile jaune éponge. Changer une graisse, une approche ou une couleur = changer
 une constante ici et relancer, jamais retoucher un SVG à la main.
 
     pip install fonttools brotli skia-pathops
@@ -14,7 +14,7 @@ une constante ici et relancer, jamais retoucher un SVG à la main.
 Le SYMBOLE : une carte pleine, aux proportions d'une carte à jouer, et une pièce
 dedans (un anneau découpé, son centre plein). C'est le produit en un signe : une
 carte qui contient de vrais coins. Une seule idée, aucun trait de plus.
-Le NOM : « cm » Bricolage 800 à l'encre, « cards » Bricolage 500 bleu, en bas de
+Le NOM : « cm » Bricolage 800 à l'encre, « cards » Bricolage 500 tomate, en bas de
 casse, approches serrées.
 """
 import io
@@ -30,8 +30,11 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 FONT = os.path.join(ROOT, 'public/fonts/bricolage-grotesque-var-latin.woff2')
 OUT = os.path.join(ROOT, 'public/brand')
 
-INK, BLUE, SKY = '#0a0f1e', '#2e63f2', '#a9c1ff'      # encre, bleu clair (« cards »), bleu ciel (sur une planche ou l'encre)
-PLANK = ('#1a3fd0', '#1d4ed8', '#2e63f2')             # la planche bleu roi, 140°
+# La palette de cm cards (src/app/globals.css) : l'encre chaude, la tomate, le jaune
+# éponge. Rien de la palette de web33.
+INK, BLUE, SKY = '#1e1a16', '#ff4b3e', '#ffd12e'      # encre, tomate (« cards »), jaune (« cards » sur l'encre)
+PLANK = ('#ffe45c', '#ffd12e', '#ffbf1a')             # la tuile jaune éponge, 140°
+CREAM = '#fff4dc'
 
 # Les approches, en millièmes d'em.
 TEXT = dict(cm=-30, cards=-20, gap=150)
@@ -96,7 +99,7 @@ def mark():
     p.convertConicsToQuads(); p.simplify()
     return svgb(p)
 
-def tile_inner(d, shape='sq', fx=True, k=.56, bg='url(#p)', col='#fff'):
+def tile_inner(d, shape='sq', fx=True, k=.56, bg='url(#p)', col=INK):
     """La tuile (le relief est à la tuile, jamais au symbole) et le symbole à plat dessus."""
     x0, y0, x1, y1 = bounds(d)
     W, H = x1 - x0, y1 - y0
@@ -140,8 +143,8 @@ def lockup(cm, cards, m, ink, blue, pad=40, inverse=False):
             f'<path fill="{ink}" d="{cm}"/><path fill="{blue}" d="{cards}"/></svg>\n')
 
 def og(cm, cards, m, W=1200, H=630):
-    """L'aperçu d'un lien : la planche plein cadre, le logo inversé au centre."""
-    inner = lockup(cm, cards, m, '#fff', SKY, pad=0, inverse=True)
+    """L'aperçu d'un lien : le papier crème plein cadre, le logo au centre."""
+    inner = lockup(cm, cards, m, INK, BLUE, pad=0)
     vb = [float(v) for v in inner.split('viewBox="', 1)[1].split('"', 1)[0].split()]
     body = inner.split('<title>cm cards</title>', 1)[1].rsplit('</svg>', 1)[0]
     sc = W * .58 / vb[2]
@@ -151,7 +154,7 @@ def og(cm, cards, m, W=1200, H=630):
             f'<stop offset=".46" stop-color="{PLANK[1]}"/><stop offset="1" stop-color="{PLANK[2]}"/></linearGradient>'
             '<radialGradient id="ogr" cx=".16" cy="0" r=".75"><stop offset="0" stop-color="#fff" stop-opacity=".2"/>'
             '<stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>'
-            f'<rect width="{W}" height="{H}" fill="url(#og)"/><rect width="{W}" height="{H}" fill="url(#ogr)"/>'
+            f'<rect width="{W}" height="{H}" fill="{CREAM}"/>'
             f'<g transform="translate({tx:.1f} {ty:.1f}) scale({sc:.5f})">{body}</g></svg>\n')
 
 def main():

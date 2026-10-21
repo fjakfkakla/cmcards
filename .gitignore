@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Les photos des traders : jamais dans le dépôt sans leur accord écrit
+/public/traders/

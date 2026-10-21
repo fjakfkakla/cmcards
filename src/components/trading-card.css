@@ -1,0 +1,190 @@
+/* La carte cm cards : une vraie carte imprimée, pas un panneau d'interface.
+   Ce qui la fait « imprimée » plutôt que « générée » :
+   - une bordure de carton pleine, sans dégradé, avec le grain du papier ;
+   - une trame (des points de demi-teinte) sur l'illustration et le corps ;
+   - une hiérarchie de carte à jouer : nom, symbole, illustration, bandeau,
+     attaques, ligne du bas, mentions ;
+   - le holo seulement sous le doigt, dans un motif (les pores de l'éponge, les
+     étoiles), jamais un arc-en-ciel posé partout. */
+
+.tc {
+  --ink: #2a1a0e;
+  --stock: #fff6d6;
+  --edge: #ffd12e;
+  --edge-2: #f2bd00;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 63 / 88;
+  border-radius: 4.6% / 3.3%;
+  background: var(--edge);
+  container-type: inline-size;
+  transform-style: preserve-3d;
+  transition: transform .2s ease-out, box-shadow .2s ease-out;
+  box-shadow: 0 1.5cqw 0 -.4cqw rgba(0,0,0,.25), 0 6cqw 10cqw -4cqw rgba(60,30,0,.45);
+  user-select: none;
+}
+/* le grain du carton de la bordure, et ses pores */
+.tc::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background:
+    radial-gradient(circle at 7% 12%, var(--edge-2) 0 1.1cqw, transparent 1.3cqw),
+    radial-gradient(circle at 94% 30%, var(--edge-2) 0 1.5cqw, transparent 1.7cqw),
+    radial-gradient(circle at 5% 64%, var(--edge-2) 0 .9cqw, transparent 1.1cqw),
+    radial-gradient(circle at 96% 78%, var(--edge-2) 0 1cqw, transparent 1.2cqw),
+    radial-gradient(circle at 60% 98.6%, var(--edge-2) 0 .9cqw, transparent 1.1cqw),
+    radial-gradient(circle at 30% 1.2%, var(--edge-2) 0 .8cqw, transparent 1cqw),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .25  0 0 0 0 0  0 0 0 .14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.tc-body {
+  position: absolute; inset: 4.4%;
+  border-radius: 2.4cqw;
+  background:
+    radial-gradient(circle, rgba(170,110,0,.09) .3cqw, transparent .4cqw) 0 0 / 1.6cqw 1.6cqw,
+    var(--stock);
+  border: .5cqw solid rgba(42,26,14,.55);
+  display: flex; flex-direction: column;
+  padding: 2cqw 3cqw 1.8cqw;
+  gap: 1.3cqw;
+  overflow: hidden;
+}
+
+/* l'en-tête : la saison, le nom, le coin qu'elle contient (à la place du type) */
+.tc-head { display: flex; align-items: flex-end; gap: 2cqw; }
+.tc-stage {
+  font: 900 2.6cqw/1 var(--font-nunito); letter-spacing: .04em; text-transform: uppercase;
+  color: var(--stock); background: var(--ink); padding: .9cqw 1.6cqw; border-radius: 1cqw;
+  align-self: center;
+}
+.tc-name {
+  font-family: var(--font-chewy); font-size: 9.6cqw; line-height: .9; color: var(--ink);
+  letter-spacing: .01em; margin-right: auto;
+}
+.tc-val { font: 900 2.6cqw/1 var(--font-nunito); color: var(--ink); text-align: right; }
+.tc-val b { display: block; font: 400 6.4cqw/1 var(--font-chewy); }
+.tc-coin {
+  width: 8.4cqw; height: 8.4cqw; border-radius: 50%; flex: none;
+  display: grid; place-items: center;
+  background: var(--coin, #ff9a1f);
+  border: .7cqw solid var(--ink);
+  font: 900 3.8cqw/1 var(--font-nunito); color: var(--ink);
+  box-shadow: inset -.8cqw -.9cqw 0 rgba(0,0,0,.18), inset .6cqw .6cqw 0 rgba(255,255,255,.45);
+}
+.tc-coin.sm { width: 5.4cqw; height: 5.4cqw; border-width: .5cqw; font-size: 1.7cqw; }
+
+/* l'illustration : un cadre doré à deux filets, la trame par-dessus */
+.tc-art {
+  position: relative; height: 39%; flex: none;
+  border: 1.3cqw solid #e0a800;
+  outline: .5cqw solid var(--ink);
+  box-shadow: inset 0 0 0 .6cqw #fff3b8;
+  overflow: hidden;
+  background: #8fd3ff;
+}
+.tc-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tc-art::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(40,20,0,.22) .3cqw, transparent .42cqw) 0 0 / 1.3cqw 1.3cqw;
+  mix-blend-mode: multiply;
+}
+.tc-bubble {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 1;
+  border: .45cqw solid rgba(255,255,255,.95);
+  background: radial-gradient(circle at 30% 28%, #fff 0 16%, rgba(255,255,255,.08) 19%);
+  animation: tc-up linear infinite;
+}
+@keyframes tc-up {
+  0% { transform: translate(0, 0); opacity: 0; }
+  12% { opacity: 1; }
+  50% { transform: translate(1.5cqw, -40cqw); }
+  100% { transform: translate(-1cqw, -80cqw); opacity: 0; }
+}
+
+/* le bandeau sous l'illustration */
+.tc-strip {
+  margin: -.4cqw 3cqw 0; text-align: center;
+  font: italic 800 2.5cqw/1.25 var(--font-nunito); color: var(--ink);
+  background: linear-gradient(#ffe58a, #ffd12e); border: .4cqw solid #c79500;
+  padding: .6cqw 1.6cqw; border-radius: .8cqw;
+}
+
+/* les attaques */
+.tc-moves { display: flex; flex-direction: column; gap: 1cqw; padding: .2cqw 0; flex: 1; min-height: 0; }
+.tc-move { display: grid; grid-template-columns: 13cqw 1fr auto; align-items: center; column-gap: 2cqw; }
+.tc-cost { display: flex; gap: .6cqw; }
+.tc-move h4 { font: 900 4.2cqw/1 var(--font-nunito); color: var(--ink); margin: 0; }
+.tc-dmg { font: 400 6cqw/1 var(--font-chewy); color: var(--ink); }
+.tc-move p { grid-column: 1 / -1; margin: .5cqw 0 0; font: 700 2.4cqw/1.3 var(--font-nunito); color: #4b3420; }
+.tc-rule { height: .35cqw; background: rgba(42,26,14,.35); border-radius: 1cqw; }
+
+/* ce que la carte contient : la vraie valeur */
+.tc-vault {
+  display: flex; align-items: center; gap: 2cqw;
+  background: var(--ink); color: var(--stock);
+  border-radius: 1.6cqw; padding: 1cqw 2cqw;
+}
+.tc-vault span { font: 800 2.3cqw/1.1 var(--font-nunito); opacity: .8; text-transform: uppercase; letter-spacing: .06em; }
+.tc-vault b { font: 900 3.8cqw/1 var(--font-nunito); display: block; }
+.tc-vault .usd { margin-left: auto; font: 400 5.4cqw/1 var(--font-chewy); color: #ffd12e; }
+
+/* la ligne du bas : faiblesse, résistance, retraite */
+.tc-stats { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; }
+.tc-stats div { font: 800 2.2cqw/1.2 var(--font-nunito); color: #6b4c2c; }
+.tc-stats b { display: block; font: 900 2.8cqw/1.2 var(--font-nunito); color: var(--ink); }
+
+/* les mentions */
+.tc-flavor {
+  font: italic 700 2.3cqw/1.3 var(--font-nunito); color: #5a3d20;
+  border: .35cqw solid rgba(199,149,0,.7); border-radius: 1cqw; padding: .7cqw 1.6cqw;
+  background: rgba(255,231,140,.35);
+}
+.tc-foot { display: flex; justify-content: space-between; align-items: center; font: 800 2.1cqw/1 var(--font-nunito); color: #6b4c2c; }
+.tc-foot .rar { color: var(--ink); font-weight: 900; }
+
+/* le holo : seulement sous le doigt, dans le motif des pores et des étoiles */
+.tc-holo {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  transition: opacity .25s;
+  background:
+    radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(255,255,255,.75), transparent 34%),
+    linear-gradient(110deg, #ff7ac8 0%, #ffe066 22%, #7dffb0 40%, #69c8ff 58%, #c38bff 76%, #ff7ac8 100%) var(--hx, 50%) var(--hy, 50%) / 300% 300%;
+  -webkit-mask:
+    radial-gradient(circle at 30% 30%, #000 0 22%, transparent 25%) 0 0 / 3.6cqw 3.6cqw,
+    radial-gradient(circle at var(--mx, 50%) var(--my, 40%), #000, transparent 55%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  mix-blend-mode: color-dodge;
+  z-index: 3;
+}
+.tc:hover .tc-holo, .tc.is-live .tc-holo { opacity: .65; }
+.tc-glare {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 4;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(255,255,255,.35), transparent 45%);
+  mix-blend-mode: soft-light; opacity: 0; transition: opacity .25s;
+}
+.tc:hover .tc-glare, .tc.is-live .tc-glare { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tc-bubble { animation: none; opacity: .8; }
+}
+
+/* Pleine illustration (Légendaire, Exclusive) : l'image couvre toute la carte, le
+   texte se pose dessus. Les attaques ont leur cartouche de carton, imprimé, opaque. */
+.tc.full .tc-body { background: #6cc4ff; border-color: rgba(42,26,14,.8); }
+.tc.full .tc-art {
+  position: absolute; inset: 0; height: auto; border: 0; outline: 0; box-shadow: none; z-index: 0;
+}
+.tc.full .tc-body > :not(.tc-art) { position: relative; z-index: 1; }
+.tc.full .tc-spacer { flex: 1; }
+.tc.full .tc-name {
+  color: #ffd12e; -webkit-text-stroke: 1.5cqw var(--ink); paint-order: stroke fill; font-size: 11cqw;
+}
+.tc.full .tc-val { color: #fff; -webkit-text-stroke: .9cqw var(--ink); paint-order: stroke fill; }
+.tc.full .tc-moves {
+  flex: none; background: rgba(255,246,214,.93); border: .5cqw solid var(--ink); border-radius: 2cqw;
+  padding: 1.6cqw 2.2cqw;
+}
+.tc.full .tc-stats, .tc.full .tc-foot {
+  background: rgba(255,246,214,.93); border-radius: 1.4cqw; padding: .9cqw 1.4cqw;
+}
+.tc.full .tc-flavor { background: rgba(255,246,214,.93); border-color: var(--ink); }

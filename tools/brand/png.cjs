@@ -51,13 +51,13 @@ const fill = s => s.replace('<svg ', '<svg style="display:block;width:100vw;heig
   const p = await b.newPage({ viewport: { width: 1200, height: 900 } });
   const img = f => 'data:image/svg+xml;base64,' + Buffer.from(svgOf(f)).toString('base64');
   await p.setContent(`<html><body style="margin:0;font-family:sans-serif">
-    <div style="background:#fbfcff;padding:60px;display:flex;gap:60px;align-items:center">
+    <div style="background:#fff4dc;padding:60px;display:flex;gap:60px;align-items:center">
       <img src="${img('cmcards-logo.svg')}" style="height:120px">
       <img src="${img('cmcards-icon.svg')}" style="height:120px">
       <img src="${img('cmcards-logo.svg')}" style="height:30px">
       <img src="${img('cmcards-favicon.svg')}" style="height:16px">
       <img src="${img('cmcards-favicon.svg')}" style="height:32px"></div>
-    <div style="background:#0a0f1e;padding:60px"><img src="${img('cmcards-logo-white.svg')}" style="height:110px"></div>
+    <div style="background:#1e1a16;padding:60px"><img src="${img('cmcards-logo-white.svg')}" style="height:110px"></div>
     <div><img src="${img('cmcards-og.svg')}" style="width:600px;display:block"></div></body></html>`);
   await p.screenshot({ path: path.join(__dirname, 'board.png'), fullPage: true });
   console.log('tools/brand/board.png');
