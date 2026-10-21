@@ -298,6 +298,19 @@ export const TRADERS: Trader[] = [
   { id: "bean", name: "Bean", handle: "", category: "holder", art: "/art/bean.webp", artPos: "50% 38%", tint: "blue",
     mythic: { banner: "/art/bean.webp", avatar: "/art/bean.webp",
       panels: { top: { src: "/art/bean.webp", pos: "50% 30%" }, left: { src: "/art/bean.webp", pos: "8% 70%" }, right: { src: "/art/bean.webp", pos: "62% 92%" } } } },
+  // trey : une seule image, la sienne partout : l'homme sans nom de profil, le chapeau,
+  // la barbe et le cigarillo, le poncho brun devant les collines. Une photo : sa Shiny
+  // est en or. Pas de thème pour sa Mythic. Un Holder.
+  { id: "trey", name: "trey", handle: "", category: "holder", art: "/art/trey.webp", artPos: "55% 40%", tint: "gold",
+    mythic: { banner: "/art/trey.webp", avatar: "/art/trey.webp",
+      panels: { top: { src: "/art/trey.webp", pos: "55% 25%" }, left: { src: "/art/trey.webp", pos: "30% 80%" }, right: { src: "/art/trey.webp", pos: "85% 62%" } } } },
+  // Dani : sa pdp (le dos d'Hercule en marbre, sur fond noir) en principale ; en noir
+  // et blanc : sa Shiny est en bleu électrique. Sa bannière (le ciel étoilé, les nuées
+  // dans les coins) dans les trois cases de la planche Mythic, la pdp en sticker.
+  // Pas de thème. Un Holder.
+  { id: "dani", name: "Dani", handle: "", category: "holder", art: "/art/dani-face.webp", artPos: "60% 40%", tint: "blue",
+    mythic: { banner: "/art/dani.webp", avatar: "/art/dani-face.webp",
+      panels: { top: { src: "/art/dani.webp", pos: "55% 50%" }, left: { src: "/art/dani.webp", pos: "8% 85%" }, right: { src: "/art/dani.webp", pos: "98% 40%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
