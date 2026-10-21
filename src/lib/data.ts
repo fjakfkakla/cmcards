@@ -288,6 +288,29 @@ export const TRADERS: Trader[] = [
   { id: "cap", name: "Cap", handle: "", category: "trencher", art: "/art/cap.webp", artPos: "58% 45%",
     mythic: { banner: "/art/cap.webp", avatar: "/art/cap.webp",
       panels: { top: { src: "/art/cap.webp", pos: "60% 20%" }, left: { src: "/art/cap.webp", pos: "10% 45%" }, right: { src: "/art/cap.webp", pos: "80% 55%" } } } },
+  // Jidn : une seule image, la sienne partout : le chat persan crème, la mine boudeuse,
+  // tenu à bout de bras devant un mur de briques tagué de noir et d'orange. Une photo :
+  // sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "jidn", name: "Jidn", handle: "", category: "trencher", art: "/art/jidn.webp", artPos: "55% 40%", tint: "gold",
+    mythic: { banner: "/art/jidn.webp", avatar: "/art/jidn.webp",
+      panels: { top: { src: "/art/jidn.webp", pos: "60% 35%" }, left: { src: "/art/jidn.webp", pos: "15% 70%" }, right: { src: "/art/jidn.webp", pos: "90% 40%" } } } },
+  // iceman77x : une seule image, la sienne partout : la silhouette en veste sombre,
+  // à contre-jour, le soleil qui perce derrière l'épaule dans un ciel bleu pâle et ses
+  // nuages. Une photo : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "iceman77x", name: "iceman77x", handle: "", category: "trencher", art: "/art/iceman77x.webp", artPos: "50% 35%", tint: "gold",
+    mythic: { banner: "/art/iceman77x.webp", avatar: "/art/iceman77x.webp",
+      panels: { top: { src: "/art/iceman77x.webp", pos: "50% 20%" }, left: { src: "/art/iceman77x.webp", pos: "10% 40%" }, right: { src: "/art/iceman77x.webp", pos: "90% 60%" } } } },
+  // gasp : sa pdp (le garçon aux yeux blancs, l'anneau de lumière bleue sur le front,
+  // les doigts croisés devant le visage) en principale ; un dessin en bleu et violet :
+  // sa Shiny est en bleu électrique. Sa bannière (gasp en lettres mauves, les
+  // personnages de manga dans les nuages) sur son OG (celui qui pointe le doigt) et
+  // dans la planche de sa Mythic : le nom en haut, la bête aux yeux rouges et le bras
+  // levé à gauche, celui qui pointe le doigt à droite, la pdp en sticker. Pas de
+  // thème. Un Trencher.
+  { id: "gasp", name: "gasp", handle: "", category: "trencher", art: "/art/gasp-face.webp", artPos: "50% 45%", tint: "blue",
+    shots: { og: { src: "/art/gasp.webp", pos: "83% 40%" } },
+    mythic: { banner: "/art/gasp.webp", avatar: "/art/gasp-face.webp",
+      panels: { top: { src: "/art/gasp.webp", pos: "50% 45%" }, left: { src: "/art/gasp.webp", pos: "20% 35%" }, right: { src: "/art/gasp.webp", pos: "82% 40%" } } } },
   // whashywash : une seule image, la sienne partout : en Cap'n Crunch, le bicorne bleu
   // au « C » jaune, la moustache blanche, la cuillère et le bol de céréales. Une photo :
   // sa Shiny est en or. Pas de thème pour sa Mythic. Un Famous.
@@ -333,6 +356,15 @@ export const TRADERS: Trader[] = [
   { id: "waiter", name: "waiter", handle: "", category: "holder", art: "/art/waiter.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/waiter.webp", avatar: "/art/waiter.webp",
       panels: { top: { src: "/art/waiter.webp", pos: "50% 15%" }, left: { src: "/art/waiter.webp", pos: "22% 35%" }, right: { src: "/art/waiter.webp", pos: "60% 80%" } } } },
+  // DOC : sa photo (Chuck Norris, la barbe rousse, le sourire, le jean au premier plan)
+  // en principale ; une photo : sa Shiny est en or. Sa seconde image (le singe en
+  // smoking, le bob orange « I ♥ ₿ », le cigare, le couteau) sur son OG et dans la
+  // planche de sa Mythic : le bob en haut, le couteau à gauche, le cigare à droite, la
+  // photo en sticker. Pas de thème. Un Holder.
+  { id: "doc", name: "DOC", handle: "", category: "holder", art: "/art/doc-face.webp", artPos: "42% 35%", tint: "gold",
+    shots: { og: { src: "/art/doc.webp", pos: "50% 40%" } },
+    mythic: { banner: "/art/doc.webp", avatar: "/art/doc-face.webp",
+      panels: { top: { src: "/art/doc.webp", pos: "50% 20%" }, left: { src: "/art/doc.webp", pos: "8% 80%" }, right: { src: "/art/doc.webp", pos: "75% 45%" } } } },
   // bandit : une seule image, la sienne partout : le chat tigré attablé devant son verre
   // de vin rouge, et son grand portrait qui veille dans la pénombre. Une photo dans les
   // bruns : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
@@ -357,6 +389,22 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/kevszn.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/kevszn.webp", avatar: "/art/kevszn-face.webp",
       panels: { top: { src: "/art/kevszn.webp", pos: "50% 25%" }, left: { src: "/art/kevszn.webp", pos: "8% 70%" }, right: { src: "/art/kevszn.webp", pos: "92% 45%" } } } },
+  // clukz : sa pdp (le singe de Super Monkey Ball au bonnet de Noël, le flingue au
+  // poing, l'éclair du coup et les impacts dans le ciel bleu) en principale ; un rendu
+  // 3D : sa Shiny est en or. Sa bannière (Monkey Park, la grande roue, le dirigeable
+  // jaune) sur son OG (la grande roue) et dans la planche de sa Mythic : le panneau
+  // MONKEY et le dirigeable en haut, le moyeu de la roue à gauche, le dirigeable à
+  // droite, la pdp en sticker. Pas de thème. Un Famous.
+  { id: "clukz", name: "clukz", handle: "", category: "famous", art: "/art/clukz-face.webp", artPos: "35% 45%", tint: "gold",
+    shots: { og: { src: "/art/clukz.webp", pos: "20% 50%" } },
+    mythic: { banner: "/art/clukz.webp", avatar: "/art/clukz-face.webp",
+      panels: { top: { src: "/art/clukz.webp", pos: "70% 45%" }, left: { src: "/art/clukz.webp", pos: "20% 75%" }, right: { src: "/art/clukz.webp", pos: "85% 35%" } } } },
+  // Jason : une seule image, la sienne partout : le portrait serré, les cheveux bruns
+  // courts, le regard droit sur un fond gris-bleu. Une photo : sa Shiny est en or. Pas
+  // de thème pour sa Mythic. Un Holder.
+  { id: "jason", name: "Jason", handle: "", category: "holder", art: "/art/jason.webp", artPos: "50% 45%", tint: "gold",
+    mythic: { banner: "/art/jason.webp", avatar: "/art/jason.webp",
+      panels: { top: { src: "/art/jason.webp", pos: "50% 15%" }, left: { src: "/art/jason.webp", pos: "30% 45%" }, right: { src: "/art/jason.webp", pos: "70% 70%" } } } },
   // quant : la capture (lui, le téléphone à 52 334,71 $) en principale ; une photo :
   // sa Shiny est violette. La photo devant la Bugatti sur son OG. Tout en violet
   // (fx) : à chaque rareté le cadre, la lueur autour de la carte, les braises. Sa
