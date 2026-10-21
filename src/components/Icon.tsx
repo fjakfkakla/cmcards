@@ -51,27 +51,9 @@ export default function Icon({ name, size = 18, className = "" }: { name: IconNa
   );
 }
 
-/* La pastille : l'icône pleine dans un carré arrondi, teinté de sa couleur. */
-export function Pastille({ name, color = "#f7c948", size = 40, solid = false }: {
-  name: IconName; color?: string; size?: number; solid?: boolean;
-}) {
-  return (
-    <span
-      className="grid shrink-0 place-items-center"
-      style={{
-        width: size, height: size, borderRadius: size * 0.3,
-        background: solid ? color : `color-mix(in srgb, ${color} 14%, transparent)`,
-        color: solid ? "#0a0b12" : color,
-        boxShadow: solid ? `inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 0 rgba(0,0,0,.18)` : `inset 0 0 0 1px color-mix(in srgb, ${color} 22%, transparent)`,
-      }}
-    >
-      <Icon name={name} size={Math.round(size * 0.5)} />
-    </span>
-  );
-}
-
-/* La marque : la tuile d'or du logo (la carte et son anneau), et le nom. */
-export function Logo({ size = 32, word = true }: { size?: number; word?: boolean }) {
+/* La marque : la tuile éponge du logo (la carte et sa pièce), et le nom, « cm » à
+   l'encre, « cards » en tomate, comme le logo sorti de tools/brand. */
+export function Logo({ size = 32, word = true, light = false }: { size?: number; word?: boolean; light?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
       <svg viewBox="0 0 1000 1000" width={size} height={size} aria-hidden="true">
@@ -84,8 +66,8 @@ export function Logo({ size = 32, word = true }: { size?: number; word?: boolean
         <path fill="#1e1a16" transform="translate(115.4 115.4) scale(7.6923)" d="M34 11H66Q78 11 78 23V77Q78 89 66 89H34Q22 89 22 77V23Q22 11 34 11ZM50 33C40.6 33 33 40.6 33 50C33 59.4 40.6 67 50 67C59.4 67 67 59.4 67 50C67 40.6 59.4 33 50 33ZM50 42C54.4 42 58 45.6 58 50C58 54.4 54.4 58 50 58C45.6 58 42 54.4 42 50C42 45.6 45.6 42 50 42Z" />
       </svg>
       {word && (
-        <span className="font-display text-[22px] leading-none tracking-[-.03em] text-fg">
-          <b className="font-extrabold">cm</b> <span className="font-medium text-gold-3">cards</span>
+        <span className={`font-display leading-none tracking-[-.04em] ${light ? "text-cream" : "text-fg"}`} style={{ fontSize: size * .82 }}>
+          <b className="font-extrabold">cm</b> <span className={`font-medium ${light ? "text-gold" : "text-tomato"}`}>cards</span>
         </span>
       )}
     </span>

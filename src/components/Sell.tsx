@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Icon from "./Icon";
 import { api, useAccount } from "@/lib/account";
-import { fmtSol, rarity, trader } from "@/lib/data";
-import { FEE_BPS, MIN_PRICE, toSol } from "@/lib/solana";
+import { fmtSol } from "@/lib/data";
+import { MIN_PRICE, toSol } from "@/lib/solana";
 import type { Listing, Offer, Owned } from "@/lib/types";
 
 /* Vendre une carte : le joueur fixe son prix. Mettre en vente ne coûte rien ;
@@ -43,36 +43,38 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
       <div className="surface mt-6 p-5">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <div className="label">En vente</div>
-            <div className="num mt-1 font-display text-[30px] leading-none font-bold tracking-[-.02em] text-gold">{fmtSol(toSol(listing.lamports))}</div>
+            <div className="font-display text-[17px] font-extrabold text-muted">En vente</div>
+            <div className="num mt-1 font-display text-[32px] leading-none font-extrabold tracking-[-.02em]">{fmtSol(toSol(listing.lamports))}</div>
           </div>
           <button className="btn-ghost btn-sm" onClick={() => act("/api/market/unlist", { uid: card.uid })} disabled={busy}>
             {busy ? "…" : "Retirer"}
           </button>
         </div>
-        <p className="mt-3 text-[13.5px] text-muted">Tu reçois ton prix entier dans ton wallet dès qu&apos;un joueur l&apos;achète.</p>
-        {error && <p className="mt-3 text-[14px] font-semibold text-down">{error}</p>}
+        {error && <p className="mt-3 text-[14.5px] font-bold text-down">{error}</p>}
       </div>
     );
 
   return (
     <form className="surface mt-6 p-5" onSubmit={(e) => { e.preventDefault(); if (valid) act("/api/market/list", { uid: card.uid, price: sol }); }}>
-      <label htmlFor="price" className="label">Ton prix</label>
+      <div className="flex items-center justify-between gap-3">
+        <label htmlFor="price" className="font-display text-[19px] font-extrabold">Ton prix</label>
+        <span className="plate h-8 px-3 text-[13.5px]">Mise en vente gratuite</span>
+      </div>
       <div className="relative mt-2">
         <input id="price" className="field num pr-14" inputMode="decimal" autoComplete="off" placeholder="0,5"
           value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.,]/g, ""))} />
-        <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-[14px] font-semibold text-dim">SOL</span>
+        <span className="pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 font-display text-[15px] font-extrabold text-muted">SOL</span>
       </div>
       {floor && (floor.min !== null || floor.last !== null) && (
         <div className="mt-3 flex flex-wrap gap-2">
           {floor.min !== null && (
-            <button type="button" className="chip h-8 hover:text-fg" onClick={() => setPrice(String(toSol(floor.min!)))}>
-              Plancher <span className="num text-fg">{fmtSol(toSol(floor.min))}</span>
+            <button type="button" className="chip h-9 text-muted hover:text-fg" onClick={() => setPrice(String(toSol(floor.min!)))}>
+              Plancher <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.min))}</span>
             </button>
           )}
           {floor.last !== null && (
-            <button type="button" className="chip h-8 hover:text-fg" onClick={() => setPrice(String(toSol(floor.last!)))}>
-              Dernière vente <span className="num text-fg">{fmtSol(toSol(floor.last))}</span>
+            <button type="button" className="chip h-9 text-muted hover:text-fg" onClick={() => setPrice(String(toSol(floor.last!)))}>
+              Dernière vente <span className="num font-display font-extrabold text-fg">{fmtSol(toSol(floor.last))}</span>
             </button>
           )}
         </div>
@@ -80,11 +82,7 @@ export default function Sell({ card, listing }: { card: Owned; listing?: Listing
       <button className="btn-gold mt-4 w-full" disabled={!valid || busy}>
         <Icon name="tag" size={16} /> {busy ? "Mise en vente…" : valid ? `Vendre ${fmtSol(sol)}` : "Mettre en vente"}
       </button>
-      <p className="mt-3 text-[13px] text-dim">
-        Gratuit. L&apos;acheteur te paie directement ; cm cards prend {FEE_BPS / 100} % en plus, à sa charge.
-        {" "}{trader(card.trader).name} {rarity(card.rarity).name} : {rarity(card.rarity).supply === 1 ? "exemplaire unique" : `${rarity(card.rarity).supply.toLocaleString("fr-FR")} exemplaires au plus`}.
-      </p>
-      {error && <p className="mt-3 text-[14px] font-semibold text-down">{error}</p>}
+      {error && <p className="mt-3 text-[14.5px] font-bold text-down">{error}</p>}
     </form>
   );
 }
