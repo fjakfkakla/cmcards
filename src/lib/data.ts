@@ -151,6 +151,14 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/profit-ghost.webp", pos: "50% 50%" } },
     mythic: { banner: "/art/profit-ghost.webp", avatar: "/art/profit-face.webp",
       panels: { top: { src: "/art/profit-ghost.webp", pos: "50% 45%" }, left: { src: "/art/profit-ghost.webp", pos: "0% 50%" }, right: { src: "/art/profit-ghost.webp", pos: "66% 46%" } } } },
+  // Unipcs : le petit robot jaune (sa pdp, un rendu 3D : sa Shiny est en or) en
+  // principale ; sa bannière (le robot devant son armée dans le désert) sur son OG
+  // et dans la planche de sa Mythic : le robot et l'armée en haut, l'armée en rang
+  // à gauche, son casque en gros plan à droite, la pdp en sticker. Un Famous.
+  { id: "unipcs", name: "Unipcs", handle: "", category: "famous", art: "/art/unipcs-face.webp", artPos: "50% 42%", tint: "gold",
+    shots: { og: { src: "/art/unipcs-army.webp", pos: "72% 50%" } },
+    mythic: { banner: "/art/unipcs-army.webp", avatar: "/art/unipcs-face.webp",
+      panels: { top: { src: "/art/unipcs-army.webp", pos: "72% 50%" }, left: { src: "/art/unipcs-army.webp", pos: "30% 55%" }, right: { src: "/art/unipcs-army.webp", pos: "80% 12%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.
@@ -167,6 +175,17 @@ export const TRADERS: Trader[] = [
   { id: "trunoest", name: "Trunoest", handle: "", category: "trencher", art: "/art/trunoest-face.webp", artPos: "50% 40%",
     mythic: { banner: "/art/trunoest.webp", avatar: "/art/trunoest-face.webp",
       panels: { top: { src: "/art/trunoest.webp", pos: "50% 50%" }, left: { src: "/art/trunoest.webp", pos: "18% 50%" }, right: { src: "/art/trunoest.webp", pos: "82% 50%" } } } },
+  // Cooker : sa pdp (la fille en blouse tachée de peinture, au téléphone dans le
+  // ciel) en principale ; sa bannière (les châteaux sur leurs îles flottantes)
+  // dans les trois cases de la planche Mythic, la pdp en sticker. Un Trencher, pas de thème.
+  { id: "cooker", name: "Cooker", handle: "", category: "trencher", art: "/art/cooker-face.webp", artPos: "50% 38%",
+    mythic: { banner: "/art/cooker.webp", avatar: "/art/cooker-face.webp",
+      panels: { top: { src: "/art/cooker.webp", pos: "62% 50%" }, left: { src: "/art/cooker.webp", pos: "10% 45%" }, right: { src: "/art/cooker.webp", pos: "96% 65%" } } } },
+  // Trencher : une seule image, la sienne partout : le gardien aux cheveux blancs,
+  // en noir et blanc (manga). Sa Shiny est en bleu électrique. Pas de thème pour sa Mythic.
+  { id: "trencher", name: "Trencher", handle: "", category: "famous", art: "/art/trencher.webp", artPos: "50% 40%", tint: "blue",
+    mythic: { banner: "/art/trencher.webp", avatar: "/art/trencher.webp",
+      panels: { top: { src: "/art/trencher.webp", pos: "50% 20%" }, left: { src: "/art/trencher.webp", pos: "12% 55%" }, right: { src: "/art/trencher.webp", pos: "88% 55%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
