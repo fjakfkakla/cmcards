@@ -404,6 +404,13 @@ export const TRADERS: Trader[] = [
   { id: "jason", name: "Jason", handle: "", category: "holder", art: "/art/jason.webp", artPos: "50% 45%", tint: "gold",
     mythic: { banner: "/art/jason.webp", avatar: "/art/jason.webp",
       panels: { top: { src: "/art/jason.webp", pos: "50% 15%" }, left: { src: "/art/jason.webp", pos: "30% 45%" }, right: { src: "/art/jason.webp", pos: "70% 70%" } } } },
+  // Insyder : une seule image, la sienne partout : le mineur en silhouette, le casque
+  // jaune à la lampe allumée, la cigarette qui fume et la pioche, dans une salle bleue
+  // jonchée de charbon. Un dessin en couleurs : sa Shiny décale ses teintes. Pas de
+  // thème pour sa Mythic. Un Trencher.
+  { id: "insyder", name: "Insyder", handle: "", category: "trencher", art: "/art/insyder.webp", artPos: "25% 45%",
+    mythic: { banner: "/art/insyder.webp", avatar: "/art/insyder.webp",
+      panels: { top: { src: "/art/insyder.webp", pos: "25% 25%" }, left: { src: "/art/insyder.webp", pos: "5% 85%" }, right: { src: "/art/insyder.webp", pos: "90% 75%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
