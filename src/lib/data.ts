@@ -317,6 +317,12 @@ export const TRADERS: Trader[] = [
   { id: "waiter", name: "waiter", handle: "", category: "holder", art: "/art/waiter.webp", artPos: "50% 45%", tint: "blue",
     mythic: { banner: "/art/waiter.webp", avatar: "/art/waiter.webp",
       panels: { top: { src: "/art/waiter.webp", pos: "50% 15%" }, left: { src: "/art/waiter.webp", pos: "22% 35%" }, right: { src: "/art/waiter.webp", pos: "60% 80%" } } } },
+  // bandit : une seule image, la sienne partout : le chat tigré attablé devant son verre
+  // de vin rouge, et son grand portrait qui veille dans la pénombre. Une photo dans les
+  // bruns : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "bandit", name: "bandit", handle: "", category: "trencher", art: "/art/bandit.webp", artPos: "50% 50%", tint: "gold",
+    mythic: { banner: "/art/bandit.webp", avatar: "/art/bandit.webp",
+      panels: { top: { src: "/art/bandit.webp", pos: "62% 22%" }, left: { src: "/art/bandit.webp", pos: "10% 75%" }, right: { src: "/art/bandit.webp", pos: "58% 90%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
