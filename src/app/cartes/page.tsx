@@ -1,10 +1,13 @@
 import CollectCard from "@/components/CollectCard";
+import Nav from "@/components/Nav";
 import { RARITIES, type Card } from "@/lib/data";
 
 /* La planche des raretés : le même personnage, du plus commun au plus rare, avec la
    chance de la tirer dans un booster Classique. */
 export default function Page() {
   return (
+    <>
+    <Nav />
     <main className="mx-auto w-full max-w-6xl px-4 py-10">
       <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3">
         {RARITIES.map((r) => {
@@ -20,5 +23,6 @@ export default function Page() {
         })}
       </div>
     </main>
+    </>
   );
 }

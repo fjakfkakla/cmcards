@@ -68,67 +68,70 @@ export type Card = {
 
 export const usdOf = (c: Card) => c.amount * COINS[c.coin].price;
 
+/* Les boosters : chacun change QUI on peut tirer (la catégorie), COMBIEN de
+   cartes, et CE QUI EST GARANTI. */
 export type Pack = {
   id: string;
   name: string;
-  price: number;      // en SOL
+  price: number;         // en SOL
   cards: number;
-  bg: string;         // le fond du booster
-  face: string;       // le trader en vitrine
-  boost?: string;     // ce qui change par rapport au Classique
+  pool?: CategoryId;     // seulement cette catégorie
+  guarantee?: RarityId;  // la dernière carte est au moins de cette rareté
+  boost?: number;        // multiplie les chances d'OG et de Mythic
+  color: string;         // la couleur du papier du booster
+  ink: string;           // la couleur de son motif
+  motif: "dots" | "stripes" | "bills" | "rays";
+  face: string;          // le personnage en vitrine
 };
 
 export const PACKS: Pack[] = [
-  {
-    id: "classique",
-    name: "Classique",
-    price: 0.1,
-    cards: 3,
-    bg: "linear-gradient(160deg,#ff6a5e 0%,#ff4b3e 45%,#d9301f 100%)",
-    face: "mitch",
-  },
-  {
-    id: "eponge",
-    name: "Éponge",
-    price: 0.5,
-    cards: 5,
-    bg: "linear-gradient(160deg,#ffe45c 0%,#ffd12e 50%,#ffb41a 100%)",
-    face: "cupsey",
-    boost: "OG et Mythic ×5",
-  },
+  { id: "classique", name: "Classique", price: 0.1, cards: 3, color: "#ff4b3e", ink: "#ff7b70", motif: "dots", face: "mitch" },
+  { id: "top10", name: "Top 10", price: 0.25, cards: 3, pool: "top10", guarantee: "shiny", color: "#ff9a1f", ink: "#ffbb63", motif: "stripes", face: "cupsey" },
+  { id: "millionaire", name: "Millionaire", price: 0.5, cards: 5, guarantee: "millionaire", color: "#2f8f5b", ink: "#4fb07b", motif: "bills", face: "mitch" },
+  { id: "og", name: "OG", price: 1, cards: 5, guarantee: "legendary", boost: 5, color: "#1e1a16", ink: "#3a332c", motif: "rays", face: "cupsey" },
 ];
 export const pack = (id: string) => PACKS.find((p) => p.id === id);
+export const rank = (id: RarityId) => RARITIES.findIndex((r) => r.id === id);
 
 /* Le tirage de la démo (au branchement : le serveur, avec la preuve publiée). */
-export function drawRarity(rand: number, boost = 1): RarityId {
-  const w = RARITIES.map((r) => (r.id === "mythic" || r.id === "og" ? r.odds * boost : r.odds));
-  const total = w.reduce((a, b) => a + b, 0);
-  let x = rand * total;
-  for (let i = RARITIES.length - 1; i >= 0; i--) {
-    // on part du plus rare pour que le boost ne mange que la commune
-    if (x < w[i]) return RARITIES[i].id;
+export function drawRarity(rand: number, boost = 1, floor: RarityId = "common"): RarityId {
+  const min = rank(floor);
+  const pool = RARITIES.filter((_, i) => i >= min);
+  const w = pool.map((r) => (r.id === "mythic" || r.id === "og" ? r.odds * boost : r.odds));
+  let x = rand * w.reduce((a, b) => a + b, 0);
+  for (let i = pool.length - 1; i >= 0; i--) {
+    if (x < w[i]) return pool[i].id;
     x -= w[i];
   }
-  return "common";
+  return pool[0].id;
 }
 
-export function drawCard(seed: number, boost = 1): Card {
+export function drawCard(seed: number, p?: Pack, floor: RarityId = "common"): Card {
   const rnd = mulberry(seed);
-  const r = drawRarity(rnd(), boost);
-  const t = TRADERS[Math.floor(rnd() * TRADERS.length)];
+  const r = drawRarity(rnd(), p?.boost ?? 1, floor);
+  const who = p?.pool ? TRADERS.filter((t) => t.category === p.pool) : TRADERS;
+  const t = who[Math.floor(rnd() * who.length)];
   const coins = Object.keys(COINS);
   const coin = coins[Math.floor(rnd() * coins.length)];
   const [lo, hi] = rarity(r).usd;
   const usd = lo + (hi - lo) * rnd() ** 2;
-  const amount = Math.round(usd / COINS[coin].price);
   return {
     id: `${t.id}-${r}-${seed}`,
     trader: t.id,
     rarity: r,
     coin,
-    amount,
+    amount: Math.max(1, Math.round(usd / COINS[coin].price)),
     serial: 1 + Math.floor(rnd() * rarity(r).supply),
   };
+}
+
+/* Ouvre un booster : ses cartes, la garantie sur la dernière, du moins rare au plus
+   rare (la meilleure se retourne en dernier). */
+export function openPack(p: Pack, seed: number): Card[] {
+  const cards = Array.from({ length: p.cards }, (_, i) =>
+    drawCard(seed * 31 + i * 7919, p, i === p.cards - 1 ? p.guarantee : undefined),
+  );
+  return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
 }
 
 function mulberry(a: number) {
@@ -143,4 +146,14 @@ function mulberry(a: number) {
 export const fmtAmount = (n: number) =>
   n >= 1e6 ? `${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)} M` : n >= 1e3 ? `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1)} k` : `${n}`;
 export const fmtUsd = (n: number) =>
-  `${n.toLocaleString("fr-FR", { maximumFractionDigits: n < 10 ? 2 : 0 })} $`;
+  n >= 10_000
+    ? `${(n / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 0 })} k$`
+    : `${n.toLocaleString("fr-FR", { maximumFractionDigits: n < 10 ? 2 : 0 })} $`;
+
+/* Ce qu'un booster peut contenir, en dollars : au pire et au mieux. */
+export function packRange(p: Pack): [number, number] {
+  const floor = p.guarantee ? rarity(p.guarantee).usd[0] : RARITIES[0].usd[0];
+  const min = (p.cards - 1) * RARITIES[0].usd[0] + floor;
+  const max = p.cards * RARITIES[RARITIES.length - 1].usd[1];
+  return [min, max];
+}
