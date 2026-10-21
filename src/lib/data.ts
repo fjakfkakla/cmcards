@@ -197,6 +197,11 @@ export const TRADERS: Trader[] = [
   { id: "daumen", name: "Daumen", handle: "", category: "famous", art: "/art/daumen.webp", artPos: "50% 45%", tint: "gold",
     mythic: { banner: "/art/daumen.webp", avatar: "/art/daumen.webp",
       panels: { top: { src: "/art/daumen.webp", pos: "50% 25%" }, left: { src: "/art/daumen.webp", pos: "15% 55%" }, right: { src: "/art/daumen.webp", pos: "85% 55%" } } } },
+  // Megga : une seule image, la sienne partout : sa photo tout sourire, les boucles
+  // brunes. Une photo : sa Shiny est en or. Pas de thème pour sa Mythic.
+  { id: "megga", name: "MEGGA", handle: "", category: "famous", art: "/art/megga.webp", artPos: "42% 45%", tint: "gold",
+    mythic: { banner: "/art/megga.webp", avatar: "/art/megga.webp",
+      panels: { top: { src: "/art/megga.webp", pos: "42% 35%" }, left: { src: "/art/megga.webp", pos: "20% 55%" }, right: { src: "/art/megga.webp", pos: "60% 60%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
