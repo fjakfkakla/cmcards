@@ -251,6 +251,15 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/art.webp", pos: "15% 40%" } },
     mythic: { banner: "/art/art.webp", avatar: "/art/art-face.webp",
       panels: { top: { src: "/art/art.webp", pos: "55% 35%" }, left: { src: "/art/art.webp", pos: "12% 40%" }, right: { src: "/art/art.webp", pos: "88% 50%" } } } },
+  // Ethan pr6spr : sa pdp (Zenitsu, les cheveux blonds dans la lumière) en principale ;
+  // un éclair jaune : sa Shiny est en or. Sa seconde image, détourée de sa miniature
+  // YouTube (lui seul, les boucles brunes et le maillot solana spaces), sur son OG et
+  // dans la planche de sa Mythic : son visage en haut, le maillot à gauche, la chaîne
+  // à droite. Pas de thème. Un Trencher.
+  { id: "ethan", name: "Ethan pr6spr", handle: "", category: "trencher", art: "/art/ethan-face.webp", artPos: "50% 40%", tint: "gold",
+    shots: { og: { src: "/art/ethan.webp", pos: "50% 35%" } },
+    mythic: { banner: "/art/ethan.webp", avatar: "/art/ethan-face.webp",
+      panels: { top: { src: "/art/ethan.webp", pos: "50% 30%" }, left: { src: "/art/ethan.webp", pos: "0% 85%" }, right: { src: "/art/ethan.webp", pos: "80% 75%" } } } },
   // dv : une seule image, la sienne partout : la Porsche orange, la roue aux étriers
   // jaunes, et lui debout à côté, les sneakers noires à la croix rouge. Une photo de
   // nuit, presque noire : l'or la verdit, sa Shiny est en bleu électrique. Pas de
