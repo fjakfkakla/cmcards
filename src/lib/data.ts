@@ -82,8 +82,9 @@ export type Trader = {
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   // le thème de sa Mythic (1 sur 1) : les bulles, la foudre, la brume, le crayon
-  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant
-  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call";
+  // d'enfant, les gélules pump.fun, le feu et la glace, le bling, l'appel entrant,
+  // les yeux laser
+  theme?: "sponge" | "volt" | "mist" | "crayon" | "pump" | "duo" | "bling" | "call" | "laser";
   tint?: "blue" | "gold"; // sa Shiny le colore (bleu électrique, or) au lieu de décaler ses teintes :
                           // pour un dessin en noir et blanc, ou une photo (une peau verte n'est pas « shiny »)
   shots?: Partial<Record<Exclude<RarityId, "mythic">, Shot>>; // une autre image pour une rareté (l'OG, souvent)
@@ -122,6 +123,12 @@ export const TRADERS: Trader[] = [
   { id: "jack", name: "Jack Duval", handle: "", category: "bundler", art: "/art/duve-face.webp", artPos: "50% 32%", theme: "call", tint: "blue",
     mythic: { banner: "/art/duve-call.webp", avatar: "/art/duve-face.webp",
       panels: { top: { src: "/art/duve-call.webp", pos: "50% 38%" }, left: { src: "/art/duve-call.webp", pos: "18% 90%" }, right: { src: "/art/duve-call.webp", pos: "82% 90%" } } } },
+  // Profit : le chat noir aux yeux bleus en principale ; le fantôme pixel (sa
+  // seconde image) sur son OG et dans la planche de sa Mythic, aux yeux laser.
+  { id: "profit", name: "Profit", handle: "", category: "sniper", art: "/art/profit-face.webp", artPos: "50% 45%", theme: "laser", tint: "blue",
+    shots: { og: { src: "/art/profit-ghost.webp", pos: "50% 50%" } },
+    mythic: { banner: "/art/profit-ghost.webp", avatar: "/art/profit-face.webp",
+      panels: { top: { src: "/art/profit-ghost.webp", pos: "50% 45%" }, left: { src: "/art/profit-ghost.webp", pos: "0% 50%" }, right: { src: "/art/profit-ghost.webp", pos: "66% 46%" } } } },
   // ses images sont celles qu'on nous a données, versionnées dans public/art/.
   // L'image principale (Commun, Rare, Shiny, OG) est sa pdp, Killua ; la bannière
   // ne sert qu'à la planche de sa Mythic, qui est électrique.

@@ -141,6 +141,12 @@ export default function CollectCard({ card, live = false, className = "" }: { ca
               <span className="cc-calling">is calling…</span>
             </>
           )}
+          {theme === "laser" && (
+            <>
+              <span className="cc-beam l" /><span className="cc-beam r" />
+              <div className="cc-heat" />
+            </>
+          )}
           {theme === "mist" && (
             <>
               <div className="cc-fog a" />

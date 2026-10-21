@@ -434,6 +434,43 @@
   animation: cc-glow 1.2s ease-in-out infinite;
 }
 
+/* ---- le thème laser : les yeux bleus du chat noir (Profit) ---- */
+.cc.mythic.laser .cc-rays {
+  background: repeating-conic-gradient(from 0deg, #1e1a16 0 9deg, #c4121a 9deg 18deg, #4df0ff 18deg 27deg, #5a0008 27deg 36deg);
+}
+.cc.mythic.laser { --label: #4df0ff; --name: #e9fbff; --mark: #4df0ff; }
+.cc.mythic.laser .cc-panel::after { background: none; }
+.cc.mythic.laser .cc-panel img { image-rendering: pixelated; }
+/* la traîne à gauche, l'œil rouge en gros plan à droite */
+.cc.mythic.laser .cc-panel.left img { transform: scale(1.6); }
+.cc.mythic.laser .cc-panel.right img { transform: scale(2.4); }
+/* ses yeux brillent : le sticker charge, les rayons partent de lui */
+.cc.mythic.laser .cc-sticker {
+  width: 34%;
+  border-color: #4df0ff;
+  box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 5cqw 1.2cqw rgba(77,240,255,.75);
+  animation: cc-stare 2.6s ease-in-out infinite;
+}
+@keyframes cc-stare {
+  0%, 100% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 4cqw .8cqw rgba(77,240,255,.5); }
+  50% { box-shadow: 1.2cqw 1.2cqw 0 var(--ink), 0 0 9cqw 2.6cqw rgba(77,240,255,.95); }
+}
+.cc-beam {
+  position: absolute; z-index: 3; top: 54%; width: 44%; height: 2.2cqw; pointer-events: none;
+  translate: 0 -50%; transform-origin: 100% 50%; border-radius: 99px;
+  background: linear-gradient(90deg, transparent, #4df0ff 40%, #fff);
+  box-shadow: 0 0 1.5cqw #4df0ff, 0 0 5cqw 1cqw rgba(77,240,255,.8);
+  animation: cc-beam 2.6s ease-in-out infinite;
+}
+.cc-beam.l { right: 58%; rotate: 5deg; }
+.cc-beam.r { left: 58%; rotate: 185deg; transform-origin: 0 50%; animation-delay: .1s; }
+@keyframes cc-beam { 0%, 100% { opacity: .6; scale: .75 1; } 50% { opacity: 1; scale: 1 1; } }
+.cc-heat {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; mix-blend-mode: screen; opacity: .45;
+  background: radial-gradient(ellipse at 50% 55%, rgba(77,240,255,.6), transparent 50%);
+  animation: cc-flicker 2.6s steps(1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cc *, .cc .cc-frame { animation: none !important; }
 }
