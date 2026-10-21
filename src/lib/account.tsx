@@ -9,10 +9,12 @@ import type { WalletName } from "@solana/wallet-adapter-base";
 import { PublicKey, SystemProgram, Transaction, TransactionInstruction } from "@solana/web3.js";
 import { Buffer } from "buffer";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { MEMO_PROGRAM, RPC_URL } from "./solana";
+import { type Config, DEFAULT_CONFIG, MEMO_PROGRAM } from "./solana";
 import type { Me } from "./types";
 
 type Account = {
+  cfg: Config;                   // le réseau et le wallet de cm cards, lus sur le serveur
+  ready: boolean;                // la config est lue
   me: Me | null;                 // null : pas encore lu
   wallet: string | null;         // le wallet connecté (session signée)
   busy: boolean;
@@ -44,16 +46,22 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
 }
 
 export default function AccountProvider({ children }: { children: React.ReactNode }) {
+  const [cfg, setCfg] = useState<Config | null>(null);
+  useEffect(() => {
+    let live = true;
+    api<Config>("/api/config").then((c) => { if (live) setCfg(c); }).catch(() => { if (live) setCfg(DEFAULT_CONFIG); });
+    return () => { live = false; };
+  }, []);
   return (
-    <ConnectionProvider endpoint={RPC_URL}>
+    <ConnectionProvider endpoint={(cfg ?? DEFAULT_CONFIG).rpc}>
       <WalletProvider wallets={[]} autoConnect onError={() => {}}>
-        <Account>{children}</Account>
+        <Account cfg={cfg ?? DEFAULT_CONFIG} ready={!!cfg}>{children}</Account>
       </WalletProvider>
     </ConnectionProvider>
   );
 }
 
-function Account({ children }: { children: React.ReactNode }) {
+function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; children: React.ReactNode }) {
   const { connection } = useConnection();
   const w = useWallet();
   const [me, setMe] = useState<Me | null>(null);
@@ -155,8 +163,8 @@ function Account({ children }: { children: React.ReactNode }) {
   }, [me, w, connection, signIn]);
 
   const value = useMemo<Account>(() => ({
-    me, wallet: me?.wallet ?? null, busy, error, balance, refresh, signIn, signOut, picker, setPicker, choose, pay,
-  }), [me, busy, error, balance, refresh, signIn, signOut, picker, choose, pay]);
+    cfg, ready, me, wallet: me?.wallet ?? null, busy, error, balance, refresh, signIn, signOut, picker, setPicker, choose, pay,
+  }), [cfg, ready, me, busy, error, balance, refresh, signIn, signOut, picker, choose, pay]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

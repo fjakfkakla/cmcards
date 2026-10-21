@@ -6,11 +6,11 @@ import Icon from "./Icon";
 import { Ago, ConnectCard, RarityTag, Stats } from "./ui";
 import { api, useAccount } from "@/lib/account";
 import { fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
-import { CLUSTER, explorer, short, toSol } from "@/lib/solana";
+import { explorer, short, toSol } from "@/lib/solana";
 
 /* Le profil : le wallet, ce qu'il possède, ce qu'il vend, ce qu'il a acheté et vendu. */
 export default function Profile() {
-  const { me, wallet, balance, signOut, refresh } = useAccount();
+  const { cfg, me, wallet, balance, signOut, refresh } = useAccount();
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ export default function Profile() {
             </div>
             <p className="mt-1.5 flex flex-wrap items-center gap-2 text-[14px] text-muted">
               <span className="num">{balance !== null ? `${toSol(balance).toLocaleString("fr-FR", { maximumFractionDigits: 4 })} SOL` : "Wallet non branché"}</span>
-              <span className="chip h-6 px-2.5 text-[12px]">{CLUSTER === "devnet" ? "Devnet" : "Mainnet"}</span>
+              <span className="chip h-6 px-2.5 text-[12px]">{cfg.cluster === "devnet" ? "Devnet" : "Mainnet"}</span>
             </p>
           </div>
           <button className="btn-ghost btn-sm ml-auto" onClick={signOut}><Icon name="logout" size={15} /> Déconnexion</button>
@@ -111,7 +111,7 @@ export default function Profile() {
                     <span className="text-muted">{trader(s.trader).name} {rarity(s.rarity).name}</span>
                   </span>
                   <span className={`num ml-auto font-semibold ${out ? "text-up" : ""}`}>{out ? "+" : "-"}{fmtSol(toSol(s.lamports))}</span>
-                  <a href={explorer(s.sig)} target="_blank" rel="noreferrer" className="hidden w-24 text-right text-[13px] text-dim hover:text-muted sm:block"><Ago at={s.at} /></a>
+                  <a href={explorer(s.sig, cfg.cluster)} target="_blank" rel="noreferrer" className="hidden w-24 text-right text-[13px] text-dim hover:text-muted sm:block"><Ago at={s.at} /></a>
                 </div>
               );
             })}

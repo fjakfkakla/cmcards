@@ -9,7 +9,8 @@
 
 import { randomBytes, randomInt } from "node:crypto";
 import { PACKS, RARITIES, type RarityId, drawRarity, packTraders, rank, rarity } from "../data";
-import { FEE_BPS, MAX_PRICE, MEMO, MIN_PRICE, TREASURY, feeOf, toLamports } from "../solana";
+import { FEE_BPS, MAX_PRICE, MEMO, MIN_PRICE, feeOf, toLamports } from "../solana";
+import { TREASURY } from "./config";
 import type { Listing, Offer, Owned, Sale } from "../types";
 import { paid, readPayment } from "./chain";
 import { Oops } from "./errors";

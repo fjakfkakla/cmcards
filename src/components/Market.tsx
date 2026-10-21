@@ -8,7 +8,7 @@ import Icon from "./Icon";
 import { Ago, CategoryTag, Empty, Filter, Modal, PageHead, RarityTag, Stats } from "./ui";
 import { api, useAccount } from "@/lib/account";
 import { CATEGORIES, RARITIES, TRADERS, type CategoryId, type RarityId, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
-import { FEE_BPS, MEMO, TREASURY, explorer, feeOf, short, toSol } from "@/lib/solana";
+import { FEE_BPS, MEMO, explorer, feeOf, short, toSol } from "@/lib/solana";
 import type { Listing, Offer, Sale } from "@/lib/types";
 
 type Sort = "cheap" | "dear" | "recent" | "rare";
@@ -148,6 +148,7 @@ export default function Market() {
 
 /* Les dernières ventes : ce qui s'est vraiment payé. */
 function Sales({ sales }: { sales: Sale[] }) {
+  const { cfg } = useAccount();
   return (
     <section className="mt-16">
       <h2 className="font-display text-[28px] font-extrabold tracking-[-.03em]">Dernières ventes</h2>
@@ -158,7 +159,7 @@ function Sales({ sales }: { sales: Sale[] }) {
             <span className="min-w-0 truncate font-semibold">{trader(s.trader).name} <span className="text-muted">{rarity(s.rarity).name}</span></span>
             <span className="num hidden text-dim sm:inline">n° {serialOf({ id: "", trader: s.trader, rarity: s.rarity, serial: s.serial })}</span>
             <span className="num ml-auto font-semibold">{fmtSol(toSol(s.lamports))}</span>
-            <a href={explorer(s.sig)} target="_blank" rel="noreferrer" className="w-24 text-right text-[13px] text-dim hover:text-muted"><Ago at={s.at} /></a>
+            <a href={explorer(s.sig, cfg.cluster)} target="_blank" rel="noreferrer" className="w-24 text-right text-[13px] text-dim hover:text-muted"><Ago at={s.at} /></a>
           </div>
         ))}
       </div>
@@ -171,7 +172,7 @@ type Step = "idle" | "reserve" | "sign" | "transfer" | "done";
 /* L'achat : le détail du prix, puis réserver, payer (un seul passage dans le wallet :
    le vendeur et les frais dans la même transaction), et le serveur passe la carte. */
 function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; onDone: () => void }) {
-  const { wallet, balance, busy, signIn, pay, refresh } = useAccount();
+  const { cfg, wallet, balance, busy, signIn, pay, refresh } = useAccount();
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
   const [sig, setSig] = useState<string | null>(null);
@@ -192,7 +193,7 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
         throw new Error("Le vendeur vient de changer son prix. Rouvre la carte pour voir le nouveau.");
       }
       setStep("sign");
-      const s = await pay([{ to: listing.seller, lamports: listing.lamports }, { to: TREASURY, lamports: feeOf(listing.lamports) }], MEMO.buy(listing.id));
+      const s = await pay([{ to: listing.seller, lamports: listing.lamports }, { to: cfg.treasury, lamports: feeOf(listing.lamports) }], MEMO.buy(listing.id));
       setSig(s);
       setStep("transfer");
       await claim(s);
@@ -241,7 +242,7 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
             </dl>
 
             <div className="mt-5">
-              {!TREASURY ? (
+              {!cfg.treasury ? (
                 <span className="btn-ghost w-full cursor-not-allowed opacity-60">Les paiements ouvrent bientôt</span>
               ) : !wallet ? (
                 <button className="btn-gold w-full" onClick={signIn} disabled={busy}><Icon name="wallet" size={17} /> {busy ? "Signature…" : "Connecter mon wallet"}</button>

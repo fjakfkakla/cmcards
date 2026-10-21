@@ -1,19 +1,30 @@
-/* La mémoire du serveur : quelques commandes Redis. En production, Upstash (sa
-   variable d'environnement est créée par l'intégration Vercel) ; en local, un fichier
-   .data/kv.json qui comprend les mêmes commandes. */
+/* La mémoire du serveur : quelques commandes Redis. En production, le Redis du projet
+   Railway (REDIS_URL = ${{Redis.REDIS_URL}}), ou Upstash par son API REST ; en local,
+   un fichier .data/kv.json qui comprend les mêmes commandes. */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import Redis from "ioredis";
 
 export type Cmd = (string | number)[];
 
 const URL_ = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || "";
 const TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || "";
 
-/* Sur Vercel, un fichier ne survit pas : sans Upstash, rien ne s'achète. */
-export const kvReady = () => !!(URL_ && TOKEN) || !process.env.VERCEL;
+const REDIS_URL = process.env.REDIS_URL || "";
+let redis: Redis | null = null;
+const tcp = () => (redis ??= new Redis(REDIS_URL, { maxRetriesPerRequest: 3, family: 0 })); // family 0 : le réseau privé de Railway est en IPv6
+
+/* Sur Railway ou Vercel, un fichier ne survit pas à un déploiement : sans vrai Redis,
+   rien ne s'achète. */
+export const kvReady = () =>
+  !!REDIS_URL || !!(URL_ && TOKEN) || !(process.env.VERCEL || process.env.RAILWAY_ENVIRONMENT);
 
 export async function run<T = unknown>(cmd: Cmd): Promise<T> {
+  if (REDIS_URL) {
+    const [op, ...args] = cmd;
+    return (await tcp().call(String(op), ...args.map(String))) as T;
+  }
   if (URL_ && TOKEN) {
     const j = await upstash("", cmd);
     if (j.error) throw new Error(`kv: ${j.error}`);
@@ -25,6 +36,12 @@ export async function run<T = unknown>(cmd: Cmd): Promise<T> {
 /* Tout ou rien : les commandes passent ensemble. */
 export async function multi(cmds: Cmd[]): Promise<unknown[]> {
   if (!cmds.length) return [];
+  if (REDIS_URL) {
+    // ioredis range les commandes d'un multi par nom de méthode : en minuscules
+    const res = await tcp().multi(cmds.map(([op, ...a]) => [String(op).toLowerCase(), ...a.map(String)])).exec();
+    if (!res) throw new Error("kv: multi annulé");
+    return res.map(([e, r]) => { if (e) throw e; return r; });
+  }
   if (URL_ && TOKEN) {
     const j = await upstash("/multi-exec", cmds);
     if (!Array.isArray(j)) throw new Error(`kv: ${j.error ?? "multi-exec"}`);
