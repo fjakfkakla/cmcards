@@ -58,18 +58,48 @@ export const COINS: Record<string, Coin> = {
   FWOG: { ticker: "FWOG", name: "Fwog", price: 0.087, color: "#7fd47f" },
 };
 
+/* Les images d'un set signature : chaque rareté a sa photo et sa mise en scène.
+   Fabriquées par tools/traders/kimchi.py (le détourage, le décor sans lui). */
+export type AuraArt = {
+  print: string;  // Commun : le tirage
+  table: string;  // Rare : la liasse
+  jet: string;    // Shiny : le rosé
+  film: string;   // OG : la pellicule
+  bg: string; cut: string; glow: string; // Mythic : le décor, lui, sa silhouette floutée
+};
+
 export type Trader = {
   id: string; name: string; handle: string;
   category?: CategoryId; // pas encore choisie : fond neutre, pas de pastille
   art?: string; artPos?: string;
   theme?: "sponge";      // le thème de sa Mythic (1 sur 1)
   mythic?: { banner: string; avatar: string }; // les images de sa Mythic
+  aura?: AuraArt;        // son set signature : une carte différente par rareté
+};
+/* Les illustrations : la bannière X publique du trader, servie par X (rien dans
+   le dépôt). Si elle change sur X, l'URL ici est à mettre à jour. */
+const BANNER = {
+  cupsey: "https://pbs.twimg.com/profile_banners/1168903946989010944/1766688794/1500x500",
+  cented: "https://pbs.twimg.com/profile_banners/1048768598494199809/1745814342/1500x500",
 };
 export const TRADERS: Trader[] = [
-  { id: "mitch", name: "Mitch", handle: "@mitch", category: "trader", art: "/traders/mitch.png", artPos: "50% 50%" },
-  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: "/traders/cupsey-banner.webp", artPos: "93% 30%", theme: "sponge",
-    mythic: { banner: "/traders/cupsey-banner.webp", avatar: "/traders/cupsey.png" } },
-  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous" },
+  // ses images sont versionnées (public/art/) : elles s'affichent aussi sur Vercel
+  { id: "mitch", name: "Mitch", handle: "", category: "trader", art: "/art/mitch.webp", artPos: "50% 42%",
+    mythic: { banner: "/art/mitch.webp", avatar: "/art/mitch-face.webp" } },
+  { id: "cupsey", name: "Cupsey", handle: "@Cupseyy", category: "legend", art: BANNER.cupsey, artPos: "93% 30%", theme: "sponge",
+    mythic: { banner: BANNER.cupsey, avatar: "https://pbs.twimg.com/profile_images/1878584793249583104/WMH0-IGY_400x400.jpg" } },
+  { id: "cented", name: "Cented", handle: "@Cented7", category: "famous", art: BANNER.cented, artPos: "65% 45%" },
+  // le handle X reste vide tant qu'on n'a pas le bon
+  { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
+    aura: {
+      print: "/traders/kimchi-desert.webp",
+      table: "/traders/kimchi-table.webp",
+      jet: "/traders/kimchi-jet.webp",
+      film: "/traders/kimchi-flash.webp",
+      bg: "/traders/kimchi-aura-bg.webp",
+      cut: "/traders/kimchi-aura-cut.webp",
+      glow: "/traders/kimchi-aura-glow.png",
+    } },
 ];
 export const trader = (id: string) => TRADERS.find((t) => t.id === id)!;
 

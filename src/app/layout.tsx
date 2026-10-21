@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Chewy, Nunito } from "next/font/google";
+import { Chewy, Instrument_Serif, Inter_Tight, Nunito } from "next/font/google";
 import "./globals.css";
 
 const chewy = Chewy({ variable: "--font-chewy", weight: "400", subsets: ["latin"] });
 const nunito = Nunito({ variable: "--font-nunito", weight: ["600", "700", "800", "900"], style: ["normal", "italic"], subsets: ["latin"] });
+// le set Kimchi : un sérif italique et des capitales espacées, rien de plus
+const serif = Instrument_Serif({ variable: "--font-serif", weight: "400", style: ["normal", "italic"], subsets: ["latin"] });
+const tight = Inter_Tight({ variable: "--font-tight", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "cm cards",
@@ -12,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={`${chewy.variable} ${nunito.variable} h-full antialiased`}>
+    <html lang="fr" className={`${chewy.variable} ${nunito.variable} ${serif.variable} ${tight.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">{children}</body>
     </html>
   );
