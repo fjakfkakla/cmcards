@@ -117,6 +117,14 @@ export const TRADERS: Trader[] = [
   { id: "sling", name: "Sling", handle: "", category: "famous", art: "/art/sling.webp", artPos: "50% 40%",
     mythic: { banner: "/art/sling.webp", avatar: "/art/sling.webp",
       panels: { top: { src: "/art/sling.webp", pos: "50% 20%" }, left: { src: "/art/sling.webp", pos: "10% 60%" }, right: { src: "/art/sling.webp", pos: "90% 60%" } } } },
+  // Rasmr : sa photo au verre de vin, dans la lumière bleue, en principale ; une photo,
+  // sa Shiny est bleue. La photo au bord de la piscine (sa seconde image) sur son OG et
+  // dans la planche de sa Mythic : lui sous le parasol en haut, ses sneakers à gauche,
+  // le parfum et les lunettes à droite. Pas de thème. Un Famous.
+  { id: "rasmr", name: "Rasmr", handle: "", category: "famous", art: "/art/rasmr-face.webp", artPos: "50% 40%", tint: "blue",
+    shots: { og: { src: "/art/rasmr-pool.webp", pos: "48% 45%" } },
+    mythic: { banner: "/art/rasmr-pool.webp", avatar: "/art/rasmr-face.webp",
+      panels: { top: { src: "/art/rasmr-pool.webp", pos: "50% 32%" }, left: { src: "/art/rasmr-pool.webp", pos: "45% 92%" }, right: { src: "/art/rasmr-pool.webp", pos: "75% 57%" } } } },
   // Frank : son dessin en principale ; sa Mythic montre sa photo, le dessin en sticker. Thème bling.
   { id: "frank", name: "Frank", handle: "", category: "famous", art: "/art/frank.webp", artPos: "50% 40%", theme: "bling",
     mythic: { banner: "/art/frank-photo.webp", avatar: "/art/frank.webp",
