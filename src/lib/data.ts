@@ -311,6 +311,12 @@ export const TRADERS: Trader[] = [
   { id: "dani", name: "Dani", handle: "", category: "holder", art: "/art/dani-face.webp", artPos: "60% 40%", tint: "blue",
     mythic: { banner: "/art/dani.webp", avatar: "/art/dani-face.webp",
       panels: { top: { src: "/art/dani.webp", pos: "55% 50%" }, left: { src: "/art/dani.webp", pos: "8% 85%" }, right: { src: "/art/dani.webp", pos: "98% 40%" } } } },
+  // bandit : une seule image, la sienne partout : le chat tigré attablé devant son verre
+  // de vin rouge, et son grand portrait qui veille dans la pénombre. Une photo dans les
+  // bruns : sa Shiny est en or. Pas de thème pour sa Mythic. Un Trencher.
+  { id: "bandit", name: "bandit", handle: "", category: "trencher", art: "/art/bandit.webp", artPos: "50% 50%", tint: "gold",
+    mythic: { banner: "/art/bandit.webp", avatar: "/art/bandit.webp",
+      panels: { top: { src: "/art/bandit.webp", pos: "62% 22%" }, left: { src: "/art/bandit.webp", pos: "10% 75%" }, right: { src: "/art/bandit.webp", pos: "58% 90%" } } } },
   // west : sa pdp (en voiture, les lunettes rondes, l'éventail de billets) en
   // principale ; une photo aux tons chauds : l'or la verdit, sa Shiny est en bleu
   // électrique. Sa bannière (le casque blanc dans sa chambre, « it's impossible to
