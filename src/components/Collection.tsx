@@ -80,7 +80,8 @@ export default function Collection() {
           <Empty title="No cards yet" href="/boosters" cta="Open a booster" />
         ) : (
           <>
-            <div className="mt-6 flex flex-col gap-3">
+            <p className="mt-6 text-[15px] font-semibold text-muted">Tap a card to set your price and sell it on the market.</p>
+            <div className="mt-4 flex flex-col gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Filter on={!cat} onClick={() => setCat(null)}>All</Filter>
                 {CATS.map((c) => (

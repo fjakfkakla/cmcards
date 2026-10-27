@@ -24,7 +24,8 @@ const CATS = CATEGORIES.filter((c) => TRADERS.some((t) => t.category === c.id));
    paie le vendeur directement, plus 1 % à cm cards ; la carte change de main dès
    que le serveur a lu le paiement. */
 export default function Market() {
-  const { wallet } = useAccount();
+  const { wallet, me } = useAccount();
+  const owned = me?.cards.length ?? 0;
   const [data, setData] = useState<{ offers: Offer[]; sales: Sale[] } | null>(null);
   const [failed, setFailed] = useState(false);
   const [cat, setCat] = useState<CategoryId | null>(null);
@@ -79,6 +80,7 @@ export default function Market() {
             <option value="recent">Newest</option>
             <option value="rare">Rarest</option>
           </select>
+          {owned > 0 && <Link href="/collection" className="btn-gold btn-sm h-12 px-5"><Icon name="tag" size={16} /> Sell a card</Link>}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Filter on={!cat} onClick={() => setCat(null)}>All</Filter>
@@ -107,7 +109,9 @@ export default function Market() {
           {Array.from({ length: 8 }, (_, k) => <div key={k} className="aspect-[63/88] animate-pulse rounded-[14px] bg-raised" />)}
         </div>
       ) : offers.length === 0 ? (
-        <Empty title="No cards for sale" href="/boosters" cta="Open a booster" />
+        owned > 0
+          ? <Empty title="No cards for sale yet" href="/collection" cta="Sell one of your cards" />
+          : <Empty title="No cards for sale" href="/boosters" cta="Open a booster" />
       ) : list.length === 0 ? (
         <div className="mt-12 text-center">
           <p className="font-display text-[22px] font-extrabold">Nothing matches these filters</p>
