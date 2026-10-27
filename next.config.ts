@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
    toutes les variables vivent là-bas. Vercel ne sert que les pages, et renvoie /api/*
    au service Railway : il n'a besoin d'aucune variable. L'adresse est écrite ici, en
    dur ; vide, Vercel répond lui-même (paiements fermés, faute de variables). */
-const RAILWAY = "";
+const RAILWAY = "https://cmcards-production.up.railway.app";
 
 const nextConfig: NextConfig = {
   /* Les anciennes adresses en français, gardées pour les liens déjà partagés. */
