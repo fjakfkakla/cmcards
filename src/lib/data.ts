@@ -431,6 +431,15 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/tobx.webp", pos: "62% 45%" } },
     mythic: { banner: "/art/tobx.webp", avatar: "/art/tobx-face.webp",
       panels: { top: { src: "/art/tobx.webp", pos: "60% 20%" }, left: { src: "/art/tobx.webp", pos: "30% 40%" }, right: { src: "/art/tobx.webp", pos: "92% 45%" } } } },
+  // badger : sa pdp (Vash, le manteau rouge au vent, devant les deux soleils couchants)
+  // en principale ; un dessin en couleurs : sa Shiny décale ses teintes. Sa bannière
+  // (la Plant de glace, les deux lunes, Vash minuscule dans le désert blanc, Knives
+  // sur son rocher) sur son OG et dans la planche de sa Mythic : les lunes et Vash en
+  // haut, la Plant à gauche, Knives à droite, la pdp en sticker. Pas de thème. Un Trencher.
+  { id: "badger", name: "badger", handle: "", category: "trencher", art: "/art/badger-face.webp", artPos: "65% 45%",
+    shots: { og: { src: "/art/badger.webp", pos: "32% 50%" } },
+    mythic: { banner: "/art/badger.webp", avatar: "/art/badger-face.webp",
+      panels: { top: { src: "/art/badger.webp", pos: "38% 75%" }, left: { src: "/art/badger.webp", pos: "8% 40%" }, right: { src: "/art/badger.webp", pos: "93% 40%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
