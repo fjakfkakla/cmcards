@@ -422,6 +422,15 @@ export const TRADERS: Trader[] = [
     shots: { og: { src: "/art/quant-bugatti.webp", pos: "28% 40%" } },
     mythic: { banner: "/art/quant-fu.webp", avatar: "/art/quant-face.webp",
       panels: { top: { src: "/art/quant-fu.webp", pos: "50% 42%" }, left: { src: "/art/quant-bugatti.webp", pos: "16% 24%" }, right: { src: "/art/quant.webp", pos: "32% 72%" } } } },
+  // tobx : sa pdp (Batman de dos, la cape au vent, sous une nuée de chauves-souris)
+  // en principale ; en noir et blanc : sa Shiny est en bleu électrique. Sa bannière
+  // (Batman qui plane au-dessus de Gotham, la lune, la tour de l'horloge) sur son OG
+  // et dans la planche de sa Mythic : Batman et la lune en haut, la tour de l'horloge
+  // à gauche, les néons du port à droite, la pdp en sticker. Pas de thème. Un Trencher.
+  { id: "tobx", name: "tobx", handle: "", category: "trencher", art: "/art/tobx-face.webp", artPos: "55% 45%", tint: "blue",
+    shots: { og: { src: "/art/tobx.webp", pos: "62% 45%" } },
+    mythic: { banner: "/art/tobx.webp", avatar: "/art/tobx-face.webp",
+      panels: { top: { src: "/art/tobx.webp", pos: "60% 20%" }, left: { src: "/art/tobx.webp", pos: "30% 40%" }, right: { src: "/art/tobx.webp", pos: "92% 45%" } } } },
   // le handle X reste vide tant qu'on n'a pas le bon
   { id: "kimchi", name: "Kimchi", handle: "", category: "legend", art: "/traders/kimchi-desert.webp", artPos: "40% 60%",
     aura: {
