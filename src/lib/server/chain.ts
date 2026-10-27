@@ -5,7 +5,9 @@ import { SERVER_RPC } from "./config";
 import { Oops } from "./errors";
 
 const RPC = SERVER_RPC;
-const MAX_AGE = 60 * 60; // un paiement de plus d'une heure n'achète plus rien (s)
+/* Un paiement de plus d'une semaine n'achète plus rien (s). Assez long pour qu'un
+   joueur parti avant la fin revienne chercher ses cartes. */
+const MAX_AGE = 7 * 24 * 3600;
 
 export type Payment = {
   signer: string;
@@ -23,7 +25,7 @@ type Tx = {
 export const isSignature = (s: unknown): s is string =>
   typeof s === "string" && /^[1-9A-HJ-NP-Za-km-z]{64,90}$/.test(s);
 
-export async function readPayment(sig: string): Promise<Payment> {
+export async function readPayment(sig: string, maxAge = MAX_AGE): Promise<Payment> {
   let tx: Tx | null = null;
   // juste après la confirmation, le nœud peut ne pas encore la servir
   for (let i = 0; i < 8 && !tx; i++) {
@@ -42,7 +44,7 @@ export async function readPayment(sig: string): Promise<Payment> {
   }
   if (!tx) throw new Oops(404, "Transaction not found on-chain. Try again in a moment.");
   if (!tx.meta || tx.meta.err) throw new Oops(400, "The transaction failed on-chain.");
-  if (!tx.blockTime || Date.now() / 1000 - tx.blockTime > MAX_AGE) throw new Oops(400, "This payment is too old.");
+  if (!tx.blockTime || Date.now() / 1000 - tx.blockTime > maxAge) throw new Oops(400, "This payment is too old.");
 
   const { accountKeys, instructions } = tx.transaction.message;
   const transfers: Payment["transfers"] = [];
@@ -59,3 +61,6 @@ export async function readPayment(sig: string): Promise<Payment> {
 /* Ce que `from` a versé à `to` dans ce paiement. */
 export const paid = (p: Payment, from: string, to: string) =>
   p.transfers.filter((t) => t.from === from && t.to === to).reduce((a, t) => a + t.lamports, 0);
+/* Tout ce que `from` a versé dans ce paiement, à qui que ce soit. */
+export const spent = (p: Payment, from: string) =>
+  p.transfers.filter((t) => t.from === from).reduce((a, t) => a + t.lamports, 0);

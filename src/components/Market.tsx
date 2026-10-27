@@ -6,7 +6,7 @@ import "./collection.css";
 import CollectCard from "./CollectCard";
 import Icon from "./Icon";
 import { Ago, CategoryTag, Empty, FamilyCoin, Filter, Modal, PageHead, RarityTag, Stats } from "./ui";
-import { api, useAccount } from "@/lib/account";
+import { api, final, useAccount } from "@/lib/account";
 import { CATEGORIES, RARITIES, TRADERS, type CategoryId, type RarityId, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
 import { FEE_BPS, MEMO, explorer, feeOf, short, toSol } from "@/lib/solana";
 import type { Listing, Offer, Sale } from "@/lib/types";
@@ -176,7 +176,7 @@ type Step = "idle" | "reserve" | "sign" | "transfer" | "done";
 /* L'achat : le détail du prix, puis réserver, payer (un seul passage dans le wallet :
    le vendeur et les frais dans la même transaction), et le serveur passe la carte. */
 function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; onDone: () => void }) {
-  const { cfg, wallet, balance, busy, signIn, pay, refresh } = useAccount();
+  const { cfg, wallet, balance, busy, signIn, pay, refresh, savePurchase, dropPurchase } = useAccount();
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
   const [sig, setSig] = useState<string | null>(null);
@@ -197,7 +197,12 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
         throw new Error("The seller just changed their price. Reopen the card to see the new one.");
       }
       setStep("sign");
-      const s = await pay([{ to: listing.seller, lamports: listing.lamports }, { to: cfg.treasury, lamports: feeOf(listing.lamports) }], MEMO.buy(listing.id));
+      const s = await pay(
+        [{ to: listing.seller, lamports: listing.lamports }, { to: cfg.treasury, lamports: feeOf(listing.lamports) }],
+        MEMO.buy(listing.id),
+        // gardé dès l'envoi : la fenêtre fermée ou la page rechargée, la carte sera redemandée
+        (sig) => { if (wallet) savePurchase({ sig, uid: offer.uid, listing: listing.id, wallet }); },
+      );
       setSig(s);
       setStep("transfer");
       await claim(s);
@@ -207,7 +212,13 @@ function Buy({ offer, onClose, onDone }: { offer: Offer; onClose: () => void; on
     }
   }
   async function claim(s: string) {
-    await api("/api/market/buy", { uid: offer.uid, listing: offer.id, signature: s });
+    try {
+      await api("/api/market/buy", { uid: offer.uid, listing: offer.id, signature: s });
+    } catch (e) {
+      if (final(e)) dropPurchase(s);
+      throw e;
+    }
+    dropPurchase(s);
     setStep("done");
     refresh(); onDone();
   }

@@ -5,14 +5,15 @@
      serial:<t>:<r>      le dernier numéro imprimé     market           les cartes en vente (set)
      listing:<uid>       l'annonce de la carte (JSON) lock:<uid>       l'acheteur en train de payer
      pay:<signature>     un paiement déjà compté       sold:<listing>   l'annonce déjà vendue
-     sales               les dernières ventes (liste)  refunds          les paiements à rembourser */
+     sales               les dernières ventes (liste)  refunds          les paiements à rembourser
+     refunded:<sig>      le remboursement de ce paiement (sa signature) */
 
 import { randomBytes, randomInt } from "node:crypto";
 import { PACKS, RARITIES, type RarityId, drawRarity, packTraders, rank, rarity } from "../data";
 import { FEE_BPS, MAX_PRICE, MEMO, MIN_PRICE, feeOf, toLamports } from "../solana";
 import { TREASURY } from "./config";
-import type { Listing, Offer, Owned, Sale } from "../types";
-import { paid, readPayment } from "./chain";
+import type { Listing, Offer, Owned, Refund, Sale } from "../types";
+import { paid, readPayment, spent } from "./chain";
 import { Oops } from "./errors";
 import { type Cmd, getJson, getMany, kvReady, multi, run } from "./kv";
 
@@ -20,7 +21,8 @@ const LOCK_S = 150; // le temps de payer une carte réservée
 const rand = () => randomInt(0, 2 ** 32) / 2 ** 32;
 const uid = () => randomBytes(9).toString("base64url");
 
-type Paid = { wallet: string; kind: "pack" | "buy"; uids?: string[]; done?: boolean };
+type Paid = { wallet: string; kind: "pack" | "buy"; uids?: string[]; done?: boolean; refund?: string };
+
 
 function ready() {
   if (!TREASURY) throw new Oops(503, "Payments are not open yet (cm cards wallet not configured).");
@@ -112,6 +114,7 @@ async function already(sig: string, wallet: string, kind: Paid["kind"]): Promise
   const p = await getJson<Paid>(`pay:${sig}`);
   if (!p) return null;
   if (p.wallet !== wallet || p.kind !== kind) throw new Oops(409, "This payment has already been used.");
+  if (p.refund) throw new Oops(409, `${p.refund} Your payment will be refunded.`);
   if (!p.done) throw new Oops(409, "This payment is already being processed.");
   const cards = await getMany<Owned>((p.uids ?? []).map((u) => `card:${u}`));
   return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
@@ -179,16 +182,20 @@ export async function buy(wallet: string, u: string, listingId: string, sig: str
 
   // payé, mais l'annonce a changé ou une autre vente l'a prise : à rembourser
   const refund = async (why: string) => {
-    await run(["LPUSH", "refunds", JSON.stringify({ sig, wallet, listing: listingId, uid: u, why, at: Date.now() })]);
+    const r: Refund = { sig, wallet, listing: listingId, uid: u, why, at: Date.now(), lamports: spent(pay, wallet), seller: l?.seller };
+    await multi([
+      ["LPUSH", "refunds", JSON.stringify(r)],
+      ["SET", `pay:${sig}`, JSON.stringify({ wallet, kind: "buy", refund: why } satisfies Paid)],
+    ]);
     throw new Oops(409, `${why} Your payment will be refunded.`);
   };
-  if (!l || l.id !== listingId) return refund("Cette annonce n'existe plus.");
+  if (!l || l.id !== listingId) return refund("This listing no longer exists.");
   if (paid(pay, wallet, l.seller) < l.lamports) return refund("The amount paid to the seller does not cover the price.");
   if (FEE_BPS && paid(pay, wallet, TREASURY) < feeOf(l.lamports)) return refund("The fee was not paid.");
   if ((await run(["SET", `sold:${l.id}`, wallet, "NX"])) !== "OK") return refund("This card was just sold.");
 
   const card = await getJson<Owned>(`card:${u}`);
-  if (!card || card.owner !== l.seller) return refund("Cette carte n'est plus au vendeur.");
+  if (!card || card.owner !== l.seller) return refund("The seller no longer owns this card.");
   const moved: Owned = { ...card, owner: wallet };
   const sale: Sale = {
     uid: u, trader: card.trader, rarity: card.rarity, serial: card.serial,
@@ -205,4 +212,36 @@ export async function buy(wallet: string, u: string, listingId: string, sig: str
     ["SET", `pay:${sig}`, JSON.stringify({ wallet, kind: "buy", uids: [u], done: true } satisfies Paid)],
   ]);
   return moved;
+}
+
+/* ——— rembourser (le wallet de cm cards seulement) ——— */
+
+export function needAdmin(wallet: string) {
+  if (!TREASURY || wallet !== TREASURY) throw new Oops(403, "Connect the cm cards wallet.");
+}
+
+export async function refunds(): Promise<Refund[]> {
+  const list = (await run<string[]>(["LRANGE", "refunds", 0, -1])).map((r) => JSON.parse(r) as Refund);
+  if (!list.length) return [];
+  const done = await run<(string | null)[]>(["MGET", ...list.map((r) => `refunded:${r.sig}`)]);
+  return Promise.all(list.map(async (r, i) => ({
+    ...r,
+    // les plus anciennes n'avaient pas noté le montant : on le relit sur la chaîne
+    lamports: r.lamports ?? spent(await readPayment(r.sig, Infinity), r.wallet),
+    done: done[i] ?? undefined,
+  })));
+}
+
+/* Le remboursement est fait depuis le wallet de cm cards : le serveur le lit sur la
+   chaîne (bon wallet, bon montant, mémo du paiement remboursé) et le note. */
+export async function markRefunded(sig: string, refundSig: string): Promise<Refund> {
+  const r = (await refunds()).find((x) => x.sig === sig);
+  if (!r) throw new Oops(404, "Unknown refund.");
+  if (r.done) throw new Oops(409, "Already refunded.");
+  const pay = await readPayment(refundSig);
+  if (pay.signer !== TREASURY) throw new Oops(403, "This refund is not signed by the cm cards wallet.");
+  if (!pay.memos.includes(MEMO.refund(sig))) throw new Oops(400, "This transaction is not the refund of this payment.");
+  if (paid(pay, TREASURY, r.wallet) < r.lamports) throw new Oops(402, "The amount sent does not cover the refund.");
+  if ((await run(["SET", `refunded:${sig}`, refundSig, "NX"])) !== "OK") throw new Oops(409, "Already refunded.");
+  return { ...r, done: refundSig };
 }

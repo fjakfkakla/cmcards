@@ -30,6 +30,7 @@ export const feeOf = (lamports: number) => Math.ceil((lamports * FEE_BPS) / 10_0
 export const MEMO = {
   pack: (pack: string) => `cmcards:pack:${pack}`,
   buy: (listing: string) => `cmcards:buy:${listing}`,
+  refund: (sig: string) => `cmcards:refund:${sig}`,
 };
 
 export const short = (w: string) => `${w.slice(0, 4)}…${w.slice(-4)}`;

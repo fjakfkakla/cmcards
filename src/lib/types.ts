@@ -25,4 +25,12 @@ export type Sale = {
   seller: string; buyer: string; lamports: number; sig: string; at: number;
 };
 
+/* Un paiement qui n'a rien acheté : cm cards le rend, depuis son wallet. */
+export type Refund = {
+  sig: string; wallet: string; listing: string; uid: string; why: string; at: number;
+  lamports: number;  // tout ce que l'acheteur a versé (au vendeur et à cm cards)
+  seller?: string;   // le vendeur de l'annonce, s'il a reçu une part
+  done?: string;     // la signature du remboursement
+};
+
 export type Me = { wallet: string | null; cards: Owned[]; listings: Listing[]; sales: Sale[] };

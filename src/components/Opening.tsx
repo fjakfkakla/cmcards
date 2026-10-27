@@ -81,7 +81,10 @@ export default function Opening({ pack }: { pack: Pack }) {
     setError(null); setStep("sign");
     let sig: string;
     try {
-      sig = await pay([{ to: cfg.treasury, lamports: price }], MEMO.pack(pack.id));
+      // gardé dès l'envoi : l'onglet fermé avant la confirmation, les cartes restent à réclamer
+      sig = await pay([{ to: cfg.treasury, lamports: price }], MEMO.pack(pack.id), (s) => {
+        try { localStorage.setItem(PENDING, JSON.stringify({ sig: s, pack: pack.id, wallet })); } catch {}
+      });
     } catch (e) {
       setStep("idle");
       setError(e instanceof Error ? e.message : "Payment cancelled.");

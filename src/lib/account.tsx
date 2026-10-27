@@ -26,7 +26,21 @@ type Account = {
   picker: boolean;
   setPicker: (v: boolean) => void;
   choose: (name: WalletName) => void;
-  pay: (transfers: { to: string; lamports: number }[], memo: string) => Promise<string>;
+  /* onSent : la transaction est partie (pas encore confirmée) ; sa signature, à garder */
+  pay: (transfers: { to: string; lamports: number }[], memo: string, onSent?: (sig: string) => void) => Promise<string>;
+  savePurchase: (p: Purchase) => void;
+  dropPurchase: (sig: string) => void;
+};
+
+/* Un achat au marché payé, dont la carte n'est pas encore arrivée : gardé dans le
+   navigateur et redemandé au serveur à chaque visite, jusqu'à ce qu'il réponde. */
+export type Purchase = { sig: string; uid: string; listing: string; wallet: string };
+const PURCHASES = "cmcards:purchases";
+const readPurchases = (): Purchase[] => {
+  try { return JSON.parse(localStorage.getItem(PURCHASES) ?? "[]"); } catch { return []; }
+};
+const writePurchases = (l: Purchase[]) => {
+  try { if (l.length) localStorage.setItem(PURCHASES, JSON.stringify(l)); else localStorage.removeItem(PURCHASES); } catch {}
 };
 
 const Ctx = createContext<Account | null>(null);
@@ -36,12 +50,19 @@ export const useAccount = () => {
   return a;
 };
 
+/* Le serveur a tranché pour de bon (pas une coupure, pas une transaction encore
+   introuvable, pas une session à refaire) : inutile de redemander. */
+export const final = (e: unknown) => {
+  const st = (e as { status?: number })?.status ?? 0;
+  return st >= 400 && st < 500 && st !== 401 && st !== 404;
+};
+
 export async function api<T>(path: string, body?: unknown): Promise<T> {
   const r = await fetch(path, body === undefined
     ? { cache: "no-store" }
     : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const j = await r.json().catch(() => ({ error: "Unreadable response from the server." }));
-  if (!r.ok) throw new Error(j.error ?? "Server error.");
+  if (!r.ok) throw Object.assign(new Error(j.error ?? "Server error."), { status: r.status });
   return j as T;
 }
 
@@ -70,6 +91,7 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
   const [picker, setPicker] = useState(false);
   const [bal, setBal] = useState<{ key: string; lamports: number } | null>(null);
   const want = useRef(false); // une connexion demandée, en attente du wallet
+  const [notice, setNotice] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try { setMe(await api<Me>("/api/me")); } catch { setMe((m) => m ?? { wallet: null, cards: [], listings: [], sales: [] }); }
@@ -131,7 +153,40 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
     await refresh();
   }, [w, refresh]);
 
-  const pay = useCallback(async (transfers: { to: string; lamports: number }[], memo: string) => {
+  const savePurchase = useCallback((p: Purchase) => {
+    writePurchases([...readPurchases().filter((x) => x.sig !== p.sig), p]);
+  }, []);
+  const dropPurchase = useCallback((sig: string) => {
+    writePurchases(readPurchases().filter((x) => x.sig !== sig));
+  }, []);
+
+  /* Les achats restés en route (onglet fermé, réseau coupé) : on les reprend dès que
+     la session est là. Une réponse nette du serveur (la carte, ou un remboursement)
+     les retire ; une coupure ou une transaction pas encore lue les garde. */
+  const retried = useRef<string | null>(null);
+  useEffect(() => {
+    const wallet = me?.wallet;
+    if (!wallet || retried.current === wallet) return;
+    retried.current = wallet;
+    const mine = readPurchases().filter((p) => p.wallet === wallet);
+    if (!mine.length) return;
+    (async () => {
+      let got = 0;
+      for (const p of mine) {
+        const r = await fetch("/api/market/buy", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uid: p.uid, listing: p.listing, signature: p.sig }),
+        }).catch(() => null);
+        if (!r || r.status === 401 || r.status === 404 || r.status >= 500) continue;
+        dropPurchase(p.sig);
+        if (r.ok) got++;
+        else setNotice((await r.json().catch(() => null))?.error ?? "A purchase could not be completed.");
+      }
+      if (got) { setNotice(got > 1 ? `${got} cards you paid for are now yours.` : "The card you paid for is now yours."); refresh(); }
+    })();
+  }, [me?.wallet, dropPurchase, refresh]);
+
+  const pay = useCallback(async (transfers: { to: string; lamports: number }[], memo: string, onSent?: (sig: string) => void) => {
     if (!me?.wallet) throw new Error("Connect your wallet.");
     if (!w.publicKey || !w.connected) {
       signIn();
@@ -157,6 +212,7 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
     } catch (e) {
       throw new Error(e instanceof Error && /reject|cancel/i.test(e.message) ? "Payment cancelled." : "The wallet rejected the transaction. Check your balance.");
     }
+    onSent?.(signature);
     const r = await connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
     if (r.value.err) throw new Error("The transaction failed on-chain.");
     return signature;
@@ -164,7 +220,18 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
 
   const value = useMemo<Account>(() => ({
     cfg, ready, me, wallet: me?.wallet ?? null, busy, error, balance, refresh, signIn, signOut, picker, setPicker, choose, pay,
-  }), [cfg, ready, me, busy, error, balance, refresh, signIn, signOut, picker, choose, pay]);
+    savePurchase, dropPurchase,
+  }), [cfg, ready, me, busy, error, balance, refresh, signIn, signOut, picker, choose, pay, savePurchase, dropPurchase]);
 
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      {children}
+      {notice && (
+        <div role="status" className="surface fixed inset-x-4 bottom-24 z-50 mx-auto flex max-w-md items-center gap-3 p-4 md:bottom-6">
+          <p className="flex-1 text-[15px] font-bold">{notice}</p>
+          <button className="btn-ghost btn-sm" onClick={() => setNotice(null)}>OK</button>
+        </div>
+      )}
+    </Ctx.Provider>
+  );
 }
