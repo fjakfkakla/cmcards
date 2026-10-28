@@ -10,6 +10,9 @@ export const CLUSTER: Cluster =
 /* Le RPC du navigateur, public ; celui du serveur peut porter une clé privée. */
 export const PUBLIC_RPC = env("SOLANA_RPC_PUBLIC", "NEXT_PUBLIC_SOLANA_RPC") || defaultRpc(CLUSTER);
 export const SERVER_RPC = env("SOLANA_RPC") || PUBLIC_RPC;
+/* Le RPC du mainnet, pour les soldes qui doivent être de vrais SOL (le booster offert) :
+   celui du serveur s'il est déjà sur le mainnet, sinon SOLANA_RPC_MAINNET ou le public. */
+export const MAINNET_RPC = CLUSTER === "mainnet-beta" ? SERVER_RPC : env("SOLANA_RPC_MAINNET") || defaultRpc("mainnet-beta");
 export const TREASURY = env("TREASURY_WALLET", "NEXT_PUBLIC_TREASURY");
 
 export const publicConfig = (): Config => ({ cluster: CLUSTER, rpc: PUBLIC_RPC, treasury: TREASURY });

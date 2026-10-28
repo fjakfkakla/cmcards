@@ -1,7 +1,7 @@
 /* Lire un paiement sur la chaîne : qui a signé, quels virements de SOL, quels mémos.
    Le serveur ne croit que ça, jamais ce que le navigateur annonce. */
 
-import { SERVER_RPC } from "./config";
+import { MAINNET_RPC, SERVER_RPC } from "./config";
 import { Oops } from "./errors";
 
 const RPC = SERVER_RPC;
@@ -58,9 +58,10 @@ export async function readPayment(sig: string, maxAge = MAX_AGE): Promise<Paymen
   return { signer: accountKeys[0]?.pubkey ?? "", transfers, memos };
 }
 
-/* Le solde d'un wallet, en lamports. */
-export async function balanceOf(wallet: string): Promise<number> {
-  const r = await fetch(RPC, {
+/* Le solde d'un wallet sur le mainnet, en lamports : jamais celui du devnet, où
+   n'importe qui a des SOL à volonté. */
+export async function mainnetBalance(wallet: string): Promise<number> {
+  const r = await fetch(MAINNET_RPC, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getBalance", params: [wallet, { commitment: "confirmed" }] }),

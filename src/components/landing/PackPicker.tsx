@@ -50,7 +50,7 @@ export default function PackPicker() {
           <FamilyCoin id={FREE_PACK} size={52} />
           <div className="min-w-0 flex-1">
             <p className="font-display text-[22px] leading-tight font-extrabold tracking-[-.03em]">Your first {category(FREE_PACK).name} booster is free</p>
-            <p className="text-[14.5px] font-semibold text-muted">One per wallet, nothing to pay: just hold at least {FREE_MIN_SOL} SOL.</p>
+            <p className="text-[14.5px] font-semibold text-muted">One per wallet, nothing to pay: just hold at least {FREE_MIN_SOL} SOL on mainnet.</p>
           </div>
           <Link href={`/booster/${FREE_PACK}`} className="btn-gold">Open it free</Link>
         </div>
