@@ -494,6 +494,9 @@ const PACK_RULES: Record<CategoryId, Pick<Pack, "price" | "cards" | "guarantee" 
   legend: { price: 0.75, cards: 5, guarantee: "shiny", boost: 2, cover: { trader: "kimchi", src: "/traders/kimchi-aura-cut.webp", pos: "50% 0%", cut: true } },
 };
 
+/* Le booster offert à chaque nouveau wallet, une seule fois. */
+export const FREE_PACK: CategoryId = "famous";
+
 export const PACKS: Pack[] = CATEGORIES.map((c) => ({
   id: c.id, name: c.name, pool: c.id, color: c.bg, ink: c.ink, ...PACK_RULES[c.id],
 }));

@@ -6,10 +6,11 @@
      listing:<uid>       l'annonce de la carte (JSON) lock:<uid>       l'acheteur en train de payer
      pay:<signature>     un paiement déjà compté       sold:<listing>   l'annonce déjà vendue
      sales               les dernières ventes (liste)  refunds          les paiements à rembourser
-     refunded:<sig>      le remboursement de ce paiement (sa signature) */
+     refunded:<sig>      le remboursement de ce paiement (sa signature)
+     free:<wallet>       le booster offert, déjà ouvert (JSON, comme pay:<sig>) */
 
 import { randomBytes, randomInt } from "node:crypto";
-import { PACKS, RARITIES, type RarityId, drawRarity, packTraders, rank, rarity } from "../data";
+import { FREE_PACK, PACKS, type Pack, RARITIES, type RarityId, drawRarity, packTraders, rank, rarity } from "../data";
 import { FEE_BPS, MAX_PRICE, MEMO, MIN_PRICE, feeOf, toLamports } from "../solana";
 import { TREASURY } from "./config";
 import type { Listing, Offer, Owned, Refund, Sale } from "../types";
@@ -21,7 +22,7 @@ const LOCK_S = 150; // le temps de payer une carte réservée
 const rand = () => randomInt(0, 2 ** 32) / 2 ** 32;
 const uid = () => randomBytes(9).toString("base64url");
 
-type Paid = { wallet: string; kind: "pack" | "buy"; uids?: string[]; done?: boolean; refund?: string };
+type Paid = { wallet: string; kind: "pack" | "buy" | "free"; uids?: string[]; done?: boolean; refund?: string };
 
 
 function ready() {
@@ -75,8 +76,7 @@ async function mint(pool: string[], r0: RarityId, floor: RarityId): Promise<{ tr
 export async function openPack(wallet: string, packId: string, sig: string): Promise<Owned[]> {
   ready();
   const p = PACKS.find((x) => x.id === packId);
-  const pool = p ? packTraders(p).map((t) => t.id) : [];
-  if (!p || !pool.length) throw new Oops(404, "This booster does not exist.");
+  if (!p || !packTraders(p).length) throw new Oops(404, "This booster does not exist.");
 
   const again = await already(sig, wallet, "pack");
   if (again) return again;
@@ -92,6 +92,12 @@ export async function openPack(wallet: string, packId: string, sig: string): Pro
     throw new Oops(409, "This payment is already being processed.");
   }
 
+  return draw(wallet, p, `pay:${sig}`, "pack");
+}
+
+/* Les cartes d'un booster, tirées et rangées chez le joueur ; `key` note qu'il est ouvert. */
+async function draw(wallet: string, p: Pack, key: string, kind: Paid["kind"]): Promise<Owned[]> {
+  const pool = packTraders(p).map((t) => t.id);
   const at = Date.now();
   const cards: Owned[] = [];
   for (let i = 0; i < p.cards; i++) {
@@ -103,9 +109,36 @@ export async function openPack(wallet: string, packId: string, sig: string): Pro
   await multi([
     ...cards.map((c): Cmd => ["SET", `card:${c.uid}`, JSON.stringify(c)]),
     ["SADD", `cards:${wallet}`, ...cards.map((c) => c.uid)],
-    ["SET", `pay:${sig}`, JSON.stringify({ wallet, kind: "pack", uids: cards.map((c) => c.uid), done: true } satisfies Paid)],
+    ["SET", key, JSON.stringify({ wallet, kind, uids: cards.map((c) => c.uid), done: true } satisfies Paid)],
   ]);
   return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
+}
+
+/* ——— le booster offert ——— */
+
+/* Chaque wallet a un booster Famous offert, une seule fois. */
+export async function freeLeft(wallet: string) {
+  return !(await run<string | null>(["GET", `free:${wallet}`]));
+}
+
+export async function openFree(wallet: string): Promise<Owned[]> {
+  if (!kvReady()) throw new Oops(503, "Boosters are not open yet (storage not configured).");
+  const p = PACKS.find((x) => x.id === FREE_PACK)!;
+  const key = `free:${wallet}`;
+  if ((await run(["SET", key, JSON.stringify({ wallet, kind: "free" } satisfies Paid), "NX"])) !== "OK") {
+    // déjà ouvert : on rend ses cartes (le navigateur peut redemander après une coupure)
+    const f = await getJson<Paid>(key);
+    if (!f?.done) throw new Oops(409, "Your free booster is already being opened.");
+    const cards = await getMany<Owned>((f.uids ?? []).map((u) => `card:${u}`));
+    return cards.sort((a, b) => rank(a.rarity) - rank(b.rarity));
+  }
+  try {
+    return await draw(wallet, p, key, "free");
+  } catch (e) {
+    // épuisé : rien n'a été rangé, il reste à ouvrir (une coupure, elle, peut avoir tout écrit)
+    if (e instanceof Oops) await run(["DEL", key]);
+    throw e;
+  }
 }
 
 /* Un paiement déjà compté pour ce wallet : on rend ce qu'il a acheté (le navigateur

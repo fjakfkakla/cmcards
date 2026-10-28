@@ -33,4 +33,5 @@ export type Refund = {
   done?: string;     // la signature du remboursement
 };
 
-export type Me = { wallet: string | null; cards: Owned[]; listings: Listing[]; sales: Sale[] };
+/* free : le booster offert est encore à ouvrir (sans wallet : oui, il attend). */
+export type Me = { wallet: string | null; cards: Owned[]; listings: Listing[]; sales: Sale[]; free: boolean };

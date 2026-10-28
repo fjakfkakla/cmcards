@@ -33,7 +33,7 @@ export default function Home() {
               <span>as cards.</span>
             </h1>
             <p className="mt-5 max-w-[560px] font-display text-[clamp(1.05rem,2vw,1.3rem)] leading-snug font-extrabold text-white [paint-order:stroke_fill] [-webkit-text-stroke:4px_#1e1a16]">
-              Open booster packs, collect {TRADERS.length} traders across five rarities, sell your cards for SOL.
+              Open booster packs, collect {TRADERS.length} traders across five rarities, sell your cards for SOL. Your first Famous booster is free.
             </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <Link href="/boosters" className="btn-gold btn-lg">

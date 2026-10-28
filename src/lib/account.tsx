@@ -94,7 +94,7 @@ function Account({ cfg, ready, children }: { cfg: Config; ready: boolean; childr
   const [notice, setNotice] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
-    try { setMe(await api<Me>("/api/me")); } catch { setMe((m) => m ?? { wallet: null, cards: [], listings: [], sales: [] }); }
+    try { setMe(await api<Me>("/api/me")); } catch { setMe((m) => m ?? { wallet: null, cards: [], listings: [], sales: [], free: false }); }
   }, []);
   useEffect(() => { const t = setTimeout(refresh, 0); return () => clearTimeout(t); }, [refresh]);
 

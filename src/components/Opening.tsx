@@ -10,7 +10,7 @@ import Medal from "./Medal";
 import { RarityTag } from "./ui";
 import { oddsOf } from "./landing/PackPicker";
 import { api, useAccount } from "@/lib/account";
-import { type Pack, RARITIES, type RarityId, category, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
+import { FREE_PACK, type Pack, RARITIES, type RarityId, category, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
 import { MEMO, explorer, toLamports } from "@/lib/solana";
 import type { Owned } from "@/lib/types";
 
@@ -32,7 +32,7 @@ const PENDING = "cmcards:pending"; // un paiement fait dont on n'a pas encore le
 const STRIP = 34, LAND = 29, TILE = 132; // la bande : ses plaques, celle où elle s'arrête, leur pas
 
 export default function Opening({ pack }: { pack: Pack }) {
-  const { cfg, ready, wallet, balance, busy, signIn, pay, refresh } = useAccount();
+  const { cfg, ready, me, wallet, balance, busy, signIn, pay, refresh } = useAccount();
   const [cards, setCards] = useState<Owned[] | null>(null);
   const [step, setStep] = useState<Step>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,16 @@ export default function Opening({ pack }: { pack: Pack }) {
   const best = cards ? cards.reduce<RarityId>((b, c) => (rank(c.rarity) > rank(b) ? c.rarity : b), "common") : "common";
   const bestUid = cards?.find((c) => c.rarity === best)?.uid;
   const price = toLamports(pack.price);
-  const short = balance !== null && balance < price + 10_000;
+  const free = pack.id === FREE_PACK && !!me?.free; // le booster offert, pas encore ouvert
+  const short = !free && balance !== null && balance < price + 10_000;
+
+  /* Les cartes tirées arrivent : le booster scellé attend d'être coupé. */
+  const got = useCallback((c: Owned[]) => {
+    setCards(c);
+    setShown(0);
+    setPhase("sealed");
+    refresh();
+  }, [refresh]);
 
   /* Le paiement est sur la chaîne : le serveur le lit et tire les cartes. */
   const claim = useCallback(async (sig: string) => {
@@ -57,14 +66,21 @@ export default function Opening({ pack }: { pack: Pack }) {
       const r = await api<{ cards: Owned[] }>("/api/packs/open", { pack: pack.id, signature: sig });
       try { localStorage.removeItem(PENDING); } catch {}
       setPending(null);
-      setCards(r.cards);
-      setShown(0);
-      setPhase("sealed");
-      refresh();
+      got(r.cards);
     } catch (e) {
       setError(e instanceof Error ? e.message : "The draw failed.");
     } finally { setStep("idle"); }
-  }, [pack.id, refresh]);
+  }, [pack.id, got]);
+
+  /* Le booster offert : rien à payer, le serveur tire les cartes. */
+  async function openFree() {
+    setStep("draw"); setError(null);
+    try {
+      got((await api<{ cards: Owned[] }>("/api/packs/free", {})).cards);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "The draw failed.");
+    } finally { setStep("idle"); }
+  }
 
   /* Un paiement resté sans cartes (onglet fermé, réseau coupé) : on le reprend. */
   useEffect(() => {
@@ -152,6 +168,7 @@ export default function Opening({ pack }: { pack: Pack }) {
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="plate"><b className="num">{pack.cards}</b> cards</span>
               {pack.guarantee && <span className="plate"><RarityTag id={pack.guarantee} size="sm" /> guaranteed</span>}
+              {free && <span className="plate">Your first one is <b>free</b></span>}
             </div>
             <ul className="mt-5 grid gap-1.5">
               {oddsOf(pack).map(({ r, pct }) => (
@@ -166,15 +183,19 @@ export default function Opening({ pack }: { pack: Pack }) {
             <div className="mt-6">
               {!ready ? (
                 <span className="btn-ghost btn-lg w-full animate-pulse">…</span>
-              ) : !cfg.treasury ? (
+              ) : !cfg.treasury && !free ? (
                 <span className="btn-ghost btn-lg w-full cursor-not-allowed">Payments open soon</span>
               ) : !wallet ? (
                 <button className="btn-gold btn-lg w-full" onClick={signIn} disabled={busy}>
-                  <Icon name="wallet" size={19} /> {busy ? "Signing…" : "Connect my wallet"}
+                  <Icon name="wallet" size={19} /> {busy ? "Signing…" : free ? "Connect my wallet to open it free" : "Connect my wallet"}
                 </button>
               ) : pending ? (
                 <button className="btn-gold btn-lg w-full" onClick={() => claim(pending)} disabled={step !== "idle"}>
                   {step === "draw" ? "Drawing…" : "Claim my cards"}
+                </button>
+              ) : free ? (
+                <button className="btn-gold btn-lg w-full" onClick={openFree} disabled={step !== "idle"}>
+                  {step === "draw" ? "Drawing…" : "Open for free"}
                 </button>
               ) : (
                 <button className="btn-gold btn-lg w-full" onClick={buy} disabled={step !== "idle" || short}>
