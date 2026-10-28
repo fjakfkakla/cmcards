@@ -20,6 +20,8 @@ export const FEE_BPS = 100;
 export const LAMPORTS = 1_000_000_000;
 export const MIN_PRICE = 0.001; // SOL
 export const MAX_PRICE = 100_000;
+/* Le booster offert : le wallet doit avoir au moins ce solde (rien n'est prélevé). */
+export const FREE_MIN_SOL = 0.1;
 export const MEMO_PROGRAM = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";
 
 export const toLamports = (sol: number) => Math.round(sol * LAMPORTS);

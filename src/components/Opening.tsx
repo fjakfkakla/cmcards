@@ -11,7 +11,7 @@ import { RarityTag } from "./ui";
 import { oddsOf } from "./landing/PackPicker";
 import { api, useAccount } from "@/lib/account";
 import { FREE_PACK, type Pack, RARITIES, type RarityId, category, fmtSol, rank, rarity, serialOf, trader } from "@/lib/data";
-import { MEMO, explorer, toLamports } from "@/lib/solana";
+import { FREE_MIN_SOL, MEMO, explorer, toLamports } from "@/lib/solana";
 import type { Owned } from "@/lib/types";
 
 /* La lumière d'une rareté : celle qui sort du booster, le cercle de la meilleure carte. */
@@ -49,7 +49,7 @@ export default function Opening({ pack }: { pack: Pack }) {
   const bestUid = cards?.find((c) => c.rarity === best)?.uid;
   const price = toLamports(pack.price);
   const free = pack.id === FREE_PACK && !!me?.free; // le booster offert, pas encore ouvert
-  const short = !free && balance !== null && balance < price + 10_000;
+  const short = balance !== null && balance < (free ? toLamports(FREE_MIN_SOL) : price + 10_000);
 
   /* Les cartes tirées arrivent : le booster scellé attend d'être coupé. */
   const got = useCallback((c: Owned[]) => {
@@ -168,7 +168,7 @@ export default function Opening({ pack }: { pack: Pack }) {
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="plate"><b className="num">{pack.cards}</b> cards</span>
               {pack.guarantee && <span className="plate"><RarityTag id={pack.guarantee} size="sm" /> guaranteed</span>}
-              {free && <span className="plate">Your first one is <b>free</b></span>}
+              {free && <span className="plate">Your first one is <b>free</b> (hold {FREE_MIN_SOL} SOL)</span>}
             </div>
             <ul className="mt-5 grid gap-1.5">
               {oddsOf(pack).map(({ r, pct }) => (
@@ -194,7 +194,7 @@ export default function Opening({ pack }: { pack: Pack }) {
                   {step === "draw" ? "Drawing…" : "Claim my cards"}
                 </button>
               ) : free ? (
-                <button className="btn-gold btn-lg w-full" onClick={openFree} disabled={step !== "idle"}>
+                <button className="btn-gold btn-lg w-full" onClick={openFree} disabled={step !== "idle" || short}>
                   {step === "draw" ? "Drawing…" : "Open for free"}
                 </button>
               ) : (
@@ -202,7 +202,7 @@ export default function Opening({ pack }: { pack: Pack }) {
                   {step === "sign" ? "Confirm in your wallet…" : step === "draw" ? "Drawing…" : `Pay ${fmtSol(pack.price)}`}
                 </button>
               )}
-              {short && !pending && <p className="mt-3 text-center text-[14.5px] font-bold text-down">Insufficient balance</p>}
+              {short && !pending && <p className="mt-3 text-center text-[14.5px] font-bold text-down">{free ? `Your wallet needs at least ${FREE_MIN_SOL} SOL to open it` : "Insufficient balance"}</p>}
               {error && <p className="mt-3 text-center text-[14.5px] font-bold text-down">{error}</p>}
               {pending && (
                 <a href={explorer(pending, cfg.cluster)} target="_blank" rel="noreferrer" className="mt-3 flex items-center justify-center gap-1.5 text-[14px] font-semibold text-muted hover:text-fg">

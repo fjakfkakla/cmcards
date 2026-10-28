@@ -11,10 +11,10 @@
 
 import { randomBytes, randomInt } from "node:crypto";
 import { FREE_PACK, PACKS, type Pack, RARITIES, type RarityId, drawRarity, packTraders, rank, rarity } from "../data";
-import { FEE_BPS, MAX_PRICE, MEMO, MIN_PRICE, feeOf, toLamports } from "../solana";
+import { FEE_BPS, FREE_MIN_SOL, MAX_PRICE, MEMO, MIN_PRICE, feeOf, toLamports } from "../solana";
 import { TREASURY } from "./config";
 import type { Listing, Offer, Owned, Refund, Sale } from "../types";
-import { paid, readPayment, spent } from "./chain";
+import { balanceOf, paid, readPayment, spent } from "./chain";
 import { Oops } from "./errors";
 import { type Cmd, getJson, getMany, kvReady, multi, run } from "./kv";
 
@@ -116,7 +116,8 @@ async function draw(wallet: string, p: Pack, key: string, kind: Paid["kind"]): P
 
 /* ——— le booster offert ——— */
 
-/* Chaque wallet a un booster Famous offert, une seule fois. */
+/* Chaque wallet a un booster Famous offert, une seule fois, s'il a au moins
+   FREE_MIN_SOL : un wallet vide créé pour l'occasion n'en a pas. */
 export async function freeLeft(wallet: string) {
   return !(await run<string | null>(["GET", `free:${wallet}`]));
 }
@@ -125,6 +126,8 @@ export async function openFree(wallet: string): Promise<Owned[]> {
   if (!kvReady()) throw new Oops(503, "Boosters are not open yet (storage not configured).");
   const p = PACKS.find((x) => x.id === FREE_PACK)!;
   const key = `free:${wallet}`;
+  if (await freeLeft(wallet) && (await balanceOf(wallet)) < toLamports(FREE_MIN_SOL))
+    throw new Oops(402, `Your wallet needs at least ${FREE_MIN_SOL} SOL to open the free booster.`);
   if ((await run(["SET", key, JSON.stringify({ wallet, kind: "free" } satisfies Paid), "NX"])) !== "OK") {
     // déjà ouvert : on rend ses cartes (le navigateur peut redemander après une coupure)
     const f = await getJson<Paid>(key);

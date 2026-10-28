@@ -58,6 +58,19 @@ export async function readPayment(sig: string, maxAge = MAX_AGE): Promise<Paymen
   return { signer: accountKeys[0]?.pubkey ?? "", transfers, memos };
 }
 
+/* Le solde d'un wallet, en lamports. */
+export async function balanceOf(wallet: string): Promise<number> {
+  const r = await fetch(RPC, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "getBalance", params: [wallet, { commitment: "confirmed" }] }),
+    cache: "no-store",
+  }).catch(() => null);
+  const v = r?.ok ? (await r.json().catch(() => null))?.result?.value : undefined;
+  if (typeof v !== "number") throw new Oops(503, "Could not read your balance. Try again in a moment.");
+  return v;
+}
+
 /* Ce que `from` a versé à `to` dans ce paiement. */
 export const paid = (p: Payment, from: string, to: string) =>
   p.transfers.filter((t) => t.from === from && t.to === to).reduce((a, t) => a + t.lamports, 0);
