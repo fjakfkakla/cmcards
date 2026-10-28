@@ -48,3 +48,8 @@ next-env.d.ts
 
 # la mémoire locale du serveur (en production : Upstash)
 /.data/
+
+# la bande-annonce : les plans filmés et le rendu (tools/trailer)
+/public/trailer/
+/tools/trailer/out/
+/tools/trailer/peek*.jpg

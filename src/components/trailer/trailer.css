@@ -1,0 +1,85 @@
+/* La bande-annonce : une scène de 1920 × 1080, tout y est placé au pixel. */
+
+.tr-root { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden; background: #000; }
+.tr-stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #000; flex: none; }
+.tr-layer { position: absolute; inset: 0; }
+.tr-vignette { background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0, 0, 0, .7)); pointer-events: none; }
+.tr-grain { position: absolute; left: 0; top: 0; mix-blend-mode: overlay; pointer-events: none; }
+.tr-rays { position: absolute; inset: -40%; }
+.tr-grid {
+  position: absolute; inset: 0; opacity: .35;
+  background-image: linear-gradient(rgba(255,255,255,.06) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.06) 2px, transparent 2px);
+  background-size: 120px 120px;
+}
+
+/* les textes en autocollant, comme le titre de la landing */
+.tr-slam {
+  position: absolute; white-space: nowrap; font-family: var(--font-display); font-weight: 800; line-height: .9;
+  letter-spacing: -.04em; paint-order: stroke fill; will-change: transform;
+}
+.tr-glitch { position: absolute; translate: -50% -50%; font-family: var(--font-display); font-weight: 800; line-height: 1; letter-spacing: -.045em; white-space: nowrap; }
+.tr-glitch span { position: absolute; left: 0; top: 0; translate: -50% -50%; mix-blend-mode: screen; }
+.tr-glitch span:nth-child(3) { mix-blend-mode: normal; }
+
+.tr-spark { position: absolute; overflow: visible; }
+.tr-ring { position: absolute; border-style: solid; border-radius: 50%; }
+.tr-ember { position: absolute; border-radius: 50%; background: #e9d5ff; box-shadow: 0 0 18px 6px rgba(176, 77, 255, .8); }
+.tr-glow { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(200, 160, 255, .9), rgba(176, 77, 255, .35) 55%, transparent); }
+
+/* un plan filmé : l'écran à bord d'encre, posé dans l'espace */
+.tr-screen {
+  position: absolute; overflow: hidden; border: 7px solid #1e1a16; border-radius: 30px; background: #fff8ec;
+  box-shadow: 0 14px 0 #1e1a16, 0 60px 120px rgba(0, 0, 0, .6);
+}
+.tr-screen img { position: absolute; max-width: none; }
+.tr-screen-sheen {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.35) 45%, transparent 55%) 0 0 / 300% 100%;
+}
+
+.tr-pack { position: absolute; transform-style: preserve-3d; }
+.tr-card { position: absolute; transform-style: preserve-3d; }
+.tr-card .cc { border: 3px solid #1e1a16; }
+.tr-card:not(.flat) .cc { box-shadow: 0 1.4cqw 0 #1e1a16, 0 8cqw 14cqw -4cqw rgba(0, 0, 0, .6); }
+
+/* la rareté sous chaque carte de l'échelle */
+.tr-tag {
+  position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 26px 14px;
+  border: 4px solid #1e1a16; border-radius: 22px; box-shadow: 0 6px 0 #1e1a16; color: #1e1a16;
+  font-family: var(--font-display); white-space: nowrap;
+}
+.tr-tag b { font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -.03em; }
+.tr-tag span { font-size: 22px; font-weight: 800; line-height: 1; opacity: .75; }
+.tr-streaks {
+  background: repeating-linear-gradient(0deg, transparent 0 34px, rgba(255,255,255,.55) 34px 38px, transparent 38px 90px);
+  mix-blend-mode: overlay; pointer-events: none;
+}
+
+/* les ventes */
+.tr-sold {
+  position: absolute; display: flex; flex-direction: column; align-items: center; padding: 8px 22px 10px;
+  border: 5px solid #ff3b4f; border-radius: 14px; background: rgba(255, 255, 255, .92); color: #ff3b4f;
+  font: 800 46px/1 var(--font-display); letter-spacing: .02em; box-shadow: 0 6px 0 #1e1a16;
+}
+.tr-sold span { margin-top: 4px; font-size: 26px; color: #1e1a16; letter-spacing: -.01em; }
+.tr-sol { position: absolute; overflow: visible; }
+.tr-total {
+  position: absolute; left: 50%; top: 820px; padding: 16px 40px 20px; border: 5px solid #1e1a16; border-radius: 999px;
+  background: #fff; box-shadow: 0 9px 0 #1e1a16; font: 800 72px/1 var(--font-display); letter-spacing: -.03em; color: #1e1a16; white-space: nowrap;
+}
+.tr-total span { color: #0c9a62; font-variant-numeric: tabular-nums; }
+.tr-toast {
+  position: absolute; display: flex; align-items: center; gap: 14px; padding: 16px 26px; border: 4px solid #1e1a16; border-radius: 22px;
+  background: #fff; box-shadow: 0 7px 0 #1e1a16; font: 700 30px/1 var(--font-sans); color: #1e1a16; white-space: nowrap;
+}
+.tr-toast i { display: grid; place-items: center; width: 44px; height: 44px; border: 3px solid #1e1a16; border-radius: 50%; background: #2fd07a; color: #fff; font-style: normal; font-weight: 900; }
+.tr-toast b { font: 800 32px/1 var(--font-display); }
+.tr-toast span { font: 800 32px/1 var(--font-display); color: #0c9a62; }
+
+/* la fin */
+.tr-logo { position: absolute; left: 50%; top: 330px; width: 1100px; filter: drop-shadow(0 12px 0 rgba(30, 26, 22, .9)); }
+.tr-cta {
+  position: absolute; left: 50%; top: 655px; padding: 22px 50px 26px; border: 5px solid #1e1a16; border-radius: 999px; white-space: nowrap;
+  background: linear-gradient(#fff6c8, #ffd12e 60%, #ffbf1a); box-shadow: 0 10px 0 #1e1a16; font: 800 58px/1 var(--font-display); letter-spacing: -.03em; color: #1e1a16;
+}
+.tr-cta b { color: #e2362b; }
